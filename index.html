@@ -1,53 +1,355 @@
-<!DOCTYPE HTML>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="pt-BR">
 
 <head>
-    <title>Álvaro Duarte</title>
-    <meta name="description" content="Álvaro Duarte">
-    <meta name="keywords" content="HTML, CSS, JavaScript, Java, Python, C#">
-    <meta name="author" content="Álvaro Filho">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <title>Álvaro Duarte — Software Developer</title>
+    <meta name="description"
+        content="Software developer specializing in digital signature systems. Working with .NET, Angular and SQL Server at Lacuna Software.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://alvaro.dev.br">
+    <meta property="og:title" content="Álvaro Duarte — Software Developer">
+    <meta property="og:description"
+        content="Software developer specializing in digital signature systems. Working with .NET, Angular and SQL Server at Lacuna Software.">
+    <meta property="og:locale" content="pt_BR">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@alvarofilho">
+    <meta name="twitter:title" content="Álvaro Duarte — Software Developer">
+    <meta name="twitter:description"
+        content="Software developer specializing in digital signature systems. Working with .NET, Angular and SQL Server at Lacuna Software.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
-
-    <link rel="icon" type="image/x-icon"
-        href="https://i.pinimg.com/originals/93/d3/e3/93d3e31639a4d07613de9dccdc8bd5e8.png">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
-        integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <script src="js/script.js" defer></script>
 </head>
 
 <body>
-    <section id="container">
-        <section id="about">
-            <img
-                src="https://avatars1.githubusercontent.com/u/16805312?s=400&u=2860a3369917f351d3131e6ec0dd094c33e2d636&v=4">
-            <section id="about-content">
-                <h1 id="about-name">Álvaro Duarte</h1>
-                <p id="about-location">Petrolina, Pernambuco, Brazil</p>
-                <p id="about-description">I'm a student, developer at Lacuna Software and currently living in Brazil.</p>
-            </section>
-        </section>
-        <section id="skills">
-            <h2>Skills</h2>
-            <div>
-                <img id="img-java" src="img/java.png" alt="Java">
-                <img id="img-python" src="img/python.png" alt="Python">
-                <img id="img-js" src="img/javascript.png" alt="JavaScript">
+    <nav>
+        <a href="#hero" class="nav-logo">
+            <span class="d">~/</span><span class="a">alvaroduarte</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="#skills">skills</a></li>
+            <li><a href="#projects">projects</a></li>
+            <li><a href="#experience">exp</a></li>
+            <li><a href="#contact">contact</a></li>
+        </ul>
+        <div class="nav-actions">
+            <button id="theme-btn" type="button" class="lang-btn theme-btn" aria-label="Alternar tema">◐</button>
+            <button id="lang-btn" type="button" class="lang-btn" aria-label="Alternar idioma">PT</button>
+        </div>
+    </nav>
+
+    <main>
+        <section id="hero">
+            <div class="wrap">
+                <div class="hero-grid">
+                    <div>
+                        <div class="hero-id">
+                            <img id="avatar" src="https://avatars1.githubusercontent.com/u/16805312"
+                                alt="Foto de Álvaro Duarte" width="72" height="72" loading="eager" decoding="async">
+                            <h1 class="hero-name">
+                                Álvaro<br><span class="hl">Duarte</span>
+                            </h1>
+                        </div>
+
+                        <p class="hero-tag">
+                            <span id="ttext"></span><span class="blink"></span>
+                        </p>
+
+                        <p class="hero-bio" data-t="hero.bio">
+                            Desenvolvedor de software especializado em sistemas de assinatura digital.
+                            Atuo com .NET, Angular e SQL Server na Lacuna Software, implementando
+                            novas funcionalidades e garantindo qualidade, performance e escalabilidade.
+                        </p>
+
+                        <div class="hero-btns">
+                            <a href="#projects" class="btn btn-p" data-t="hero.btn">ver projetos →</a>
+                            <a href="https://github.com/alvarofilho" target="_blank" rel="noopener noreferrer"
+                                class="btn btn-o">GitHub ↗</a>
+                        </div>
+                    </div>
+
+                    <div class="term">
+                        <div class="term-bar">
+                            <div class="tdots">
+                                <div class="td r"></div>
+                                <div class="td y"></div>
+                                <div class="td g"></div>
+                            </div>
+                            <span class="ttitle">álvaro@dev — zsh</span>
+                        </div>
+                        <div class="term-body" id="term-body"></div>
+                    </div>
+
+                </div>
             </div>
         </section>
-        <section id="projects">
-            <h2>Projects</h2>
-            <section id="cards"></section>
+
+        <div class="rule"></div>
+
+        <section id="skills">
+            <div class="wrap">
+                <p class="eyebrow fi" data-t="skills.eye">skills</p>
+                <h2 class="sec-title fi" data-t="skills.title">Habilidades</h2>
+                <div class="skills-cats">
+
+                    <div class="scat fi">
+                        <div class="scat-label" data-t="sk.lang">Linguagens</div>
+                        <div class="scat-items">
+                            <span class="sk-tag">C#</span>
+                            <span class="sk-tag">TypeScript</span>
+                            <span class="sk-tag">SQL</span>
+                            <span class="sk-tag">Java</span>
+                            <span class="sk-tag">Python</span>
+                        </div>
+                    </div>
+
+                    <div class="scat fi">
+                        <div class="scat-label" data-t="sk.fw">Frameworks</div>
+                        <div class="scat-items">
+                            <span class="sk-tag">.NET</span>
+                            <span class="sk-tag">Angular</span>
+                            <span class="sk-tag">Svelte</span>
+                            <span class="sk-tag">Flask</span>
+                        </div>
+                    </div>
+
+                    <div class="scat fi">
+                        <div class="scat-label" data-t="sk.db">Banco de dados</div>
+                        <div class="scat-items">
+                            <span class="sk-tag">MySQL</span>
+                            <span class="sk-tag">PostgresSQL</span>
+                            <span class="sk-tag">SQL Server</span>
+                        </div>
+                    </div>
+
+                    <div class="scat fi">
+                        <div class="scat-label" data-t="sk.tools">Ferramentas</div>
+                        <div class="scat-items">
+                            <span class="sk-tag">Git</span>
+                            <span class="sk-tag">IA &amp; LLMs</span>
+                        </div>
+                    </div>
+
+                    <div class="scat fi">
+                        <div class="scat-label" data-t="sk.soft">Práticas</div>
+                        <div class="scat-items">
+                            <span class="sk-tag soft-tag">Code Review</span>
+                            <span class="sk-tag soft-tag">Escrita técnica</span>
+                            <span class="sk-tag soft-tag">Ownership</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
-    </section>
+
+        <div class="rule"></div>
+
+        <section id="projects">
+            <div class="wrap">
+                <p class="eyebrow fi" data-t="proj.eye">projects</p>
+                <div class="section-head fi">
+                    <h2 class="sec-title" data-t="proj.title">Projetos</h2>
+                    <a href="https://github.com/alvarofilho?tab=repositories" target="_blank" rel="noopener noreferrer"
+                        class="btn btn-o section-cta" data-t="proj.cta">ver todos os projetos ↗</a>
+                </div>
+                <div class="proj-grid">
+
+                    <a href="https://alvarofilho.github.io" target="_blank" rel="noopener noreferrer" class="pc fi">
+                        <div class="ph"><span class="pn">alvarofilho.github.io</span><span class="parr">↗</span></div>
+                        <p class="pd" data-t="proj.p1">Portfólio pessoal — apresenta projetos e habilidades técnicas.
+                        </p>
+                        <div class="ptags"><span class="tag">Svelte</span><span class="tag">JavaScript</span></div>
+                    </a>
+
+                    <a href="https://github.com/alvarofilho/Bin2Dec" target="_blank" rel="noopener noreferrer"
+                        class="pc fi">
+                        <div class="ph"><span class="pn">Bin2Dec</span><span class="parr">↗</span></div>
+                        <p class="pd" data-t="proj.p2">Conversor binário para decimal construído com Svelte.</p>
+                        <div class="ptags"><span class="tag">Svelte</span><span class="tag">JavaScript</span></div>
+                    </a>
+
+                    <a href="https://github.com/alvarofilho/MakeYourRPC" target="_blank" rel="noopener noreferrer"
+                        class="pc fi">
+                        <div class="ph"><span class="pn">MakeYourRPC</span><span class="parr">↗</span></div>
+                        <p class="pd" data-t="proj.p3">Crie seu Rich Presence no Discord de forma fácil e prática.</p>
+                        <div class="ptags"><span class="tag">Python</span><span class="tag">Discord API</span></div>
+                    </a>
+
+                    <a href="https://github.com/alvarofilho/PasteFlask" target="_blank" rel="noopener noreferrer"
+                        class="pc fi">
+                        <div class="ph"><span class="pn">PasteFlask</span><span class="parr">↗</span></div>
+                        <p class="pd" data-t="proj.p4">Sistema Pastebin desenvolvido em Flask com armazenamento em
+                            banco.</p>
+                        <div class="ptags"><span class="tag">Python</span><span class="tag">Flask</span><span
+                                class="tag">SQL</span></div>
+                    </a>
+
+                    <a href="https://github.com/alvarofilho/Pokedex" target="_blank" rel="noopener noreferrer"
+                        class="pc fi">
+                        <div class="ph"><span class="pn">Pokedex</span><span class="parr">↗</span></div>
+                        <p class="pd" data-t="proj.p5">Pokédex criada para estudar Svelte e seu ecossistema.</p>
+                        <div class="ptags"><span class="tag">Svelte</span><span class="tag">PokeAPI</span></div>
+                    </a>
+
+                    <a href="https://github.com/alvarofilho/url-shortener-api" target="_blank" rel="noopener noreferrer"
+                        class="pc fi">
+                        <div class="ph"><span class="pn">url-shortener-api</span><span class="parr">↗</span></div>
+                        <p class="pd" data-t="proj.p6">API REST de encurtamento de URLs desenvolvida em Java.</p>
+                        <div class="ptags"><span class="tag">Java</span><span class="tag">REST API</span></div>
+                    </a>
+
+                </div>
+            </div>
+        </section>
+
+        <div class="rule"></div>
+
+        <section id="experience">
+            <div class="wrap">
+                <p class="eyebrow fi" data-t="exp.eye">experience</p>
+                <h2 class="sec-title fi" data-t="exp.title">Experiência</h2>
+                <div class="exp-list">
+                    <div class="exp-row fi">
+                        <div class="exp-meta">
+                            <div class="exp-date" data-t="exp.date">set. 2021 — presente</div>
+                            <div class="exp-loc" data-t="exp.loc">Brasília, DF · Remoto</div>
+                        </div>
+                        <div>
+                            <div class="exp-co">Lacuna Software</div>
+                            <div class="exp-role" data-t="exp.role">Desenvolvedor de Software · Tempo integral</div>
+                            <ul class="exp-bullets" data-i18n-list="exp.desc">
+                                <li>Desenvolvimento e manutenção de sistema de assinatura digital com .NET, Angular e
+                                    SQL Server</li>
+                                <li>Implementação de novas funcionalidades e otimização de performance</li>
+                                <li>Integração de modelo pré-pago com gateway de pagamento</li>
+                                <li>Gerenciamento de webhooks</li>
+                                <li>Apoio em integração com ERPs</li>
+                                <li>Participação em decisões de arquitetura e melhorias de infraestrutura</li>
+                                <li>Colaboração com equipes de produto para definição de requisitos e priorização de
+                                    funcionalidades</li>
+                            </ul>
+                            <div class="exp-tech">
+                                <span class="tag">.NET</span>
+                                <span class="tag">C#</span>
+                                <span class="tag">Angular</span>
+                                <span class="tag">TypeScript</span>
+                                <span class="tag">SQL Server</span>
+                                <span class="tag">Webhooks</span>
+                                <span class="tag">Pagamentos</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="rule"></div>
+
+        <section id="contact">
+            <div class="wrap">
+                <p class="eyebrow fi" data-t="contact.eye">contact</p>
+                <h2 class="sec-title fi" data-t="contact.title">Contato</h2>
+                <div class="contact-list fi">
+
+                    <a href="https://linkedin.com/in/alvaroduarte" target="_blank" rel="noopener noreferrer" class="cl">
+                        <div class="cl-left">
+                            <div class="cl-icon">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="cl-label">LinkedIn</div>
+                                <div class="cl-handle">alvaroduarte</div>
+                            </div>
+                        </div>
+                        <span class="cl-arr">↗</span>
+                    </a>
+
+                    <a href="mailto:eu@alvaro.dev.br" class="cl">
+                        <div class="cl-left">
+                            <div class="cl-icon">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="2" y="4" width="20" height="16" rx="2" />
+                                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="cl-label">Email</div>
+                                <div class="cl-handle">eu@alvaro.dev.br</div>
+                            </div>
+                        </div>
+                        <span class="cl-arr">↗</span>
+                    </a>
+
+                    <a href="https://github.com/alvarofilho" target="_blank" rel="noopener noreferrer" class="cl">
+                        <div class="cl-left">
+                            <div class="cl-icon">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="cl-label">GitHub</div>
+                                <div class="cl-handle">@alvarofilho</div>
+                            </div>
+                        </div>
+                        <span class="cl-arr">↗</span>
+                    </a>
+
+                    <a href="https://twitter.com/alvarofilho" target="_blank" rel="noopener noreferrer" class="cl">
+                        <div class="cl-left">
+                            <div class="cl-icon">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="cl-label">Twitter / X</div>
+                                <div class="cl-handle">@alvarofilho</div>
+                            </div>
+                        </div>
+                        <span class="cl-arr">↗</span>
+                    </a>
+
+                    <a href="https://t.me/alvaroduarte" target="_blank" rel="noopener noreferrer" class="cl">
+                        <div class="cl-left">
+                            <div class="cl-icon">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-.994-.65-.35-1.006.217-1.589.149-.154 2.733-2.505 2.784-2.717.006-.025.012-.12-.045-.169-.057-.05-.144-.032-.207-.019-.088.019-1.49.947-4.207 2.783-.398.27-.758.402-1.084.395-.357-.008-1.044-.202-1.554-.368-.626-.204-1.124-.312-1.08-.659.022-.18.339-.364.953-.553 3.725-1.62 6.209-2.689 7.452-3.206 3.547-1.521 4.285-1.785 4.763-1.793z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="cl-label">Telegram</div>
+                                <div class="cl-handle">@alvaroduarte</div>
+                            </div>
+                        </div>
+                        <span class="cl-arr">↗</span>
+                    </a>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
     <footer>
-        <div id="footer-icons">
-            <a target="_blank" href="https://github.com/alvarofilho"><i class="fab fa-github"></i></a>
-            <a target="_blank" href="https://twitter.com/alvarofilh0"><i class="fab fa-twitter"></i></a>
-            <a target="_blank" href="https://telegram.me/alvarofilho"><i class="fab fa-telegram"></i></a>
+        <div class="footer-inner">
+            <span data-t="footer">// álvaro duarte · 2026 · Petrolina, Pernambuco, Brasil</span>
         </div>
     </footer>
 </body>
-<script src="js/script.js"></script>
 
 </html>
