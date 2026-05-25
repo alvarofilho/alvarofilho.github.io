@@ -1,0 +1,123 @@
+{
+  "htmlLang": "en",
+  "locale": "en_US",
+  "meta": {
+    "title": "Álvaro Duarte — Software Developer",
+    "description": "Software developer specializing in digital signature systems. Working with .NET, Angular and SQL Server at Lacuna Software."
+  },
+  "nav": {
+    "skills": "skills",
+    "projects": "projects",
+    "experience": "exp",
+    "blog": "blog",
+    "contact": "contact"
+  },
+  "text": {
+    "heroBio": "Software developer specializing in digital signature systems. I work with .NET, Angular and SQL Server at Lacuna Software, implementing new features and ensuring quality, performance and scalability.",
+    "heroButton": "view projects →",
+    "skillsTitle": "Skills",
+    "projectsTitle": "Projects",
+    "projectsCta": "view all projects ↗",
+    "experienceTitle": "Experience",
+    "contactTitle": "Contact",
+    "blogTitle": "Blog",
+    "blogCta": "view all posts",
+    "blogHint": "articles about .NET, distributed systems and software engineering",
+    "blogEmptyStatus": "// in progress",
+    "blogEmptyCount": "03 articles",
+    "blogEmptyText": "Articles about .NET, distributed systems and software engineering coming soon.",
+    "blogSearchPlaceholder": "search by text",
+    "blogSearchLabel": "Search",
+    "blogTagFilter": "filter by tag",
+    "blogNoResults": "No posts found for this search.",
+    "blogClearFilters": "clear filters",
+    "blogTagSearchPlaceholder": "filter tags",
+    "blogResultsSummary": "posts found",
+    "blogLoadMore": "show more",
+    "blogSelectedTags": "selected tags",
+    "blogPopularTags": "popular tags",
+    "blogAdvancedFilters": "more options",
+    "blogHideFilters": "hide filters",
+    "backToBlog": "back to blog",
+    "footer": "// álvaro duarte · 2026 · Petrolina, Pernambuco, Brazil",
+    "codeCopy": "copy",
+    "codeCopied": "copied",
+    "httpRequest": "HTTP request",
+    "httpResponse": "HTTP response",
+    "httpMessage": "HTTP message",
+    "httpHeaders": "headers",
+    "httpBody": "body",
+    "componentShowcaseTitle": "Component Showcase",
+    "componentShowcaseDescription": "Visual reference for all blog post components available in this site.",
+    "componentShowcaseReference": "reference",
+    "componentShowcaseTag": "components",
+    "componentHttpMessageDescription": "Structured HTTP request/response viewer. Props: message, bodyLang?, title?.",
+    "componentHttpMessageExampleTitle": "POST request with JSON body",
+    "postAvailableIn": "available in",
+    "e404Title": "page not found",
+    "e404Sub": "This route does not exist or has been removed.",
+    "e404Cta": "back to home",
+    "tocTitle": "contents"
+  },
+  "skillLabels": {
+    "lang": "Languages",
+    "frameworks": "Frameworks",
+    "database": "Database",
+    "tools": "Tools",
+    "practices": "Practices"
+  },
+  "experience": {
+    "date": "Sep. 2021 — present",
+    "location": "Brasília, DF · Remote",
+    "role": "Software Developer · Full-time",
+    "bullets": [
+      "Development and maintenance of digital signature systems using .NET, Angular and SQL Server",
+      "Implementation of new features and performance optimization",
+      "Integration of a prepaid model with a payment gateway",
+      "Webhook management",
+      "Support for ERP integrations",
+      "Participation in architecture decisions and infrastructure improvements",
+      "Collaboration with product teams for requirements definition and feature prioritization"
+    ]
+  },
+  "roles": ["Software Developer", ".NET · Angular · SQL Server", "Lacuna Software"],
+  "terminal": [
+    { "kind": "cmd", "text": "whoami" },
+    { "kind": "out", "text": "álvaro duarte", "modifier": "hi" },
+    { "kind": "space" },
+    { "kind": "cmd", "text": "cat role.txt" },
+    { "kind": "out", "text": "Software Developer" },
+    { "kind": "out", "text": "Lacuna Software · Digital Signature" },
+    { "kind": "space" },
+    { "kind": "cmd", "text": "ls stack/" },
+    { "kind": "out", "text": ".net  angular  sql-server", "modifier": "gr" },
+    { "kind": "out", "text": "java  python   svelte", "modifier": "gr" },
+    { "kind": "space" },
+    { "kind": "cursor" }
+  ],
+  "aria": {
+    "languageButton": "Mudar para português",
+    "themeToggle": "Switch theme",
+    "themeNext": "Next"
+  },
+  "language": {
+    "current": "Current language",
+    "other": "PT"
+  },
+  "theme": {
+    "dark": "dark theme",
+    "light": "light theme",
+    "system": "system theme"
+  },
+  "skillGroups": {
+    "practices": ["Code Review", "Technical writing", "Ownership"]
+  },
+  "projectDescriptions": [
+    "Personal portfolio — showcases technical projects and skills.",
+    "Binary to decimal converter built with Svelte.",
+    "Create your Rich Presence on Discord easily and practically.",
+    "Pastebin system built with Flask and database storage.",
+    "Pokédex built to study Svelte and its ecosystem.",
+    "REST URL shortener API built in Java."
+  ]
+}

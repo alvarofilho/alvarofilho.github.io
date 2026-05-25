@@ -1,0 +1,23 @@
+---
+title: Engenharia por trás de assinaturas digitais
+description: Um mapa inicial dos cuidados técnicos que sustentam sistemas de assinatura digital confiáveis.
+date: '2026-05-24'
+tags:
+  - PKI
+  - Certificados
+lang: pt
+slug: engenharia-assinaturas-digitais
+draft: true
+---
+
+<script>
+  import { BlogImage, CodeSnippet, Mermaid } from '$lib/components/post';
+</script>
+
+Sistemas de assinatura digital parecem simples quando vistos pela interface: escolher um documento, confirmar a identidade e assinar. Por baixo, existe uma cadeia de decisões técnicas que precisa preservar validade jurídica, rastreabilidade e experiência de uso.
+
+<BlogImage
+  src="/images/blog/signature-layers.svg"
+  alt="Camadas técnicas de uma assinatura digital"
+  caption="Uma assinatura confiável combina documento, identidade, certificado e trilha de auditoria."
+/>

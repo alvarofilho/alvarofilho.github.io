@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 200" width="800" height="200">
+  <rect width="800" height="200" fill="#131313"/>
+
+  <!-- Labels -->
+  <text x="24" y="34" font-family="JetBrains Mono, monospace" font-size="10" fill="#787878" letter-spacing="0.1em">LAYER</text>
+  <text x="200" y="34" font-family="JetBrains Mono, monospace" font-size="10" fill="#787878" letter-spacing="0.1em">PROTOCOL</text>
+  <text x="480" y="34" font-family="JetBrains Mono, monospace" font-size="10" fill="#787878" letter-spacing="0.1em">ROLE</text>
+
+  <!-- Row 1: Application -->
+  <rect x="16" y="48" width="760" height="34" fill="#1d1d1d"/>
+  <text x="24" y="70" font-family="JetBrains Mono, monospace" font-size="12" fill="#e05c3a">Application</text>
+  <text x="200" y="70" font-family="JetBrains Mono, monospace" font-size="12" fill="#edeae5">HTTP / HTTPS · DNS · TLS</text>
+  <text x="480" y="70" font-family="JetBrains Mono, monospace" font-size="12" fill="#787878">Request/response semantics</text>
+
+  <!-- Row 2: Transport -->
+  <rect x="16" y="90" width="760" height="34" fill="#171717"/>
+  <text x="24" y="112" font-family="JetBrains Mono, monospace" font-size="12" fill="#e05c3a">Transport</text>
+  <text x="200" y="112" font-family="JetBrains Mono, monospace" font-size="12" fill="#edeae5">TCP · UDP · QUIC</text>
+  <text x="480" y="112" font-family="JetBrains Mono, monospace" font-size="12" fill="#787878">Reliable delivery, ports</text>
+
+  <!-- Row 3: Internet -->
+  <rect x="16" y="132" width="760" height="34" fill="#1d1d1d"/>
+  <text x="24" y="154" font-family="JetBrains Mono, monospace" font-size="12" fill="#e05c3a">Internet</text>
+  <text x="200" y="154" font-family="JetBrains Mono, monospace" font-size="12" fill="#edeae5">IP · ICMP</text>
+  <text x="480" y="154" font-family="JetBrains Mono, monospace" font-size="12" fill="#787878">Routing between networks</text>
+
+  <!-- Row 4: Link -->
+  <rect x="16" y="174" width="760" height="22" fill="#171717"/>
+  <text x="24" y="190" font-family="JetBrains Mono, monospace" font-size="12" fill="#e05c3a">Link</text>
+  <text x="200" y="190" font-family="JetBrains Mono, monospace" font-size="12" fill="#edeae5">Ethernet · Wi-Fi</text>
+  <text x="480" y="190" font-family="JetBrains Mono, monospace" font-size="12" fill="#787878">Physical transmission</text>
+</svg>
