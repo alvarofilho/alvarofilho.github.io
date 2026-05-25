@@ -1,0 +1,139 @@
+---
+title: Webhooks como contrato de integracao
+description: Como tratar webhooks como uma interface publica, com retries, idempotencia e observabilidade.
+date: '2026-05-24'
+tags:
+  - Webhooks
+  - APIs
+lang: __LANG__
+slug: webhooks-como-contrato-de-integracao
+draft: true
+translationKey: webhooks-as-integration-contract
+image: /images/blog/http-overview.svg
+---
+
+<script>
+  import {
+    BlogImage,
+    Callout,
+    CodeSnippet,
+    HttpMessage,
+    KeyValue,
+    Mermaid,
+    Step,
+    StepList,
+    TableWrapper
+  } from '$lib/components/post';
+
+  const retryPolicy = `{
+  "event": "document.signed",
+  "deliveryId": "evt_01HX9K7",
+  "attempt": 3,
+  "nextRetryAt": "2026-05-24T18:30:00Z"
+}`;
+
+  const signatureCheck = `public bool IsValidWebhook(HttpRequest request)
+{
+    var signature = request.Headers["X-Signature"];
+    var payload = request.Body;
+
+    return verifier.Verify(payload, signature);
+}`;
+
+  const deliveryFlow = `sequenceDiagram
+  participant Produto
+  participant Fila
+  participant Cliente
+
+  Produto->>Fila: evento assinado
+  Fila->>Cliente: POST /webhooks
+  Cliente-->>Fila: 2xx
+  Fila-->>Produto: entrega confirmada`;
+</script>
+
+Webhooks costumam parecer simples: um sistema faz `POST` para outro quando algo acontece. Na pratica, eles viram uma API publica. Isso significa que precisam de contrato, versionamento, seguranca e uma historia honesta para falhas.
+
+<BlogImage
+  src="/images/blog/http-overview.svg"
+  alt="Camadas envolvidas em uma comunicacao HTTP"
+  caption="Um webhook e pequeno na superficie, mas atravessa rede, fila, autenticacao e regras de negocio."
+/>
+
+## O contrato comeca no evento
+
+Antes do endpoint, defina o evento. Nome, payload, versao e semantica precisam ser estaveis.
+
+<KeyValue
+  caption="Campos minimos de um evento"
+  items={[
+    { key: 'id', value: 'Identificador unico para idempotencia' },
+    { key: 'type', value: 'Nome semantico do evento' },
+    { key: 'occurredAt', value: 'Quando o fato aconteceu' },
+    { key: 'payload', value: 'Dados necessarios para processar o evento' }
+  ]}
+/>
+
+<Callout type="warning" title="o endpoint nao e o contrato">
+  <p>O contrato real e o significado do evento. A URL pode mudar; a semantica do evento nao deveria mudar sem versionamento.</p>
+</Callout>
+
+## Entrega e retries
+
+Falhas temporarias fazem parte do desenho. O consumidor pode estar fora do ar, lento ou recusando o payload por algum motivo corrigivel.
+
+<Mermaid
+  title="fluxo de entrega"
+  chart={deliveryFlow}
+/>
+
+<HttpMessage
+  title="payload de retry"
+  message={`POST /webhooks/signatures HTTP/1.1
+Host: cliente.example.com
+Content-Type: application/json
+X-Event-Type: document.signed
+X-Delivery-Id: evt_01HX9K7
+
+${retryPolicy}`}
+/>
+
+<StepList>
+  <Step title="Persistir o evento">
+    <p>Grave o evento antes de tentar entregar. A fila deve sobreviver a reinicios e deploys.</p>
+  </Step>
+  <Step title="Assinar o payload">
+    <p>Inclua uma assinatura para o consumidor validar autenticidade e integridade.</p>
+  </Step>
+  <Step title="Aplicar backoff">
+    <p>Reenvie com intervalos progressivos e limite claro de tentativas.</p>
+  </Step>
+</StepList>
+
+<CodeSnippet lang="csharp" title="validacao de assinatura" code={signatureCheck}/>
+
+## Como documentar
+
+<TableWrapper caption="Checklist antes de publicar">
+  <table>
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Por que importa</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Eventos versionados</td>
+        <td>Evita quebrar integracoes existentes.</td>
+      </tr>
+      <tr>
+        <td>Idempotencia</td>
+        <td>Permite receber o mesmo evento mais de uma vez sem duplicar efeitos.</td>
+      </tr>
+      <tr>
+        <td>Observabilidade</td>
+        <td>Ajuda suporte e cliente a entenderem tentativas, falhas e sucesso.</td>
+      </tr>
+    </tbody>
+  </table>
+</TableWrapper>

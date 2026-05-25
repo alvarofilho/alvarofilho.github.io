@@ -1,0 +1,123 @@
+{
+  "htmlLang": "pt-BR",
+  "locale": "pt_BR",
+  "meta": {
+    "title": "Álvaro Duarte — Desenvolvedor de Software",
+    "description": "Desenvolvedor de software especializado em sistemas de assinatura digital. Atua com .NET, Angular e SQL Server na Lacuna Software."
+  },
+  "nav": {
+    "skills": "skills",
+    "projects": "projects",
+    "experience": "exp",
+    "blog": "blog",
+    "contact": "contact"
+  },
+  "text": {
+    "heroBio": "Desenvolvedor de software especializado em sistemas de assinatura digital. Atuo com .NET, Angular e SQL Server na Lacuna Software, implementando novas funcionalidades e garantindo qualidade, performance e escalabilidade.",
+    "heroButton": "ver projetos →",
+    "skillsTitle": "Habilidades",
+    "projectsTitle": "Projetos",
+    "projectsCta": "ver todos os projetos ↗",
+    "experienceTitle": "Experiência",
+    "contactTitle": "Contato",
+    "blogTitle": "Blog",
+    "blogCta": "ver todos os posts",
+    "blogHint": "artigos sobre .NET, sistemas distribuídos e engenharia de software",
+    "blogEmptyStatus": "// em preparação",
+    "blogEmptyCount": "03 artigos",
+    "blogEmptyText": "Artigos sobre .NET, sistemas distribuídos e engenharia de software em breve.",
+    "blogSearchPlaceholder": "buscar por texto",
+    "blogSearchLabel": "Busca",
+    "blogTagFilter": "filtrar por tag",
+    "blogNoResults": "Nenhum post encontrado para essa busca.",
+    "blogClearFilters": "limpar filtros",
+    "blogTagSearchPlaceholder": "filtrar tags",
+    "blogResultsSummary": "posts encontrados",
+    "blogLoadMore": "mostrar mais",
+    "blogSelectedTags": "tags selecionadas",
+    "blogPopularTags": "tags populares",
+    "blogAdvancedFilters": "mais opções",
+    "blogHideFilters": "ocultar filtros",
+    "backToBlog": "voltar para o blog",
+    "footer": "// álvaro duarte · 2026 · Petrolina, Pernambuco, Brasil",
+    "codeCopy": "copiar",
+    "codeCopied": "copiado",
+    "httpRequest": "requisição HTTP",
+    "httpResponse": "resposta HTTP",
+    "httpMessage": "mensagem HTTP",
+    "httpHeaders": "cabeçalhos",
+    "httpBody": "corpo",
+    "componentShowcaseTitle": "Vitrine de componentes",
+    "componentShowcaseDescription": "Referência visual dos componentes disponíveis nos posts do blog.",
+    "componentShowcaseReference": "referência",
+    "componentShowcaseTag": "componentes",
+    "componentHttpMessageDescription": "Visualizador estruturado de requisições e respostas HTTP. Props: message, bodyLang?, title?.",
+    "componentHttpMessageExampleTitle": "POST com corpo JSON",
+    "postAvailableIn": "disponível em",
+    "e404Title": "página não encontrada",
+    "e404Sub": "Essa rota não existe ou foi removida.",
+    "e404Cta": "voltar ao início",
+    "tocTitle": "sumário"
+  },
+  "skillLabels": {
+    "lang": "Linguagens",
+    "frameworks": "Frameworks",
+    "database": "Banco de dados",
+    "tools": "Ferramentas",
+    "practices": "Práticas"
+  },
+  "experience": {
+    "date": "set. 2021 — presente",
+    "location": "Brasília, DF · Remoto",
+    "role": "Desenvolvedor de Software · Tempo integral",
+    "bullets": [
+      "Desenvolvimento e manutenção de sistema de assinatura digital com .NET, Angular e SQL Server",
+      "Implementação de novas funcionalidades e otimização de performance",
+      "Integração de modelo pré-pago com gateway de pagamento",
+      "Gerenciamento de webhooks",
+      "Apoio em integração com ERPs",
+      "Participação em decisões de arquitetura e melhorias de infraestrutura",
+      "Colaboração com equipes de produto para definição de requisitos e priorização de funcionalidades"
+    ]
+  },
+  "roles": ["Software Developer", ".NET · Angular · SQL Server", "Lacuna Software"],
+  "terminal": [
+    { "kind": "cmd", "text": "whoami" },
+    { "kind": "out", "text": "álvaro duarte", "modifier": "hi" },
+    { "kind": "space" },
+    { "kind": "cmd", "text": "cat role.txt" },
+    { "kind": "out", "text": "Software Developer" },
+    { "kind": "out", "text": "Lacuna Software · Assinatura Digital" },
+    { "kind": "space" },
+    { "kind": "cmd", "text": "ls stack/" },
+    { "kind": "out", "text": ".net  angular  sql-server", "modifier": "gr" },
+    { "kind": "out", "text": "java  python   svelte", "modifier": "gr" },
+    { "kind": "space" },
+    { "kind": "cursor" }
+  ],
+  "aria": {
+    "languageButton": "Switch to English",
+    "themeToggle": "Alternar tema",
+    "themeNext": "Próximo"
+  },
+  "language": {
+    "current": "Idioma atual",
+    "other": "EN"
+  },
+  "theme": {
+    "dark": "tema escuro",
+    "light": "tema claro",
+    "system": "tema do sistema"
+  },
+  "skillGroups": {
+    "practices": ["Code Review", "Escrita técnica", "Ownership"]
+  },
+  "projectDescriptions": [
+    "Portfólio pessoal — apresenta projetos e habilidades técnicas.",
+    "Conversor binário para decimal construído com Svelte.",
+    "Crie seu Rich Presence no Discord de forma fácil e prática.",
+    "Sistema Pastebin desenvolvido em Flask com armazenamento em banco.",
+    "Pokédex criada para estudar Svelte e seu ecossistema.",
+    "API REST de encurtamento de URLs desenvolvida em Java."
+  ]
+}

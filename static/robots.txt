@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /pt/blog/drafts/
+Disallow: /en/blog/drafts/
+Disallow: /pt/blog/components/
+Disallow: /en/blog/components/
+
+Sitemap: https://alvaro.dev.br/sitemap.xml
