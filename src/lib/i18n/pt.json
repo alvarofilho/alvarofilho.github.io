@@ -6,18 +6,18 @@
     "description": "Desenvolvedor de software especializado em sistemas de assinatura digital. Atua com .NET, Angular e SQL Server na Lacuna Software."
   },
   "nav": {
-    "skills": "skills",
-    "projects": "projects",
-    "experience": "exp",
+    "skills": "habilidades",
+    "projects": "projetos",
+    "experience": "experiência",
     "blog": "blog",
-    "contact": "contact"
+    "contact": "contato"
   },
   "text": {
-    "heroBio": "Desenvolvedor de software especializado em sistemas de assinatura digital. Atuo com .NET, Angular e SQL Server na Lacuna Software, implementando novas funcionalidades e garantindo qualidade, performance e escalabilidade.",
-    "heroButton": "ver projetos →",
+    "heroBio": "Desenvolvedor de software especializado em sistemas de assinatura digital. Na Lacuna Software, trabalho com .NET, Angular e SQL Server entregando fluxos reais de assinatura, pagamentos, webhooks, integrações com ERP e melhorias de performance em produto usado em produção.",
+    "heroButton": "ver projetos",
     "skillsTitle": "Habilidades",
     "projectsTitle": "Projetos",
-    "projectsCta": "ver todos os projetos ↗",
+    "projectsCta": "ver todos os projetos",
     "experienceTitle": "Experiência",
     "contactTitle": "Contato",
     "blogTitle": "Blog",
@@ -32,12 +32,17 @@
     "blogNoResults": "Nenhum post encontrado para essa busca.",
     "blogClearFilters": "limpar filtros",
     "blogTagSearchPlaceholder": "filtrar tags",
+    "blogTagSearchLabel": "Buscar tags",
     "blogResultsSummary": "posts encontrados",
     "blogLoadMore": "mostrar mais",
     "blogSelectedTags": "tags selecionadas",
     "blogPopularTags": "tags populares",
     "blogAdvancedFilters": "mais opções",
     "blogHideFilters": "ocultar filtros",
+    "blogPaginationLabel": "paginação",
+    "blogPreviousPageLabel": "página anterior",
+    "blogNextPageLabel": "próxima página",
+    "blogPageLabel": "página",
     "backToBlog": "voltar para o blog",
     "footer": "// álvaro duarte · 2026 · Petrolina, Pernambuco, Brasil",
     "codeCopy": "copiar",
@@ -57,7 +62,8 @@
     "e404Title": "página não encontrada",
     "e404Sub": "Essa rota não existe ou foi removida.",
     "e404Cta": "voltar ao início",
-    "tocTitle": "sumário"
+    "tocTitle": "sumário",
+    "tocNavLabel": "seções do post"
   },
   "skillLabels": {
     "lang": "Linguagens",
@@ -71,13 +77,13 @@
     "location": "Brasília, DF · Remoto",
     "role": "Desenvolvedor de Software · Tempo integral",
     "bullets": [
-      "Desenvolvimento e manutenção de sistema de assinatura digital com .NET, Angular e SQL Server",
-      "Implementação de novas funcionalidades e otimização de performance",
-      "Integração de modelo pré-pago com gateway de pagamento",
-      "Gerenciamento de webhooks",
-      "Apoio em integração com ERPs",
-      "Participação em decisões de arquitetura e melhorias de infraestrutura",
-      "Colaboração com equipes de produto para definição de requisitos e priorização de funcionalidades"
+      "Desenvolvimento e manutenção de produto de assinatura digital com .NET, Angular e SQL Server em ambiente de produção",
+      "Implementação de fluxos de assinatura, gestão de documentos e melhorias de usabilidade para operações do dia a dia",
+      "Entrega de modelo pré-pago com integração a gateway de pagamento, cobrindo regras de negócio e acompanhamento do ciclo de cobrança",
+      "Construção e manutenção de webhooks para eventos de assinatura, pagamento e integrações externas",
+      "Apoio técnico em integrações com ERPs e sistemas corporativos, ajudando clientes a conectar processos internos ao produto",
+      "Otimização de performance, correção de bugs e evolução de código em áreas críticas da aplicação",
+      "Participação em decisões de arquitetura, refinamento com produto e priorização de funcionalidades com foco em valor de negócio"
     ]
   },
   "roles": ["Software Developer", ".NET · Angular · SQL Server", "Lacuna Software"],
@@ -96,9 +102,10 @@
     { "kind": "cursor" }
   ],
   "aria": {
-    "languageButton": "Switch to English",
+    "languageButton": "Mudar para inglês",
     "themeToggle": "Alternar tema",
-    "themeNext": "Próximo"
+    "themeNext": "Próximo",
+    "skipToContent": "Pular para o conteúdo"
   },
   "language": {
     "current": "Idioma atual",
@@ -113,7 +120,7 @@
     "practices": ["Code Review", "Escrita técnica", "Ownership"]
   },
   "projectDescriptions": [
-    "Portfólio pessoal — apresenta projetos e habilidades técnicas.",
+    "Portfólio pessoal com foco em posicionamento profissional, conteúdo técnico e apresentação de experiência prática.",
     "Conversor binário para decimal construído com Svelte.",
     "Crie seu Rich Presence no Discord de forma fácil e prática.",
     "Sistema Pastebin desenvolvido em Flask com armazenamento em banco.",

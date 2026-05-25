@@ -2,6 +2,7 @@
   import { page } from '$app/stores';
   import Footer from '$lib/components/Footer.svelte';
   import Navigation from '$lib/components/Navigation.svelte';
+  import Seo from '$lib/components/Seo.svelte';
   import { isLang, messages } from '$lib/data/site';
 
   const lang = $derived.by(() => {
@@ -14,7 +15,16 @@
 
 <Navigation {lang} messages={m} path={$page.url.pathname} />
 
-<main>
+<Seo
+  title={`404 — ${m.text.e404Title} — Álvaro Duarte`}
+  description={m.text.e404Sub}
+  path={$page.url.pathname}
+  lang={lang}
+  locale={m.locale}
+  noindex
+/>
+
+<main id="main-content">
   <section class="redirect-page">
     <div class="wrap e404-wrap">
       <p class="eyebrow">404</p>

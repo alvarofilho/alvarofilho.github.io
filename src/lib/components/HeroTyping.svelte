@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
 
   type Props = {
     roles: string[];
@@ -10,10 +11,10 @@
 
   function startTyping() {
     if (timeoutId) window.clearTimeout(timeoutId);
-    text = '';
+    text = roles[0] ?? '';
 
     let roleIndex = 0;
-    let charIndex = 0;
+    let charIndex = text.length;
     let deleting = false;
 
     const typeRole = () => {
@@ -37,11 +38,21 @@
     timeoutId = window.setTimeout(typeRole, 900);
   }
 
-  $effect(() => {
-    roles; // track prop — restarts when lang changes
+  onMount(() => {
+    const shouldAnimate =
+      window.matchMedia('(min-width: 721px)').matches &&
+      window.matchMedia('(prefers-reduced-motion: no-preference)').matches;
+
+    if (!shouldAnimate) {
+      return;
+    }
+
     startTyping();
-    return () => { if (timeoutId) window.clearTimeout(timeoutId); };
+
+    return () => {
+      if (timeoutId) window.clearTimeout(timeoutId);
+    };
   });
 </script>
 
-<span>{text}</span><span class="blink"></span>
+<span>{text || roles[0] || ''}</span><span class="blink"></span>

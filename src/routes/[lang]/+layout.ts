@@ -10,6 +10,7 @@ export const load: LayoutLoad = ({ params, url }) => {
   return {
     lang: params.lang,
     messages: messages[params.lang],
+    htmlLang: messages[params.lang].htmlLang,
     path: url.pathname
   };
 };

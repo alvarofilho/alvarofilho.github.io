@@ -8,16 +8,16 @@
   "nav": {
     "skills": "skills",
     "projects": "projects",
-    "experience": "exp",
+    "experience": "experience",
     "blog": "blog",
     "contact": "contact"
   },
   "text": {
-    "heroBio": "Software developer specializing in digital signature systems. I work with .NET, Angular and SQL Server at Lacuna Software, implementing new features and ensuring quality, performance and scalability.",
-    "heroButton": "view projects →",
+    "heroBio": "Software developer specializing in digital signature systems. At Lacuna Software, I work with .NET, Angular and SQL Server delivering real-world signature flows, payments, webhooks, ERP integrations and performance improvements in a production product.",
+    "heroButton": "view projects",
     "skillsTitle": "Skills",
     "projectsTitle": "Projects",
-    "projectsCta": "view all projects ↗",
+    "projectsCta": "view all projects",
     "experienceTitle": "Experience",
     "contactTitle": "Contact",
     "blogTitle": "Blog",
@@ -32,12 +32,17 @@
     "blogNoResults": "No posts found for this search.",
     "blogClearFilters": "clear filters",
     "blogTagSearchPlaceholder": "filter tags",
+    "blogTagSearchLabel": "Search tags",
     "blogResultsSummary": "posts found",
     "blogLoadMore": "show more",
     "blogSelectedTags": "selected tags",
     "blogPopularTags": "popular tags",
     "blogAdvancedFilters": "more options",
     "blogHideFilters": "hide filters",
+    "blogPaginationLabel": "pagination",
+    "blogPreviousPageLabel": "previous page",
+    "blogNextPageLabel": "next page",
+    "blogPageLabel": "page",
     "backToBlog": "back to blog",
     "footer": "// álvaro duarte · 2026 · Petrolina, Pernambuco, Brazil",
     "codeCopy": "copy",
@@ -57,7 +62,8 @@
     "e404Title": "page not found",
     "e404Sub": "This route does not exist or has been removed.",
     "e404Cta": "back to home",
-    "tocTitle": "contents"
+    "tocTitle": "contents",
+    "tocNavLabel": "post sections"
   },
   "skillLabels": {
     "lang": "Languages",
@@ -71,13 +77,13 @@
     "location": "Brasília, DF · Remote",
     "role": "Software Developer · Full-time",
     "bullets": [
-      "Development and maintenance of digital signature systems using .NET, Angular and SQL Server",
-      "Implementation of new features and performance optimization",
-      "Integration of a prepaid model with a payment gateway",
-      "Webhook management",
-      "Support for ERP integrations",
-      "Participation in architecture decisions and infrastructure improvements",
-      "Collaboration with product teams for requirements definition and feature prioritization"
+      "Development and maintenance of a production digital signature product using .NET, Angular and SQL Server",
+      "Implementation of signature flows, document management features and usability improvements for day-to-day operations",
+      "Delivery of a prepaid billing model integrated with a payment gateway, including business rules and billing lifecycle handling",
+      "Implementation and maintenance of webhooks for signature events, payments and external integrations",
+      "Technical support for ERP and back-office integrations, helping customers connect internal processes to the product",
+      "Performance improvements, bug fixing and code evolution in critical application areas",
+      "Participation in architecture decisions, product refinement and feature prioritization with a business impact mindset"
     ]
   },
   "roles": ["Software Developer", ".NET · Angular · SQL Server", "Lacuna Software"],
@@ -96,9 +102,10 @@
     { "kind": "cursor" }
   ],
   "aria": {
-    "languageButton": "Mudar para português",
+    "languageButton": "Switch to Portuguese",
     "themeToggle": "Switch theme",
-    "themeNext": "Next"
+    "themeNext": "Next",
+    "skipToContent": "Skip to content"
   },
   "language": {
     "current": "Current language",
@@ -113,7 +120,7 @@
     "practices": ["Code Review", "Technical writing", "Ownership"]
   },
   "projectDescriptions": [
-    "Personal portfolio — showcases technical projects and skills.",
+    "Personal portfolio focused on professional positioning, technical writing and practical product experience.",
     "Binary to decimal converter built with Svelte.",
     "Create your Rich Presence on Discord easily and practically.",
     "Pastebin system built with Flask and database storage.",

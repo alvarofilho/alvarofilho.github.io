@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import type { TerminalLine } from '$lib/data/site';
 
   type Props = {
@@ -14,6 +15,15 @@
   let { lines }: Props = $props();
   let rendered = $state<RenderedLine[]>([]);
   let timeoutId: number | undefined;
+  const staticRendered = $derived(renderStatic(lines));
+
+  function renderStatic(source: TerminalLine[]): RenderedLine[] {
+    return source.map((line) => {
+      if (line.kind === 'cmd') return { kind: 'cmd', prompt: '$', text: line.text };
+      if (line.kind === 'out') return line;
+      return line;
+    });
+  }
 
   function renderTerminal() {
     if (timeoutId) window.clearTimeout(timeoutId);
@@ -62,10 +72,21 @@
     timeoutId = window.setTimeout(renderNextLine, 1300);
   }
 
-  $effect(() => {
-    lines; // track prop — restarts when lang changes
+  onMount(() => {
+    const shouldAnimate =
+      window.matchMedia('(min-width: 721px)').matches &&
+      window.matchMedia('(prefers-reduced-motion: no-preference)').matches;
+
+    if (!shouldAnimate) {
+      rendered = renderStatic(lines);
+      return;
+    }
+
     renderTerminal();
-    return () => { if (timeoutId) window.clearTimeout(timeoutId); };
+
+    return () => {
+      if (timeoutId) window.clearTimeout(timeoutId);
+    };
   });
 </script>
 
@@ -79,7 +100,7 @@
     <span class="ttitle">álvaro@dev — zsh</span>
   </div>
   <div class="term-body">
-    {#each rendered as line}
+    {#each (rendered.length ? rendered : staticRendered) as line}
       {#if line.kind === 'space'}
         <div class="tspace"></div>
       {:else if line.kind === 'cursor'}

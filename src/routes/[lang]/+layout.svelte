@@ -9,5 +9,7 @@
 </script>
 
 <Navigation lang={data.lang} messages={data.messages} path={data.path} />
-{@render children()}
+<div id="main-content" tabindex="-1">
+  {@render children()}
+</div>
 <Footer messages={data.messages} />

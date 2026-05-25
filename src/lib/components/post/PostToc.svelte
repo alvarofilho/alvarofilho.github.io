@@ -9,6 +9,7 @@
 
   const getMessages = getContext<(() => Messages) | undefined>('messages');
   const tocTitle = $derived(getMessages?.()?.text.tocTitle ?? 'contents');
+  const tocNavLabel = $derived(getMessages?.()?.text.tocNavLabel ?? 'post sections');
 
   function slugify(value: string) {
     return value
@@ -55,7 +56,7 @@
 </script>
 
 {#if headings.length}
-  <nav class="post-toc" aria-label="Post sections">
+  <nav class="post-toc" aria-label={tocNavLabel}>
     <p>// {tocTitle}</p>
     <ol>
       {#each headings as heading}

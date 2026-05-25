@@ -130,6 +130,10 @@
       .toLowerCase()
       .trim();
   }
+
+  function isTagSelected(tag: string) {
+    return selectedTags.includes(tag);
+  }
 </script>
 
 {#if posts.length}
@@ -148,7 +152,12 @@
       {#if selectedTags.length}
         <div class="selected-tags" aria-label={messages.text.blogSelectedTags}>
           {#each selectedTags as tag}
-            <button type="button" class="search-tag selected" onclick={() => toggleTag(tag)}>
+            <button
+              type="button"
+              class="search-tag selected"
+              aria-pressed={true}
+              onclick={() => toggleTag(tag)}
+            >
               {tag}
             </button>
           {/each}
@@ -158,7 +167,12 @@
       <div class="tag-row-head">
         <span>{messages.text.blogPopularTags}</span>
         {#if hasHiddenTags}
-          <button type="button" onclick={() => (showAdvancedFilters = !showAdvancedFilters)}>
+          <button
+            type="button"
+            aria-controls="advanced-tag-filters"
+            aria-expanded={showAdvancedFilters}
+            onclick={() => (showAdvancedFilters = !showAdvancedFilters)}
+          >
             {showAdvancedFilters ? messages.text.blogHideFilters : messages.text.blogAdvancedFilters}
           </button>
         {/if}
@@ -168,8 +182,9 @@
         {#each popularTags as { tag, count }}
           <button
             type="button"
-            class:selected={selectedTags.includes(tag)}
+            class:selected={isTagSelected(tag)}
             class="search-tag"
+            aria-pressed={isTagSelected(tag)}
             onclick={() => toggleTag(tag)}
           >
             {tag}<span>{count}</span>
@@ -178,11 +193,12 @@
       </div>
 
       {#if showAdvancedFilters}
-        <div class="advanced-tags">
+        <div id="advanced-tag-filters" class="advanced-tags">
           <input
             bind:value={tagQuery}
             class="tag-search-input"
             type="search"
+            aria-label={messages.text.blogTagSearchLabel}
             placeholder={messages.text.blogTagSearchPlaceholder}
             autocomplete="off"
           />
@@ -191,8 +207,9 @@
             {#each matchingTags as { tag, count }}
               <button
                 type="button"
-                class:selected={selectedTags.includes(tag)}
+                class:selected={isTagSelected(tag)}
                 class="search-tag"
+                aria-pressed={isTagSelected(tag)}
                 onclick={() => toggleTag(tag)}
               >
                 {tag}<span>{count}</span>
@@ -218,13 +235,13 @@
       {/each}
     </div>
     {#if totalPages > 1}
-      <nav class="blog-pagination" aria-label="pagination">
+      <nav class="blog-pagination" aria-label={messages.text.blogPaginationLabel}>
         <button
           type="button"
           class="pg-btn pg-arrow"
           disabled={safePage <= 1}
           onclick={() => setPage(safePage - 1)}
-          aria-label="previous page"
+          aria-label={messages.text.blogPreviousPageLabel}
         >←</button>
         {#each Array.from({ length: totalPages }, (_, i) => i + 1) as pageNum}
           <button
@@ -232,7 +249,7 @@
             class="pg-btn"
             class:active={pageNum === safePage}
             onclick={() => setPage(pageNum)}
-            aria-label="page {pageNum}"
+            aria-label={`${messages.text.blogPageLabel} ${pageNum}`}
             aria-current={pageNum === safePage ? 'page' : undefined}
           >{pageNum}</button>
         {/each}
@@ -241,7 +258,7 @@
           class="pg-btn pg-arrow"
           disabled={safePage >= totalPages}
           onclick={() => setPage(safePage + 1)}
-          aria-label="next page"
+          aria-label={messages.text.blogNextPageLabel}
         >→</button>
       </nav>
     {/if}

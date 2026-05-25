@@ -2,7 +2,7 @@
   import { fadeIn } from '$lib/actions/fadeIn';
   import { blogTopics, projects, skillGroups, type Lang, type Messages } from '$lib/data/site';
   import { getAllPostsForLang } from '$lib/data/posts';
-  import { Mail } from '@lucide/svelte';
+  import { ArrowRight, ArrowUpRight, Mail } from '@lucide/svelte';
   import { SiDiscord, SiGithub } from '@icons-pack/svelte-simple-icons';
   import HeroTyping from './HeroTyping.svelte';
   import Terminal from './Terminal.svelte';
@@ -25,12 +25,13 @@
           <div class="hero-id">
             <img
               id="avatar"
-              src="https://avatars1.githubusercontent.com/u/16805312"
+              src="/images/avatar-144.jpg"
               alt="Foto de Álvaro Duarte"
               width="72"
               height="72"
               loading="eager"
               decoding="async"
+              fetchpriority="high"
             />
             <h1 class="hero-name">Álvaro<br /><span class="hl">Duarte</span></h1>
           </div>
@@ -42,9 +43,12 @@
           <p class="hero-bio">{messages.text.heroBio}</p>
 
           <div class="hero-btns">
-            <a href="#projects" class="btn btn-p">{messages.text.heroButton}</a>
+            <a href="#projects" class="btn btn-p">
+              {messages.text.heroButton}
+              <ArrowRight size={14} strokeWidth={2} aria-hidden="true" />
+            </a>
             <a href="https://github.com/alvarofilho" target="_blank" rel="noreferrer" class="btn btn-o"
-              >GitHub ↗</a
+              >GitHub <ArrowUpRight size={14} strokeWidth={2} aria-hidden="true" /></a
             >
           </div>
         </div>
@@ -86,7 +90,8 @@
           href="https://github.com/alvarofilho?tab=repositories"
           target="_blank"
           rel="noreferrer"
-          class="btn btn-o section-cta">{messages.text.projectsCta}</a
+          class="btn btn-o section-cta"
+          >{messages.text.projectsCta}<ArrowUpRight size={14} strokeWidth={2} aria-hidden="true" /></a
         >
       </div>
       <div class="proj-grid">
@@ -94,7 +99,7 @@
           <a href={project.href} target="_blank" rel="noreferrer" class="pc fi" use:fadeIn>
             <div class="ph">
               <span class="pn">{project.name}</span>
-              <span class="parr">↗</span>
+              <span class="parr" aria-hidden="true"><ArrowUpRight size={14} strokeWidth={2} /></span>
             </div>
             <p class="pd">{messages.projectDescriptions[i]}</p>
             <div class="ptags">
@@ -156,7 +161,7 @@
             <span class="blog-cta-main">{messages.text.blogCta}</span>
             <span class="blog-cta-hint">{messages.text.blogHint}</span>
           </span>
-          <span class="blog-cta-arr">→</span>
+          <span class="blog-cta-arr" aria-hidden="true"><ArrowRight size={18} strokeWidth={2} /></span>
         </a>
       {:else}
         <div class="blog-coming fi" use:fadeIn>
@@ -185,21 +190,21 @@
             </span>
             <span><span class="cl-label">LinkedIn</span><span class="cl-handle">alvarofsd</span></span>
           </span>
-          <span class="cl-arr">↗</span>
+          <span class="cl-arr" aria-hidden="true"><ArrowUpRight size={14} strokeWidth={2} /></span>
         </a>
         <a href="mailto:eu@alvaro.dev.br" class="cl">
           <span class="cl-left">
             <span class="cl-icon"><Mail size={15} strokeWidth={2} /></span>
             <span><span class="cl-label">Email</span><span class="cl-handle">eu@alvaro.dev.br</span></span>
           </span>
-          <span class="cl-arr">↗</span>
+          <span class="cl-arr" aria-hidden="true"><ArrowUpRight size={14} strokeWidth={2} /></span>
         </a>
         <a href="https://github.com/alvarofilho" target="_blank" rel="noreferrer" class="cl">
           <span class="cl-left">
             <span class="cl-icon"><SiGithub size={15} title="GitHub" /></span>
             <span><span class="cl-label">GitHub</span><span class="cl-handle">@alvarofilho</span></span>
           </span>
-          <span class="cl-arr">↗</span>
+          <span class="cl-arr" aria-hidden="true"><ArrowUpRight size={14} strokeWidth={2} /></span>
         </a>
         <div class="cl">
           <span class="cl-left">

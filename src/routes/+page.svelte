@@ -15,8 +15,11 @@
   path="/"
   lang={lang}
   locale={pageMessages.locale}
+  xDefaultPath="/"
 />
 
 <Navigation {lang} messages={pageMessages} path="/" />
-<HomePage {lang} messages={pageMessages} />
+<div id="main-content" tabindex="-1">
+  <HomePage {lang} messages={pageMessages} />
+</div>
 <Footer messages={pageMessages} />

@@ -42,12 +42,17 @@ export type Messages = {
     blogNoResults: string;
     blogClearFilters: string;
     blogTagSearchPlaceholder: string;
+    blogTagSearchLabel: string;
     blogResultsSummary: string;
     blogLoadMore: string;
     blogSelectedTags: string;
     blogPopularTags: string;
     blogAdvancedFilters: string;
     blogHideFilters: string;
+    blogPaginationLabel: string;
+    blogPreviousPageLabel: string;
+    blogNextPageLabel: string;
+    blogPageLabel: string;
     backToBlog: string;
     footer: string;
     codeCopy: string;
@@ -68,6 +73,7 @@ export type Messages = {
     e404Sub: string;
     e404Cta: string;
     tocTitle: string;
+    tocNavLabel: string;
   };
   skillLabels: {
     lang: string;
@@ -92,6 +98,7 @@ export type Messages = {
     languageButton: string;
     themeToggle: string;
     themeNext: string;
+    skipToContent: string;
   };
   language: {
     current: string;

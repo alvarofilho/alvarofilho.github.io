@@ -11,6 +11,7 @@
   path={`/${data.lang}/`}
   lang={data.lang}
   locale={data.messages.locale}
+  xDefaultPath="/"
 />
 
 <HomePage lang={data.lang} messages={data.messages} />

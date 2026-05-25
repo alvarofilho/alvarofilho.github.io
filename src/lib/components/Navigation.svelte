@@ -1,5 +1,7 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { browser } from '$app/environment';
+  import { page } from '$app/state';
+  import { tick } from 'svelte';
   import ThemeToggle from './ThemeToggle.svelte';
   import { getOtherLang, languages, type Lang, type Messages } from '$lib/data/site';
   import { getDraftPost, getDraftPostPath, getPost, getPostPath, getTranslatedDraftPost, getTranslatedPost } from '$lib/data/posts';
@@ -11,12 +13,15 @@
   };
 
   let { lang, messages, path }: Props = $props();
-  let active = $state('hero');
+  let activeSection = $state('');
 
+  const currentPath = $derived(page.url.pathname || path);
+  const currentHash = $derived(page.url.hash);
   const otherLang = $derived(getOtherLang(lang));
-  const isBlog = $derived(path.includes('/blog'));
-  const homePath = $derived(path === '/' ? '/' : `/${lang}/`);
-  const otherPath = $derived(getLanguagePath(path, lang, otherLang));
+  const isBlog = $derived(currentPath.includes('/blog'));
+  const homePath = $derived(currentPath === '/' ? '/' : `/${lang}/`);
+  const otherPath = $derived(getLanguagePath(currentPath, lang, otherLang));
+  const activeLinkId = $derived(isBlog ? 'blog' : activeSection);
 
   const links = $derived([
     { id: 'skills', label: messages.nav.skills, href: `${homePath}#skills` },
@@ -58,28 +63,88 @@
     return currentPath.replace(`/${currentLang}/`, `/${nextLang}/`);
   }
 
-  onMount(() => {
-    const sections = Array.from(document.querySelectorAll<HTMLElement>('section[id]'));
-    if (!('IntersectionObserver' in window) || isBlog) {
-      active = isBlog ? 'blog' : 'hero';
+  const scrollTrackedSections = new Set(['skills', 'projects', 'experience', 'blog', 'contact']);
+
+  function getSectionFromHash() {
+    const hashId = globalThis.location.hash.slice(1);
+    return scrollTrackedSections.has(hashId) && document.getElementById(hashId) ? hashId : '';
+  }
+
+  function updateActiveSectionFromScroll() {
+    const sections = Array.from(document.querySelectorAll<HTMLElement>('section[id]')).filter((section) =>
+      scrollTrackedSections.has(section.id)
+    );
+    const documentBottom = window.scrollY + window.innerHeight;
+    const contactSection = sections.find((section) => section.id === 'contact');
+
+    if (contactSection && documentBottom >= document.documentElement.scrollHeight - 8) {
+      activeSection = 'contact';
       return;
     }
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            active = entry.target.id;
-          }
-        }
-      },
-      { threshold: 0.35 }
-    );
+    const marker = Math.min(window.innerHeight * 0.45, window.innerHeight - 96);
+    const currentSection = sections.find((section) => {
+      const rect = section.getBoundingClientRect();
+      return rect.top <= marker && rect.bottom >= marker;
+    });
 
-    for (const section of sections) observer.observe(section);
-    return () => observer.disconnect();
+    activeSection = currentSection?.id || '';
+  }
+
+  $effect(() => {
+    const currentRoutePath = currentPath;
+    currentHash;
+
+    if (!browser) return;
+
+    let cancelled = false;
+    let frame = 0;
+
+    if (isBlog) {
+      activeSection = '';
+      return;
+    }
+
+    const requestActiveUpdate = () => {
+      if (frame) return;
+
+      frame = window.requestAnimationFrame(() => {
+        frame = 0;
+        if (cancelled || currentRoutePath !== currentPath) return;
+        updateActiveSectionFromScroll();
+      });
+    };
+
+    const handleHashChange = () => {
+      tick().then(() => {
+        if (cancelled || currentRoutePath !== currentPath) return;
+        activeSection = getSectionFromHash();
+        if (!activeSection) requestActiveUpdate();
+      });
+    };
+
+    tick().then(() => {
+      if (cancelled || currentRoutePath !== currentPath) return;
+
+      activeSection = getSectionFromHash();
+      if (!activeSection) updateActiveSectionFromScroll();
+
+      window.addEventListener('scroll', requestActiveUpdate, { passive: true });
+      window.addEventListener('resize', requestActiveUpdate);
+      window.addEventListener('hashchange', handleHashChange);
+    });
+
+    return () => {
+      cancelled = true;
+      if (frame) window.cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', requestActiveUpdate);
+      window.removeEventListener('resize', requestActiveUpdate);
+      window.removeEventListener('hashchange', handleHashChange);
+    };
   });
 </script>
+
+<a class="skip-link" href="#main-content">{messages.aria.skipToContent}</a>
 
 <nav class="site-nav">
   <a href={homePath} class="nav-logo">
@@ -88,7 +153,7 @@
   <ul class="nav-links">
     {#each links as link}
       <li>
-        <a href={link.href} class:active={active === link.id}>{link.label}</a>
+        <a href={link.href} class:active={activeLinkId === link.id}>{link.label}</a>
       </li>
     {/each}
   </ul>

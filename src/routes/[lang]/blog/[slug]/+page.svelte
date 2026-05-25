@@ -3,6 +3,8 @@
   import PostLangs from '$lib/components/post/PostLangs.svelte';
   import PostToc from '$lib/components/post/PostToc.svelte';
   import RelatedPosts from '$lib/components/post/RelatedPosts.svelte';
+  import { getPostPath, getTranslatedPost } from '$lib/data/posts';
+  import { languageConfig } from '$lib/data/site';
   import type { Component } from 'svelte';
 
   let { data } = $props();
@@ -17,6 +19,18 @@
       return metadata?.lang === data.lang && metadata.slug === data.post.slug;
     })?.[1].default
   );
+  const alternates = $derived(
+    data.availableLangs.map((alternateLang) => {
+      const translatedPost = alternateLang === data.post.lang
+        ? data.post
+        : getTranslatedPost(data.post, alternateLang);
+
+      return {
+        hreflang: languageConfig[alternateLang].htmlLang,
+        path: translatedPost ? getPostPath(translatedPost) : getPostPath(data.post)
+      };
+    })
+  );
 </script>
 
 <Seo
@@ -30,6 +44,7 @@
   publishedTime={`${data.post.date}T00:00:00Z`}
   tags={data.post.tags}
   image={data.post.image}
+  {alternates}
 />
 
 <main>

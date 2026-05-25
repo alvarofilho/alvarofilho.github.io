@@ -138,7 +138,7 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiJ9...
 />
 
 <main>
-  <article class="post-page">
+  <article class="post-page component-showcase-page">
     <div class="wrap post-wrap">
       <a href={`/${data.lang}/blog/`} class="post-back">← blog</a>
 
@@ -407,5 +407,122 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiJ9...
     padding: 1rem 1.25rem;
     border: 1px solid var(--border);
     background: var(--surface);
+  }
+
+  @media (max-width: 720px) {
+    .demo-block {
+      padding: 0.85rem 0.9rem;
+    }
+
+    .component-showcase-page :global(.post-head p),
+    .component-showcase-page :global(.post-content p),
+    .component-showcase-page :global(.post-content li),
+    .component-showcase-page :global(.post-content td),
+    .component-showcase-page :global(.post-content dd) {
+      overflow-wrap: anywhere;
+      word-break: normal;
+    }
+
+    .component-showcase-page :global(.post-meta) {
+      flex-wrap: wrap;
+      align-items: flex-start;
+    }
+
+    .component-showcase-page :global(.post-content) {
+      font-size: 0.92rem;
+      line-height: 1.8;
+    }
+
+    .component-showcase-page :global(.post-content h2) {
+      font-size: 1.05rem;
+    }
+
+    .component-showcase-page :global(.post-content h3) {
+      font-size: 0.92rem;
+    }
+
+    .component-showcase-page :global(.post-content :not(pre) > code) {
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+
+    .component-showcase-page :global(.code-snippet figcaption),
+    .component-showcase-page :global(.http-message figcaption),
+    .component-showcase-page :global(.http-section-label) {
+      flex-wrap: wrap;
+      align-items: flex-start;
+    }
+
+    .component-showcase-page :global(.code-snippet figcaption button),
+    .component-showcase-page :global(.http-message figcaption button) {
+      margin-left: auto;
+    }
+
+    .component-showcase-page :global(.code-snippet pre),
+    .component-showcase-page :global(.http-body),
+    .component-showcase-page :global(.diff-pre),
+    .component-showcase-page :global(.pt-body),
+    .component-showcase-page :global(.tabs-panels),
+    .component-showcase-page :global(.diagram-surface) {
+      padding-left: 0.9rem;
+      padding-right: 0.9rem;
+    }
+
+    .component-showcase-page :global(.http-start-line) {
+      padding: 0.75rem 0.8rem;
+    }
+
+    .component-showcase-page :global(.http-chip) {
+      min-height: 1.3rem;
+      font-size: 0.62rem;
+    }
+
+    .component-showcase-page :global(.tabs-nav button) {
+      flex: 0 0 auto;
+      min-height: 2.3rem;
+    }
+
+    .component-showcase-page :global(.kv-row) {
+      grid-template-columns: 1fr;
+    }
+
+    .component-showcase-page :global(.kv-row dt) {
+      border-right: 0;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.25rem;
+    }
+
+    .component-showcase-page :global(.kv-row dd) {
+      padding-top: 0.35rem;
+    }
+
+    .component-showcase-page :global(.post-langs) {
+      flex-wrap: wrap;
+      align-items: flex-start;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .component-showcase-page :global(.post-content) {
+      font-size: 0.89rem;
+    }
+
+    .component-showcase-page :global(.code-snippet pre),
+    .component-showcase-page :global(.http-body),
+    .component-showcase-page :global(.diff-pre),
+    .component-showcase-page :global(.pt-body),
+    .component-showcase-page :global(.tabs-panels),
+    .component-showcase-page :global(.diagram-surface) {
+      padding-left: 0.75rem;
+      padding-right: 0.75rem;
+    }
+
+    .component-showcase-page :global(.step-item) {
+      grid-template-columns: 38px 1fr;
+    }
+
+    .component-showcase-page :global(.step-body) {
+      padding: 0.75rem 0.85rem;
+    }
   }
 </style>

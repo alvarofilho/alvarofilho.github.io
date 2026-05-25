@@ -1,5 +1,11 @@
 <script lang="ts">
-  import { siteUrl, type Lang } from '$lib/data/site';
+  import { browser } from '$app/environment';
+  import { languageConfig, siteUrl, type Lang } from '$lib/data/site';
+
+  type Alternate = {
+    hreflang: string;
+    path: string;
+  };
 
   type Props = {
     title: string;
@@ -12,6 +18,8 @@
     publishedTime?: string;
     tags?: string[];
     image?: string;
+    alternates?: Alternate[];
+    xDefaultPath?: string;
     noindex?: boolean;
   };
 
@@ -26,18 +34,51 @@
     publishedTime,
     tags,
     image,
+    alternates = [],
+    xDefaultPath,
     noindex = false
   }: Props = $props();
 
-  const ogImage = $derived(image ? `${siteUrl}${image}` : undefined);
+  const htmlLang = $derived(lang ? languageConfig[lang].htmlLang : undefined);
+  const canonicalPath = $derived(path === '/pt/' ? '/' : path);
+  const canonical = $derived(`${siteUrl}${canonicalPath}`);
+  const ogImage = $derived(`${siteUrl}${image ?? '/images/avatar-144.jpg'}`);
+  const twitterCard = $derived(image ? 'summary_large_image' : 'summary');
+  const defaultAlternates = $derived.by(() => {
+    if (path === '/' || path === '/pt/' || path === '/en/') {
+      return [
+        { hreflang: languageConfig.pt.htmlLang, path: '/' },
+        { hreflang: languageConfig.en.htmlLang, path: '/en/' }
+      ];
+    }
 
-  const canonical = $derived(`${siteUrl}${path}`);
-  const shouldUseSimpleAlternate = $derived(path.split('/').filter(Boolean).length <= 2);
-  const alternatePath = $derived(shouldUseSimpleAlternate && path.startsWith('/pt/')
-    ? path.replace('/pt/', '/en/')
-    : shouldUseSimpleAlternate && path.startsWith('/en/')
-      ? path.replace('/en/', '/pt/')
-      : undefined);
+    const segments = path.split('/').filter(Boolean);
+    if (segments.length === 2 && segments[1] === 'blog') {
+      return path.startsWith('/pt/')
+        ? [
+            { hreflang: languageConfig.pt.htmlLang, path },
+            { hreflang: languageConfig.en.htmlLang, path: path.replace('/pt/', '/en/') }
+          ]
+        : path.startsWith('/en/')
+          ? [
+              { hreflang: languageConfig.pt.htmlLang, path: path.replace('/en/', '/pt/') },
+              { hreflang: languageConfig.en.htmlLang, path }
+            ]
+          : [];
+    }
+
+    return [];
+  });
+  const resolvedAlternates = $derived((alternates.length ? alternates : defaultAlternates).map((alternate) => ({
+    ...alternate,
+    href: `${siteUrl}${alternate.path === '/pt/' ? '/' : alternate.path}`
+  })));
+
+  $effect(() => {
+    if (browser && htmlLang) {
+      document.documentElement.lang = htmlLang;
+    }
+  });
 </script>
 
 <svelte:head>
@@ -48,33 +89,25 @@
     <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet" />
   {/if}
   <link rel="canonical" href={canonical} />
-  {#if lang}
+  {#if htmlLang}
     <meta property="og:locale" content={locale} />
-    <link rel="alternate" hreflang={lang === 'pt' ? 'pt-BR' : 'en'} href={canonical} />
-    {#if alternatePath}
-      <link
-        rel="alternate"
-        hreflang={lang === 'pt' ? 'en' : 'pt-BR'}
-        href={`${siteUrl}${alternatePath}`}
-      />
-    {/if}
+  {/if}
+  {#each resolvedAlternates as alternate}
+    <link rel="alternate" hreflang={alternate.hreflang} href={alternate.href} />
+  {/each}
+  {#if xDefaultPath}
+    <link rel="alternate" hreflang="x-default" href={`${siteUrl}${xDefaultPath}`} />
   {/if}
   <meta property="og:type" content={type} />
   <meta property="og:url" content={canonical} />
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
-  {#if ogImage}
-    <meta property="og:image" content={ogImage} />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-  {/if}
-  <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+  <meta property="og:image" content={ogImage} />
+  <meta name="twitter:card" content={twitterCard} />
   <meta name="twitter:site" content="@alvarofilho" />
   <meta name="twitter:title" content={title} />
   <meta name="twitter:description" content={description} />
-  {#if ogImage}
-    <meta name="twitter:image" content={ogImage} />
-  {/if}
+  <meta name="twitter:image" content={ogImage} />
   {#if rssPath}
     <link rel="alternate" type="application/rss+xml" title={title} href={`${siteUrl}${rssPath}`} />
   {/if}
