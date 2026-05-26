@@ -1,6 +1,7 @@
 <script lang="ts">
   import Seo from '$lib/components/Seo.svelte';
   import Callout from '$lib/components/post/Callout.svelte';
+  import Comments from '$lib/components/post/Comments.svelte';
   import CodeSnippet from '$lib/components/post/CodeSnippet.svelte';
   import DiffSnippet from '$lib/components/post/DiffSnippet.svelte';
   import HttpMessage from '$lib/components/post/HttpMessage.svelte';
@@ -126,6 +127,33 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiJ9...
     { kind: 'cmd' as const, text: 'ls build/' },
     { kind: 'out' as const, text: 'index.html  _app/  pt/  en/', muted: true },
   ];
+
+  const commentsExample = [
+    {
+      author: 'Rafael Costa',
+      handle: '@rafaelc',
+      date: 'May 24, 2026',
+      body: 'The HTTP flow example made the verification step much easier to reason about. A follow-up post about revocation would be great.',
+      badge: 'reader',
+      replies: [
+        {
+          author: 'Álvaro Duarte',
+          handle: '@alvaroduarte',
+          date: 'May 24, 2026',
+          body: 'That is a good next topic. I want to cover timestamping and revocation together so the examples stay practical.',
+          badge: 'author',
+          isAuthor: true
+        }
+      ]
+    },
+    {
+      author: 'Marina Lopes',
+      handle: '@marinal',
+      date: 'May 25, 2026',
+      body: 'I used the table and terminal blocks from this reference while writing internal docs. Having a consistent visual language helps a lot.',
+      badge: 'member'
+    }
+  ];
 </script>
 
 <Seo
@@ -155,6 +183,10 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiJ9...
             </div>
           </header>
 
+          <div class="component-showcase-mobile-toc">
+            <PostToc />
+          </div>
+
           <div class="post-content">
 
             <!-- ─── CALLOUT ──────────────────────────────────────── -->
@@ -180,6 +212,20 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiJ9...
             <Callout type="danger" title="breaking change">
               <p>Danger callout. Use for destructive actions, security implications, or hard failures.</p>
             </Callout>
+
+            <!-- ─── COMMENTS ─────────────────────────────────────── -->
+            <h2 id="comments">Comments</h2>
+            <p>Static discussion block for blog posts. Props: <code>comments</code>, optional <code>title</code>, <code>description</code>, and form labels.</p>
+
+            <Comments
+              title="comments"
+              description="Use this block when a post needs a built-in discussion area or a visual placeholder before wiring up a backend."
+              comments={commentsExample}
+              formTitle="leave a thoughtful reply"
+              namePlaceholder="Your name"
+              messagePlaceholder="What did you find useful in this post?"
+              submitLabel="submit for review"
+            />
 
             <!-- ─── ASIDE ─────────────────────────────────────────── -->
             <h2 id="aside">Aside</h2>
@@ -334,6 +380,7 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiJ9...
                 </thead>
                 <tbody>
                   <tr><td>Callout</td><td>type, title?</td><td>yes</td></tr>
+                  <tr><td>Comments</td><td>comments, title?, description?, form labels?</td><td>no</td></tr>
                   <tr><td>Aside</td><td>title?</td><td>yes</td></tr>
                   <tr><td>CodeSnippet</td><td>code, lang?, title?</td><td>no</td></tr>
                   <tr><td>HttpMessage</td><td>message, bodyLang?, title?</td><td>no</td></tr>
@@ -409,9 +456,22 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiJ9...
     background: var(--surface);
   }
 
+  .component-showcase-mobile-toc {
+    display: none;
+  }
+
   @media (max-width: 720px) {
+    .component-showcase-mobile-toc {
+      display: block;
+      margin-top: 1.25rem;
+    }
+
     .demo-block {
       padding: 0.85rem 0.9rem;
+    }
+
+    .component-showcase-page :global(.post-back) {
+      white-space: normal;
     }
 
     .component-showcase-page :global(.post-head p),
@@ -449,13 +509,15 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiJ9...
     .component-showcase-page :global(.code-snippet figcaption),
     .component-showcase-page :global(.http-message figcaption),
     .component-showcase-page :global(.http-section-label) {
+      display: grid;
       flex-wrap: wrap;
       align-items: flex-start;
+      gap: 0.4rem;
     }
 
     .component-showcase-page :global(.code-snippet figcaption button),
     .component-showcase-page :global(.http-message figcaption button) {
-      margin-left: auto;
+      margin-left: 0;
     }
 
     .component-showcase-page :global(.code-snippet pre),
@@ -482,6 +544,10 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiJ9...
       min-height: 2.3rem;
     }
 
+    .component-showcase-page :global(.post-toc) {
+      margin: 0;
+    }
+
     .component-showcase-page :global(.kv-row) {
       grid-template-columns: 1fr;
     }
@@ -503,6 +569,10 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiJ9...
   }
 
   @media (max-width: 480px) {
+    .component-showcase-mobile-toc {
+      margin-top: 1rem;
+    }
+
     .component-showcase-page :global(.post-content) {
       font-size: 0.89rem;
     }

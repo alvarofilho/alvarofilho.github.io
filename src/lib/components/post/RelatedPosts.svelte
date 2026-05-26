@@ -69,8 +69,20 @@
 
   .rp-date {
     font-size: 0.8rem;
-    color: var(--text-muted);
+    color: var(--muted);
     white-space: nowrap;
     flex-shrink: 0;
+  }
+
+  @media (max-width: 480px) {
+    a {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .rp-date {
+      white-space: normal;
+    }
   }
 </style>

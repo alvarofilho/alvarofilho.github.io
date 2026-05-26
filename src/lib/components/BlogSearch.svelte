@@ -134,6 +134,14 @@
   function isTagSelected(tag: string) {
     return selectedTags.includes(tag);
   }
+
+  function getTagFilterLabel(tag: string) {
+    return `${messages.text.blogFilterByTagLabel}: ${tag}`;
+  }
+
+  function getTagRemoveLabel(tag: string) {
+    return `${messages.text.blogRemoveTagLabel}: ${tag}`;
+  }
 </script>
 
 {#if posts.length}
@@ -156,6 +164,7 @@
               type="button"
               class="search-tag selected"
               aria-pressed={true}
+              aria-label={getTagRemoveLabel(tag)}
               onclick={() => toggleTag(tag)}
             >
               {tag}
@@ -185,6 +194,7 @@
             class:selected={isTagSelected(tag)}
             class="search-tag"
             aria-pressed={isTagSelected(tag)}
+            aria-label={getTagFilterLabel(tag)}
             onclick={() => toggleTag(tag)}
           >
             {tag}<span>{count}</span>
@@ -210,6 +220,7 @@
                 class:selected={isTagSelected(tag)}
                 class="search-tag"
                 aria-pressed={isTagSelected(tag)}
+                aria-label={getTagFilterLabel(tag)}
                 onclick={() => toggleTag(tag)}
               >
                 {tag}<span>{count}</span>
@@ -220,7 +231,12 @@
       {/if}
     </div>
 
-    <div class="search-summary">
+    <div
+      class="search-summary"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+    >
       <span>{filteredPosts.length} {messages.text.blogResultsSummary}</span>
       {#if hasFilters}
         <button type="button" onclick={clearFilters}>{messages.text.blogClearFilters}</button>
@@ -249,7 +265,7 @@
             class="pg-btn"
             class:active={pageNum === safePage}
             onclick={() => setPage(pageNum)}
-            aria-label={`${messages.text.blogPageLabel} ${pageNum}`}
+            aria-label={`${pageNum === safePage ? messages.text.blogCurrentPageLabel : messages.text.blogPageLabel} ${pageNum}`}
             aria-current={pageNum === safePage ? 'page' : undefined}
           >{pageNum}</button>
         {/each}

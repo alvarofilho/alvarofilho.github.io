@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { browser } from '$app/environment';
   import { languageConfig, siteUrl, type Lang } from '$lib/data/site';
 
   type Alternate = {
@@ -74,11 +73,6 @@
     href: `${siteUrl}${alternate.path === '/pt/' ? '/' : alternate.path}`
   })));
 
-  $effect(() => {
-    if (browser && htmlLang) {
-      document.documentElement.lang = htmlLang;
-    }
-  });
 </script>
 
 <svelte:head>

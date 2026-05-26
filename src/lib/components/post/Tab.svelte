@@ -23,3 +23,13 @@
 >
   {@render children?.()}
 </div>
+
+<style>
+  .tab-panel[hidden] {
+    display: none;
+  }
+
+  .tab-panel :global(> :last-child) {
+    margin-bottom: 0;
+  }
+</style>

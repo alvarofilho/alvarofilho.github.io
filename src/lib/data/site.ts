@@ -25,6 +25,13 @@ export type Messages = {
   text: {
     heroBio: string;
     heroButton: string;
+    avatarAlt: string;
+    externalLinkSuffix: string;
+    skillsEyebrow: string;
+    projectsEyebrow: string;
+    experienceEyebrow: string;
+    blogEyebrow: string;
+    contactEyebrow: string;
     skillsTitle: string;
     projectsTitle: string;
     projectsCta: string;
@@ -44,6 +51,8 @@ export type Messages = {
     blogTagSearchPlaceholder: string;
     blogTagSearchLabel: string;
     blogResultsSummary: string;
+    blogRemoveTagLabel: string;
+    blogFilterByTagLabel: string;
     blogLoadMore: string;
     blogSelectedTags: string;
     blogPopularTags: string;
@@ -53,6 +62,7 @@ export type Messages = {
     blogPreviousPageLabel: string;
     blogNextPageLabel: string;
     blogPageLabel: string;
+    blogCurrentPageLabel: string;
     backToBlog: string;
     footer: string;
     codeCopy: string;
@@ -68,7 +78,22 @@ export type Messages = {
     componentShowcaseTag: string;
     componentHttpMessageDescription: string;
     componentHttpMessageExampleTitle: string;
+    commentsTitle: string;
+    commentsDescription: string;
+    commentsCountSingle: string;
+    commentsCountPlural: string;
+    commentsFormTitle: string;
+    commentsNamePlaceholder: string;
+    commentsMessagePlaceholder: string;
+    commentsSubmitLabel: string;
+    commentsEmpty: string;
+    commentsDiscussionKicker: string;
+    commentsListLabel: string;
+    commentsRepliesLabel: string;
     postAvailableIn: string;
+    postLangsLabel: string;
+    postCurrentLangLabel: string;
+    postReadInLangLabel: string;
     e404Title: string;
     e404Sub: string;
     e404Cta: string;
@@ -91,6 +116,7 @@ export type Messages = {
     location: string;
     role: string;
     bullets: string[];
+    tech: string[];
   };
   roles: string[];
   terminal: TerminalLine[];
@@ -99,6 +125,8 @@ export type Messages = {
     themeToggle: string;
     themeNext: string;
     skipToContent: string;
+    primaryNavigation: string;
+    homeLink: string;
   };
   language: {
     current: string;

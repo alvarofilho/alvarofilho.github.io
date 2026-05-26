@@ -14,6 +14,7 @@
   let isLoading = $state(false);
 
   let mermaidPromise: Promise<MermaidApi> | undefined;
+  const diagramLabel = $derived(title ?? 'Mermaid diagram');
 
   function getMermaid() {
     mermaidPromise ??= import('mermaid').then((module) => module.default);
@@ -66,13 +67,13 @@
   {#if title}
     <figcaption>{title}</figcaption>
   {/if}
-  <div class="diagram-surface">
+  <div class="diagram-surface" role={svg ? 'img' : undefined} aria-label={svg ? diagramLabel : undefined}>
     {#if svg}
       {@html svg}
     {:else if failed}
       <pre>{chart}</pre>
     {:else if isLoading}
-      <pre>rendering diagram...</pre>
+      <pre aria-live="polite">rendering diagram...</pre>
     {:else}
       <pre>{chart}</pre>
     {/if}

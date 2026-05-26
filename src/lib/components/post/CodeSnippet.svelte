@@ -1,6 +1,5 @@
 <script lang="ts">
   import { getContext } from 'svelte';
-  import { codeToHtml } from 'shiki';
   import type { Messages } from '$lib/data/site';
 
   type Props = {
@@ -11,18 +10,48 @@
 
   let { code, lang = 'text', title }: Props = $props();
   let copied = $state(false);
+  let highlighted = $state('');
+  let highlightFailed = $state(false);
+  let highlightRun = 0;
 
   const getMessages = getContext<(() => Messages) | undefined>('messages');
   const copyLabel = $derived(getMessages?.()?.text.codeCopy ?? 'copy');
   const copiedLabel = $derived(getMessages?.()?.text.codeCopied ?? 'copied');
+  const trimmedCode = $derived(code.trim());
+  const codeLabel = $derived(title || lang);
 
-  const highlighted = $derived(codeToHtml(code.trim(), {
-    lang,
-    theme: 'github-dark',
-  }));
+  $effect(() => {
+    trimmedCode;
+    lang;
+    void highlightCode();
+  });
+
+  async function highlightCode() {
+    const run = ++highlightRun;
+    highlighted = '';
+    highlightFailed = false;
+
+    try {
+      const { codeToHtml } = await import('shiki');
+      const html = await codeToHtml(trimmedCode, {
+        lang,
+        theme: 'github-dark'
+      });
+
+      if (run === highlightRun) {
+        highlighted = html;
+      }
+    } catch (error) {
+      if (run === highlightRun) {
+        highlightFailed = true;
+      }
+
+      console.error('Code highlight failed', error);
+    }
+  }
 
   async function copyCode() {
-    await navigator.clipboard.writeText(code.trim());
+    await navigator.clipboard.writeText(trimmedCode);
     copied = true;
     window.setTimeout(() => (copied = false), 1400);
   }
@@ -30,14 +59,16 @@
 
 <figure class="code-snippet">
   <figcaption>
-    <span class="lang-label">{title || lang}</span>
-    <button type="button" onclick={copyCode}>{copied ? copiedLabel : copyLabel}</button>
+    <span class="lang-label">{codeLabel}</span>
+    <button type="button" onclick={copyCode} aria-label={`${copyLabel}: ${codeLabel}`} aria-live="polite">
+      {copied ? copiedLabel : copyLabel}
+    </button>
   </figcaption>
-  {#await highlighted}
-    <pre><code class="language-{lang}">{code.trim()}</code></pre>
-  {:then html}
-    {@html html}
-  {/await}
+  {#if highlighted && !highlightFailed}
+    {@html highlighted}
+  {:else}
+    <pre><code class="language-{lang}">{trimmedCode}</code></pre>
+  {/if}
 </figure>
 
 <style>

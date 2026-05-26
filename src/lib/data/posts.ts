@@ -14,15 +14,15 @@ export type PostMeta = {
   searchText: string;
 };
 
-type PostModule = {
-  metadata: Omit<PostMeta, 'searchText'> & { searchText?: string };
-  default: unknown;
-};
+type PostMetadata = Omit<PostMeta, 'searchText'> & { searchText?: string };
 
-const postModules = import.meta.glob<PostModule>('/src/content/posts/**/*.svx', { eager: true });
+const postMetadata = import.meta.glob<PostMetadata>('/src/content/posts/**/*.svx', {
+  eager: true,
+  import: 'metadata'
+});
 
-export const allPosts = Object.values(postModules)
-  .map((module) => enrichPost(module.metadata))
+export const allPosts = Object.values(postMetadata)
+  .map((metadata) => enrichPost(metadata))
   .sort((a, b) => b.date.localeCompare(a.date));
 
 export const posts = allPosts
@@ -33,7 +33,7 @@ export const draftPosts = allPosts
   .filter((post) => post.draft)
   .sort((a, b) => b.date.localeCompare(a.date));
 
-function enrichPost(post: Omit<PostMeta, 'searchText'> & { searchText?: string }): PostMeta {
+function enrichPost(post: PostMetadata): PostMeta {
   return {
     ...post,
     searchText: [post.title, post.description, post.tags.join(' '), post.slug]

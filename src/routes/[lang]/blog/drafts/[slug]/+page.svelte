@@ -5,17 +5,11 @@
 
   let { data } = $props();
 
-  const modules = import.meta.glob<{
-    default: Component;
-    metadata: { draft: boolean; lang: string; slug: string };
-  }>('/src/content/posts/**/*.svx', { eager: true });
-
-  const Content = $derived(
-    Object.entries(modules).find(([, module]) => {
-      const metadata = module.metadata;
-      return metadata?.draft && metadata.lang === data.lang && metadata.slug === data.post.slug;
-    })?.[1].default
-  );
+  const modules = import.meta.glob<Component>('/src/content/posts/**/*.svx', {
+    eager: true,
+    import: 'default'
+  });
+  const Content = $derived(modules[`/src/content/posts/${data.lang}/${data.post.slug}.svx`]);
 </script>
 
 <Seo

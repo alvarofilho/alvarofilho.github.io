@@ -11,7 +11,11 @@
   let { post, availableLangs }: Props = $props();
 
   const getMessages = getContext<(() => Messages) | undefined>('messages');
-  const label = $derived(getMessages?.()?.text.postAvailableIn ?? 'available in');
+  const text = $derived(getMessages?.()?.text);
+  const label = $derived(text?.postAvailableIn ?? 'available in');
+  const navLabel = $derived(text?.postLangsLabel ?? 'Available languages for this post');
+  const currentLabel = $derived(text?.postCurrentLangLabel ?? 'Current language');
+  const readInLabel = $derived(text?.postReadInLangLabel ?? 'Read this post in');
 
   function getPath(lang: Lang) {
     const translated = getTranslatedPost(post, lang);
@@ -20,16 +24,22 @@
 </script>
 
 {#if availableLangs.length > 1}
-  <div class="post-langs">
+  <nav class="post-langs" aria-label={navLabel}>
     <span class="post-langs-label">// {label}</span>
     {#each availableLangs as lang}
       {@const path = getPath(lang)}
       {@const isCurrent = lang === post.lang}
       {#if isCurrent}
-        <span class="post-lang-chip post-lang-chip--current">{lang.toUpperCase()}</span>
+        <span
+          class="post-lang-chip post-lang-chip--current"
+          aria-current="page"
+          aria-label={`${currentLabel}: ${lang.toUpperCase()}`}
+        >{lang.toUpperCase()}</span>
       {:else if path}
-        <a href={path} class="post-lang-chip">{lang.toUpperCase()}</a>
+        <a href={path} class="post-lang-chip" aria-label={`${readInLabel} ${lang.toUpperCase()}`}
+          >{lang.toUpperCase()}</a
+        >
       {/if}
     {/each}
-  </div>
+  </nav>
 {/if}

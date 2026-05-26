@@ -9,16 +9,11 @@
 
   let { data } = $props();
 
-  const modules = import.meta.glob<{
-    default: Component;
-    metadata: { lang: string; slug: string };
-  }>('/src/content/posts/**/*.svx', { eager: true });
-  const Content = $derived(
-    Object.entries(modules).find(([, module]) => {
-      const metadata = (module as { metadata?: { lang: string; slug: string } }).metadata;
-      return metadata?.lang === data.lang && metadata.slug === data.post.slug;
-    })?.[1].default
-  );
+  const modules = import.meta.glob<Component>('/src/content/posts/**/*.svx', {
+    eager: true,
+    import: 'default'
+  });
+  const Content = $derived(modules[`/src/content/posts/${data.lang}/${data.post.slug}.svx`]);
   const alternates = $derived(
     data.availableLangs.map((alternateLang) => {
       const translatedPost = alternateLang === data.post.lang

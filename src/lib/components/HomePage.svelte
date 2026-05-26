@@ -1,6 +1,6 @@
 <script lang="ts">
   import { fadeIn } from '$lib/actions/fadeIn';
-  import { blogTopics, projects, skillGroups, type Lang, type Messages } from '$lib/data/site';
+  import { projects, skillGroups, type Lang, type Messages } from '$lib/data/site';
   import { getAllPostsForLang } from '$lib/data/posts';
   import { ArrowRight, ArrowUpRight, Mail } from '@lucide/svelte';
   import { SiDiscord, SiGithub } from '@icons-pack/svelte-simple-icons';
@@ -15,6 +15,10 @@
 
   let { lang, messages }: Props = $props();
   const posts = $derived(getAllPostsForLang(lang).slice(0, 5));
+
+  function externalLabel(label: string) {
+    return `${label} (${messages.text.externalLinkSuffix})`;
+  }
 </script>
 
 <main>
@@ -26,7 +30,7 @@
             <img
               id="avatar"
               src="/images/avatar-144.jpg"
-              alt="Foto de Álvaro Duarte"
+              alt={messages.text.avatarAlt}
               width="72"
               height="72"
               loading="eager"
@@ -47,7 +51,12 @@
               {messages.text.heroButton}
               <ArrowRight size={14} strokeWidth={2} aria-hidden="true" />
             </a>
-            <a href="https://github.com/alvarofilho" target="_blank" rel="noreferrer" class="btn btn-o"
+            <a
+              href="https://github.com/alvarofilho"
+              target="_blank"
+              rel="noreferrer"
+              class="btn btn-o"
+              aria-label={externalLabel('GitHub')}
               >GitHub <ArrowUpRight size={14} strokeWidth={2} aria-hidden="true" /></a
             >
           </div>
@@ -62,7 +71,7 @@
 
   <section id="skills">
     <div class="wrap">
-      <p class="eyebrow fi" use:fadeIn>skills</p>
+      <p class="eyebrow fi" use:fadeIn>{messages.text.skillsEyebrow}</p>
       <h2 class="sec-title fi" use:fadeIn>{messages.text.skillsTitle}</h2>
       <div class="skills-cats">
         {#each skillGroups as group}
@@ -83,7 +92,7 @@
 
   <section id="projects">
     <div class="wrap">
-      <p class="eyebrow fi" use:fadeIn>projects</p>
+      <p class="eyebrow fi" use:fadeIn>{messages.text.projectsEyebrow}</p>
       <div class="section-head fi" use:fadeIn>
         <h2 class="sec-title">{messages.text.projectsTitle}</h2>
         <a
@@ -91,12 +100,20 @@
           target="_blank"
           rel="noreferrer"
           class="btn btn-o section-cta"
+          aria-label={externalLabel(messages.text.projectsCta)}
           >{messages.text.projectsCta}<ArrowUpRight size={14} strokeWidth={2} aria-hidden="true" /></a
         >
       </div>
       <div class="proj-grid">
         {#each projects as project, i}
-          <a href={project.href} target="_blank" rel="noreferrer" class="pc fi" use:fadeIn>
+          <a
+            href={project.href}
+            target="_blank"
+            rel="noreferrer"
+            class="pc fi"
+            aria-label={externalLabel(`${project.name}: ${messages.projectDescriptions[i]}`)}
+            use:fadeIn
+          >
             <div class="ph">
               <span class="pn">{project.name}</span>
               <span class="parr" aria-hidden="true"><ArrowUpRight size={14} strokeWidth={2} /></span>
@@ -117,7 +134,7 @@
 
   <section id="experience">
     <div class="wrap">
-      <p class="eyebrow fi" use:fadeIn>experience</p>
+      <p class="eyebrow fi" use:fadeIn>{messages.text.experienceEyebrow}</p>
       <h2 class="sec-title fi" use:fadeIn>{messages.text.experienceTitle}</h2>
       <div class="exp-list">
         <div class="exp-row fi" use:fadeIn>
@@ -134,7 +151,7 @@
               {/each}
             </ul>
             <div class="exp-tech">
-              {#each ['.NET', 'C#', 'Angular', 'TypeScript', 'SQL Server', 'Webhooks', 'Pagamentos'] as tag}
+              {#each messages.experience.tech as tag}
                 <span class="tag">{tag}</span>
               {/each}
             </div>
@@ -148,7 +165,7 @@
 
   <section id="blog">
     <div class="wrap">
-      <p class="eyebrow fi" use:fadeIn>blog</p>
+      <p class="eyebrow fi" use:fadeIn>{messages.text.blogEyebrow}</p>
       <h2 class="sec-title fi" use:fadeIn>{messages.text.blogTitle}</h2>
       {#if posts.length}
         <div class="blog-list fi" use:fadeIn>
@@ -176,10 +193,16 @@
 
   <section id="contact">
     <div class="wrap">
-      <p class="eyebrow fi" use:fadeIn>contact</p>
+      <p class="eyebrow fi" use:fadeIn>{messages.text.contactEyebrow}</p>
       <h2 class="sec-title fi" use:fadeIn>{messages.text.contactTitle}</h2>
       <div class="contact-list fi" use:fadeIn>
-        <a href="https://linkedin.com/in/alvarofsd" target="_blank" rel="noreferrer" class="cl">
+        <a
+          href="https://linkedin.com/in/alvarofsd"
+          target="_blank"
+          rel="noreferrer"
+          class="cl"
+          aria-label={externalLabel('LinkedIn alvarofsd')}
+        >
           <span class="cl-left">
             <span class="cl-icon">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -199,7 +222,13 @@
           </span>
           <span class="cl-arr" aria-hidden="true"><ArrowUpRight size={14} strokeWidth={2} /></span>
         </a>
-        <a href="https://github.com/alvarofilho" target="_blank" rel="noreferrer" class="cl">
+        <a
+          href="https://github.com/alvarofilho"
+          target="_blank"
+          rel="noreferrer"
+          class="cl"
+          aria-label={externalLabel('GitHub @alvarofilho')}
+        >
           <span class="cl-left">
             <span class="cl-icon"><SiGithub size={15} title="GitHub" /></span>
             <span><span class="cl-label">GitHub</span><span class="cl-handle">@alvarofilho</span></span>

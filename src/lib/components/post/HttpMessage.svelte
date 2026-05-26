@@ -192,7 +192,9 @@
 <figure class="http-message http-message-{parsed.kind}">
   <figcaption>
     <span>{label}</span>
-    <button type="button" onclick={copyMessage}>{copied ? copiedLabel : copyLabel}</button>
+    <button type="button" onclick={copyMessage} aria-label={`${copyLabel}: ${label}`} aria-live="polite">
+      {copied ? copiedLabel : copyLabel}
+    </button>
   </figcaption>
 
   <div class="http-start-line">

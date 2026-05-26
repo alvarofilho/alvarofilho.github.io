@@ -1,6 +1,7 @@
 export { default as Aside } from './Aside.svelte';
 export { default as BlogImage } from './BlogImage.svelte';
 export { default as Callout } from './Callout.svelte';
+export { default as Comments } from './Comments.svelte';
 export { default as CodeSnippet } from './CodeSnippet.svelte';
 export { default as DiffSnippet } from './DiffSnippet.svelte';
 export { default as HttpMessage } from './HttpMessage.svelte';

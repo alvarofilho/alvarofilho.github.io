@@ -12,3 +12,11 @@
 <ol class="step-list">
   {@render children?.()}
 </ol>
+
+<style>
+  .step-list {
+    margin: 1.7rem 0;
+    list-style: none;
+    border: 1px solid var(--border);
+  }
+</style>

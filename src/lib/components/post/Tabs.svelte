@@ -70,6 +70,22 @@
     }
   }
 
+  function tabRef(node: HTMLButtonElement, index: number) {
+    tabRefs[index] = node;
+
+    return {
+      update(nextIndex: number) {
+        if (nextIndex === index) return;
+        tabRefs[index] = null;
+        index = nextIndex;
+        tabRefs[index] = node;
+      },
+      destroy() {
+        tabRefs[index] = null;
+      }
+    };
+  }
+
   setContext('tabs', {
     get active() {
       return activeLabel;
@@ -85,7 +101,7 @@
     {#each labels as label, index}
       <button
         type="button"
-        bind:this={tabRefs[index]}
+        use:tabRef={index}
         role="tab"
         class:active={activeLabel === label}
         id={getTabId(label)}
@@ -101,3 +117,56 @@
     {@render children?.()}
   </div>
 </div>
+
+<style>
+  .tabs-block {
+    margin: 1.7rem 0;
+    border: 1px solid var(--border-l);
+  }
+
+  .tabs-nav {
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+    background: var(--card);
+    border-bottom: 1px solid var(--border-l);
+  }
+
+  .tabs-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  button {
+    padding: 0.55rem 0.9rem;
+    background: none;
+    border: 0;
+    border-right: 1px solid var(--border-l);
+    color: var(--muted);
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    transition: color 0.15s, background 0.15s;
+    white-space: nowrap;
+  }
+
+  button:hover {
+    color: var(--text);
+    background: var(--card-h);
+  }
+
+  button.active {
+    color: var(--accent);
+    background: var(--card-h);
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: calc(0.55rem - 2px);
+  }
+
+  .tabs-panels {
+    background: var(--card);
+    padding: 1rem 1.1rem;
+  }
+
+  .tabs-panels :global(> :last-child) {
+    margin-bottom: 0;
+  }
+</style>

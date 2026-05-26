@@ -31,6 +31,11 @@
     { id: 'contact', label: messages.nav.contact, href: `${homePath}#contact` }
   ]);
 
+  function getAriaCurrent(linkId: string) {
+    if (activeLinkId !== linkId) return undefined;
+    return linkId === 'blog' ? 'page' : 'location';
+  }
+
   function getLanguagePath(currentPath: string, currentLang: Lang, nextLang: Lang) {
     if (currentPath === '/') {
       return `/${nextLang}/`;
@@ -146,14 +151,16 @@
 
 <a class="skip-link" href="#main-content">{messages.aria.skipToContent}</a>
 
-<nav class="site-nav">
-  <a href={homePath} class="nav-logo">
+<nav class="site-nav" aria-label={messages.aria.primaryNavigation}>
+  <a href={homePath} class="nav-logo" aria-label={messages.aria.homeLink}>
     <span class="d">~/</span><span class="a">alvaroduarte</span>
   </a>
   <ul class="nav-links">
     {#each links as link}
       <li>
-        <a href={link.href} class:active={activeLinkId === link.id}>{link.label}</a>
+        <a href={link.href} class:active={activeLinkId === link.id} aria-current={getAriaCurrent(link.id)}
+          >{link.label}</a
+        >
       </li>
     {/each}
   </ul>
