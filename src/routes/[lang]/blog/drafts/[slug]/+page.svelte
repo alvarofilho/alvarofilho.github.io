@@ -41,6 +41,7 @@
                 day: '2-digit',
                 year: 'numeric'
               })}</span>
+              <span>{data.post.readingTime} {data.messages.text.readingTime}</span>
               <span class="tag">draft</span>
               {#each data.post.tags as tag}
                 <span class="tag">{tag}</span>

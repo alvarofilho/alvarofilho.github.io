@@ -99,6 +99,7 @@ export type Messages = {
     e404Cta: string;
     tocTitle: string;
     tocNavLabel: string;
+    readingTime: string;
   };
   skillLabels: {
     lang: string;

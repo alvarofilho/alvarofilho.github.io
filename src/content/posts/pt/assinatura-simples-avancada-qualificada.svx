@@ -1,0 +1,244 @@
+---
+title: "Assinatura Simples, Avançada e Qualificada: qual usar em cada caso?"
+description: "Simples, Avançada ou Qualificada? Um guia prático para escolher o nível certo de assinatura eletrônica em contratos CLT, saúde, jurídico e educação, sem errar e sem exagerar."
+date: '2026-06-01'
+tags:
+  - Assinatura Digital
+  - ICP-Brasil
+lang: pt
+slug: assinatura-simples-avancada-qualificada
+draft: true
+---
+<script>
+  import { Callout, Aside, KeyValue, References, TableWrapper } from '$lib/components/post';
+</script>
+
+## Por que essa distinção importa?
+
+Você provavelmente já assinou algum documento digitalmente nos últimos meses: um contrato de trabalho, um termo de aceite, talvez uma locação de imóvel.
+
+O processo parece simples: você abre o link, clica em assinar, pronto. Mas por trás desse clique existe uma diferença importante que a maioria das empresas ignora até que o problema apareça: nem toda assinatura eletrônica tem o mesmo peso jurídico.
+
+No Brasil, a lei reconhece três tipos de assinatura eletrônica (Simples, Avançada e Qualificada) e cada uma oferece um nível diferente de segurança, rastreabilidade e validade legal. Usar o tipo errado não significa que o documento é inválido automaticamente, mas significa que ele fica muito mais vulnerável a questionamentos. E descobrir isso no meio de uma disputa trabalhista ou contratual é tarde demais.
+
+## O que diz a lei e o que isso muda na prática
+
+Durante muitos anos, a validade de um documento eletrônico no Brasil esteve fortemente associada ao uso de certificados digitais emitidos pela ICP-Brasil.
+Esse cenário começou a mudar em 2001 e evoluiu significativamente ao longo das décadas seguintes.
+
+A [MP 2.200-2/2001](https://www.planalto.gov.br/ccivil_03/mpv/antigas_2001/2200-2.htm) foi a primeira legislação a estabelecer as regras para assinaturas digitais no país.
+Ela criou a ICP-Brasil (Infraestrutura de Chaves Públicas Brasileira), uma cadeia de autoridades certificadoras reconhecidas pelo governo.
+
+Quando um documento é assinado com um certificado ICP-Brasil, existe uma presunção legal de que a assinatura pertence ao titular do certificado e de que o documento não foi alterado após a assinatura.
+Na prática, é o mecanismo que oferece o mais alto nível de confiabilidade jurídica para documentos eletrônicos no país.
+
+Uma analogia útil é o reconhecimento de firma em cartório. Não são institutos equivalentes, mas ambos têm o objetivo de aumentar a confiança sobre a identidade de quem assinou.
+
+O problema é que exigir certificado ICP-Brasil para tudo criava uma barreira enorme: custo, burocracia e fricção para o usuário final inviabilizavam processos digitais simples.
+Foi aí que a [Lei 14.063/2020](https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2020/lei/L14063.htm) entrou, organizando o uso de assinaturas eletrônicas em interações com o poder público e reconhecendo formalmente que existem outros níveis válidos além da qualificada.
+
+O [Marco Legal das Startups (LC 182/2021)](https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp182.htm) reforçou essa tendência ao reconhecer mecanismos eletrônicos para formalização de atos societários e empresariais, consolidando um movimento de flexibilização iniciado pela [MP 2.200-2/2001](https://www.planalto.gov.br/ccivil_03/mpv/antigas_2001/2200-2.htm).
+
+<Callout type="info" title="O princípio que mudou tudo">
+A partir desse conjunto de mudanças, consolidou-se o entendimento de que a validade jurídica de um documento eletrônico não depende necessariamente de um certificado ICP-Brasil.
+<br/>
+<br/>
+O que importa é que o método utilizado seja compatível com o <b>risco e a natureza do ato praticado</b>.
+</Callout>
+
+## Os três tipos
+
+A diferença entre os três níveis não é técnica, mas de responsabilidade. Quanto mais robusto o método de identificação do signatário, maior a proteção jurídica do documento.
+
+### Assinatura Simples
+
+É o nível mais básico. Funciona com qualquer dado que permita identificar quem assinou: um endereço de email, um CPF digitado, um clique em "aceito os termos".
+O sistema registra que alguém com aquele email ou CPF interagiu com o documento, mas não confirma se era de fato aquela pessoa.
+
+A analogia mais próxima é um post-it com seu nome. Alguém pode ler, entender que foi você, mas qualquer um poderia ter escrito.
+
+<KeyValue
+  caption="art. 4º, I · Lei 14.063/2020"
+  items={[
+    { key: 'Autenticação', value: 'Nenhuma obrigatória (email, CPF digitado, clique)' },
+    { key: 'Rastreabilidade', value: 'Básica: IP e timestamp' },
+    { key: 'Uso ideal', value: 'Termos de aceite, políticas internas, NDA entre colaboradores' },
+    { key: 'Risco de impugnação', value: 'Alto: difícil provar autoria se contestado' },
+  ]}
+/>
+
+### Assinatura Avançada
+
+Aqui o nível de exigência sobe. A assinatura avançada requer uma autenticação que vincule o documento à identidade real do signatário; não basta um email.
+Os métodos mais comuns são: código SMS enviado ao celular cadastrado, reconhecimento facial por selfie, validação biométrica, token via aplicativo ou uma transferência Pix de R$ 0,01 como prova de titularidade da conta.
+
+A analogia é a autenticação em dois fatores do seu banco. Você não acessa só com o CPF: precisa provar que é você com algo que só você tem ou é.
+
+<KeyValue
+  caption="art. 4º, II · Lei 14.063/2020"
+  items={[
+    { key: 'Autenticação', value: 'SMS, selfie, Pix, biometria, OTP' },
+    { key: 'Rastreabilidade', value: 'Forte: biometria + trilha de auditoria' },
+    { key: 'Uso ideal', value: 'Contrato de trabalho CLT, locação, prestação de serviços, atestados' },
+    { key: 'Risco de impugnação', value: 'Médio: depende da robustez do método de autenticação' },
+  ]}
+/>
+
+### Assinatura Qualificada
+
+É o topo da hierarquia. Exige um certificado digital emitido por uma autoridade credenciada pela ICP-Brasil: pode ser um token físico (A3), um cartão inteligente ou um certificado em nuvem (A1 ou cloud).
+O processo de emissão inclui verificação presencial ou por videoconferência da identidade do titular.
+
+A analogia é o reconhecimento de firma em cartório, mas em versão digital.
+O Estado mantém uma infraestrutura de certificação que presume a autoria e a integridade daquela assinatura, conferindo a ela o mais alto grau de confiabilidade jurídica previsto na legislação brasileira.
+
+<KeyValue
+  caption="art. 10 MP 2.200-2/2001 · art. 4º, III Lei 14.063/2020"
+  items={[
+    { key: 'Autenticação', value: 'Certificado digital ICP-Brasil (A1, A2, A3 ou cloud)' },
+    { key: 'Rastreabilidade', value: 'Total: ICP-Brasil + log de auditoria completo' },
+    { key: 'Uso ideal', value: 'Escritura, procuração, nota fiscal eletrônica, prescrição de controlados' },
+    { key: 'Risco de impugnação', value: 'Mínimo: presunção legal de autoria e integridade' },
+  ]}
+/>
+
+<Callout type="danger" title="Quando a lei exige qualificada, não há alternativa">
+Escrituras de imóvel, procurações ad judicia, notas fiscais eletrônicas, prescrições de medicamentos controlados e documentos perante a Receita Federal exigem assinatura qualificada por lei. Usar avançada nesses casos não reduz a proteção: torna o documento inválido.
+</Callout>
+
+## Comparativo rápido
+
+<TableWrapper caption="Comparativo entre os três níveis de assinatura eletrônica reconhecidos pela Lei 14.063/2020">
+  <table>
+    <thead>
+      <tr>
+        <th>Critério</th>
+        <th>Simples</th>
+        <th>Avançada</th>
+        <th>Qualificada</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Validade jurídica</td>
+        <td>Aceita em acordos entre partes</td>
+        <td>Alta, reconhecida pelos tribunais</td>
+        <td>Máxima, com presunção legal de autoria e integridade</td>
+      </tr>
+      <tr>
+        <td>Fricção ao usuário</td>
+        <td>Mínima (clique ou email)</td>
+        <td>Média (SMS, selfie, Pix...)</td>
+        <td>Alta (token, nuvem, certificado)</td>
+      </tr>
+      <tr>
+        <td>Custo de implantação</td>
+        <td>Baixo</td>
+        <td>Médio</td>
+        <td>Alto (infraestrutura + certificação)</td>
+      </tr>
+      <tr>
+        <td>Rastreabilidade</td>
+        <td>Básica (IP, timestamp)</td>
+        <td>Forte (varia com o método)</td>
+        <td>Total (ICP-Brasil + log)</td>
+      </tr>
+      <tr>
+        <td>Obrigatoriedade legal</td>
+        <td>Não obrigatória por lei</td>
+        <td>Não obrigatória por lei</td>
+        <td>Obrigatória em alguns atos</td>
+      </tr>
+      <tr>
+        <td>Risco de impugnação</td>
+        <td>Maior, fácil de contestar</td>
+        <td>Médio, depende do contexto</td>
+        <td>Mínimo</td>
+      </tr>
+      <tr>
+        <td>Autenticação exigida</td>
+        <td>Email, CPF ou clique (sem verificação de identidade)</td>
+        <td>SMS, selfie, Pix, biometria</td>
+        <td>Certificado digital ICP-Brasil</td>
+      </tr>
+      <tr>
+        <td>Exemplo de uso ideal</td>
+        <td>Termos de aceite, NDA interno</td>
+        <td>Contrato de trabalho, locação</td>
+        <td>Escritura, procuração, nota fiscal</td>
+      </tr>
+    </tbody>
+  </table>
+</TableWrapper>
+
+## Onde cada uma brilha
+
+### RH & CLT
+
+Contratos de trabalho são um dos casos que mais geram dúvidas quando o assunto é assinatura eletrônica. A boa notícia é que a Justiça do Trabalho e o Ministério do Trabalho já reconhecem a validade de documentos assinados eletronicamente há vários anos.
+
+Na prática, soluções de assinatura avançada com mecanismos robustos de autenticação e trilha de auditoria costumam ser suficientes para contratos de trabalho, admissões, termos aditivos e demais documentos trabalhistas. O ponto central não é a existência de um certificado ICP-Brasil, mas a capacidade de demonstrar quem assinou o documento, quando a assinatura ocorreu e que o conteúdo não foi alterado posteriormente.
+
+<Callout type="warning" title="Erro comum em RH">
+Usar assinatura simples por conveniência em documentos trabalhistas oferece menor capacidade probatória caso o documento seja questionado judicialmente. Quando surge uma disputa, a empresa precisa demonstrar autoria e integridade: quanto mais frágil o processo de identificação, maior o risco de contestação.
+</Callout>
+
+### Saúde
+
+Prescrição médica é o caso mais delicado, e a regulação é mais específica do que parece. A [RDC 1.000/2025 da Anvisa](https://anvisalegis.datalegis.net/action/ActionDatalegis.php?acao=abrirTextoAto&tipo=RDC&numeroAto=00001000&seqAto=000&valorAno=2025&orgao=RDC%2FDC%2FANVISA%2FMS&codTipo=&desItem=&desItemFim=&cod_menu=1696&cod_modulo=134&pesquisa=true) estabelece uma distinção clara:
+
+- **Medicamentos controlados** (entorpecentes e psicotrópicos da [Portaria 344/1998](https://bvsms.saude.gov.br/bvs/saudelegis/svs/1998/prt0344_12_05_1998_rep.html)): exigem assinatura **qualificada** com certificado ICP-Brasil, sem exceção.
+- **Medicamentos sujeitos à retenção de receita** ([RDC 471/2021](https://anvisalegis.datalegis.net/action/ActionDatalegis.php?acao=abrirTextoAto&tipo=RDC&numeroAto=00000471&seqAto=000&valorAno=2021&orgao=RDC/DC/ANVISA/MS&codTipo=&desItem=&desItemFim=&cod_menu=1696&cod_modulo=134&pesquisa=true)): aceitam qualificada ou avançada, incluindo gov.br.
+- **Prontuários e atestados**: assinatura avançada com biometria já atende.
+
+<Callout type="danger" title="Passivo jurídico em produção">
+Usar SMS como único fator de autenticação em prescrições de medicamentos controlados não atende aos requisitos da RDC 1.000/2025. Plataformas com essa integração em produção estão expostas a passivo jurídico e regulatório.
+</Callout>
+
+### Jurídico & Financeiro
+
+Em regra, atos como escrituras públicas, registros imobiliários e determinadas procurações exigem assinatura qualificada ou mecanismos expressamente previstos pela regulamentação aplicável. Para contratos de prestação de serviço entre empresas, a assinatura avançada com rastreabilidade sólida já funciona bem.
+
+<Aside title="Base legal">
+Contratos com cláusula de eleição de assinatura eletrônica têm força probatória reconhecida pelos tribunais, conforme o <a href="https://www.planalto.gov.br/ccivil_03/mpv/antigas_2001/2200-2.htm">art. 10, §2º da MP 2.200-2/2001</a>.
+</Aside>
+
+### Educação
+
+Contratos de matrícula, rematrícula e termos de estágio não têm normativo MEC específico de assinatura. A Lei 14.063/2020 se aplica diretamente e a assinatura avançada é suficiente.
+
+Diplomas e históricos escolares seguem regras próprias. A [Portaria MEC 554/2019](https://www.in.gov.br/materia/-/asset_publisher/Kujrw0TZC2Mb/content/id/66544171/do1-2019-03-12-portaria-n-554-de-11-de-marco-de-2019-66543842) exige certificado ICP-Brasil A3 institucional com padrão XAdES e carimbo de tempo, o que na prática equivale à assinatura qualificada. A [Portaria MEC 70/2025](http://www.abmes.org.br/arquivos/legislacoes/Portaria-mec-070-2025-01-24.pdf) ampliou essa exigência para pós-graduação stricto sensu e residências em saúde a partir de janeiro de 2026.
+
+<Callout type="warning" title="Erro clássico em IES">
+Usar a mesma plataforma de assinatura avançada para contratos de matrícula e para diplomas não atende à Portaria MEC 554/2019. Diplomas exigem certificado ICP-Brasil A3 institucional, padrão XAdES e carimbo de tempo. Soluções de assinatura avançada comuns não são válidas para esse documento.
+</Callout>
+
+<Aside title="Base legal">
+<a href="https://www.in.gov.br/materia/-/asset_publisher/Kujrw0TZC2Mb/content/id/66544171/do1-2019-03-12-portaria-n-554-de-11-de-marco-de-2019-66543842">Portaria MEC 554/2019</a> · <a href="https://portal.mec.gov.br/diplomadigital/">IN SESu 2/2022 (Portal MEC)</a> · <a href="http://www.abmes.org.br/arquivos/legislacoes/Portaria-mec-070-2025-01-24.pdf">Portaria MEC 70/2025</a>
+</Aside>
+
+## Conclusão
+
+<Callout type="info" title="A pergunta certa">
+Não é: <em>"preciso de certificado digital?"</em>
+
+É: <strong>qual é o risco do documento que estou assinando?</strong>
+</Callout>
+
+Para documentos de baixo impacto, uma assinatura simples pode ser suficiente. Para a maior parte dos contratos empresariais e trabalhistas, uma assinatura avançada oferece um bom equilíbrio entre segurança, experiência do usuário e custo. Já para atos regulados por legislação específica, a assinatura qualificada continua sendo indispensável.
+
+Escolher o nível adequado de assinatura não é apenas uma questão de compliance: é uma forma de evitar que um documento aparentemente válido se transforme em um problema jurídico quando ele mais precisar ser defendido.
+
+Se você está implementando um fluxo de assinatura e precisa suportar os três níveis em uma única plataforma, o [Lacuna Signer](https://www.lacunasoftware.com/signer) cobre desde assinatura simples até qualificada com ICP-Brasil, com suporte a XAdES para diplomas digitais e integração via API.
+
+<References items={[
+  { label: 'MP 2.200-2/2001: Institui a ICP-Brasil', href: 'https://www.planalto.gov.br/ccivil_03/mpv/antigas_2001/2200-2.htm' },
+  { label: 'Lei 14.063/2020: Assinaturas eletrônicas em interações com entes públicos', href: 'https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2020/lei/L14063.htm' },
+  { label: 'LC 182/2021: Marco Legal das Startups', href: 'https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp182.htm' },
+  { label: 'RDC 1.000/2025 (Anvisa): Prescrição eletrônica e SNCR', href: 'https://anvisalegis.datalegis.net/action/ActionDatalegis.php?acao=abrirTextoAto&tipo=RDC&numeroAto=00001000&seqAto=000&valorAno=2025&orgao=RDC%2FDC%2FANVISA%2FMS&codTipo=&desItem=&desItemFim=&cod_menu=1696&cod_modulo=134&pesquisa=true' },
+  { label: 'RDC 471/2021 (Anvisa): Medicamentos sujeitos a retenção de receita', href: 'https://anvisalegis.datalegis.net/action/ActionDatalegis.php?acao=abrirTextoAto&tipo=RDC&numeroAto=00000471&seqAto=000&valorAno=2021&orgao=RDC/DC/ANVISA/MS&codTipo=&desItem=&desItemFim=&cod_menu=1696&cod_modulo=134&pesquisa=true' },
+  { label: 'Portaria SVS/MS 344/1998: Medicamentos controlados', href: 'https://bvsms.saude.gov.br/bvs/saudelegis/svs/1998/prt0344_12_05_1998_rep.html' },
+  { label: 'Portaria MEC 554/2019: Diploma digital', href: 'https://www.in.gov.br/materia/-/asset_publisher/Kujrw0TZC2Mb/content/id/66544171/do1-2019-03-12-portaria-n-554-de-11-de-marco-de-2019-66543842' },
+  { label: 'IN SeSu 2/2022: Histórico escolar digital (Portal MEC)', href: 'https://portal.mec.gov.br/diplomadigital/' },
+  { label: 'Portaria MEC 70/2025: Diploma digital para pós-graduação e residências', href: 'http://www.abmes.org.br/arquivos/legislacoes/Portaria-mec-070-2025-01-24.pdf' },
+]} />

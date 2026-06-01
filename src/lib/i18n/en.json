@@ -88,7 +88,8 @@
     "e404Sub": "This route does not exist or has been removed.",
     "e404Cta": "back to home",
     "tocTitle": "contents",
-    "tocNavLabel": "post sections"
+    "tocNavLabel": "post sections",
+    "readingTime": "min read"
   },
   "skillLabels": {
     "lang": "Languages",

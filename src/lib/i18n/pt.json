@@ -88,7 +88,8 @@
     "e404Sub": "Essa rota não existe ou foi removida.",
     "e404Cta": "voltar ao início",
     "tocTitle": "sumário",
-    "tocNavLabel": "seções do post"
+    "tocNavLabel": "seções do post",
+    "readingTime": "min de leitura"
   },
   "skillLabels": {
     "lang": "Linguagens",

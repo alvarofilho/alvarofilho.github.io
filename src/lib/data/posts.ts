@@ -8,10 +8,11 @@ export type PostMeta = {
   lang: Lang;
   slug: string;
   draft: boolean;
-  translationKey: string;
+  translationKey?: string;
   related?: string[];
   image?: string;
   searchText: string;
+  readingTime: number;
 };
 
 type PostMetadata = Omit<PostMeta, 'searchText'> & { searchText?: string };
@@ -22,6 +23,7 @@ const postMetadata = import.meta.glob<PostMetadata>('/src/content/posts/**/*.svx
 });
 
 export const allPosts = Object.values(postMetadata)
+  .filter((metadata): metadata is PostMetadata => metadata != null && metadata.title != null)
   .map((metadata) => enrichPost(metadata))
   .sort((a, b) => b.date.localeCompare(a.date));
 
