@@ -1,3 +1,7 @@
+.body-wrapper {
+  display: contents;
+}
+
 :root {
   --bg: #14161a;
   --surface: #1b1f27;
@@ -23,7 +27,7 @@
   --term-border: var(--border-l);
   --term-text: var(--text);
   --term-muted: var(--muted);
-  --term-dimmer: var(--dimmer);
+  --term-dimmer: #7a8ba8;
   --term-green: var(--green);
 }
 
@@ -48,7 +52,7 @@
   --term-border: #2d3443;
   --term-text: #f4f4f6;
   --term-muted: #98a3b3;
-  --term-dimmer: #4a5570;
+  --term-dimmer: #7a8ba8;
   --term-green: #3dd68c;
 }
 
@@ -1843,6 +1847,65 @@ section {
   line-height: 1.6;
 }
 
+.related-posts {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.related-posts ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.75rem 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.related-posts a {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.15s;
+}
+
+.related-posts a:hover {
+  border-bottom-color: var(--border);
+}
+
+.related-posts a:hover .rp-title {
+  color: var(--accent);
+}
+
+.rp-title {
+  font-size: 0.9rem;
+  color: var(--text);
+  transition: color 0.15s;
+}
+
+.rp-date {
+  font-size: 0.8rem;
+  color: var(--muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+@media (max-width: 480px) {
+  .related-posts a {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .rp-date {
+    white-space: normal;
+  }
+}
+
 .callout {
   margin: 1.7rem 0;
   padding: 1rem 1.1rem;
@@ -1882,6 +1945,10 @@ section {
 
 .callout-warning .callout-title {
   color: #e8b83c;
+}
+
+[data-theme='light'] .callout-warning .callout-title {
+  color: #7a4e00;
 }
 
 .callout-danger {

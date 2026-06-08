@@ -161,6 +161,10 @@
     padding-bottom: calc(0.55rem - 2px);
   }
 
+  :global([data-theme='light']) button.active {
+    color: #2d56c5;
+  }
+
   .tabs-panels {
     background: var(--card);
     padding: 1rem 1.1rem;
