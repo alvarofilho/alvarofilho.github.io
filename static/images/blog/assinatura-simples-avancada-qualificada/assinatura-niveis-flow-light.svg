@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-labelledby="title desc">
+  <title id="title">Fluxo dos níveis de assinatura digital</title>
+  <desc id="desc">Infográfico com documento conectado aos níveis Simples, Avançada e Qualificada, cada um chegando a um indicador verde.</desc>
+  <defs>
+    <pattern id="grid" width="100" height="70" patternUnits="userSpaceOnUse">
+      <path d="M100 0V70M0 70H100" fill="none" stroke="#e0e4eb" stroke-width="1" opacity="0.8"/>
+    </pattern>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 10 5 0 10z" fill="#3864d4"/>
+    </marker>
+    <style>
+      .mono { font-family: "JetBrains Mono", Consolas, "Liberation Mono", monospace; }
+      .label { fill: #151c28; font-size: 28px; }
+      .muted { fill: #626f84; }
+      .accent { fill: #3864d4; }
+      .flow { fill: none; stroke: #3864d4; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="620" fill="#fcfcfd"/>
+  <rect width="1200" height="620" fill="url(#grid)"/>
+
+  <rect x="110" y="70" width="980" height="480" rx="0" fill="#ffffff" stroke="#e0e4eb" stroke-width="2"/>
+
+  <g class="mono">
+    <text x="155" y="132" class="accent" font-size="24">// assinatura eletrônica</text>
+
+    <g transform="translate(210 205)">
+      <path d="M35 0h120l48 48v164H35z" fill="#f2f4f7" stroke="#c8d0dd" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M155 2v48h47" fill="none" stroke="#c8d0dd" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M70 82h90M70 112h115M70 142h72M70 172h105" stroke="#aab5c5" stroke-width="11" stroke-linecap="round"/>
+      <text x="31" y="258" class="muted" font-size="24">// documento</text>
+    </g>
+
+    <path class="flow" d="M430 310H500"/>
+    <path class="flow" d="M500 310C535 310 535 205 570 205"/>
+    <path class="flow" d="M500 310H570"/>
+    <path class="flow" d="M500 310C535 310 535 415 570 415"/>
+
+    <g>
+      <rect x="585" y="168" width="270" height="74" rx="0" fill="#f2f4f7" stroke="#3864d4" stroke-width="2"/>
+      <text x="625" y="216" class="label">Simples</text>
+      <path class="flow" d="M855 205H955"/>
+      <circle cx="1005" cy="205" r="27" fill="#f2f4f7" stroke="#1f9e60" stroke-width="4"/>
+    </g>
+
+    <g>
+      <rect x="585" y="273" width="270" height="74" rx="0" fill="#f2f4f7" stroke="#3864d4" stroke-width="2"/>
+      <text x="625" y="321" class="label">Avançada</text>
+      <path class="flow" d="M855 310H955"/>
+      <circle cx="1005" cy="310" r="27" fill="#f2f4f7" stroke="#1f9e60" stroke-width="4"/>
+    </g>
+
+    <g>
+      <rect x="585" y="378" width="270" height="74" rx="0" fill="#f2f4f7" stroke="#3864d4" stroke-width="2"/>
+      <text x="625" y="426" class="label">Qualificada</text>
+      <path class="flow" d="M855 415H955"/>
+      <circle cx="1005" cy="415" r="27" fill="#f2f4f7" stroke="#1f9e60" stroke-width="4"/>
+      <path d="M990 415l10 11 20-24" fill="none" stroke="#1f9e60" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+  </g>
+</svg>

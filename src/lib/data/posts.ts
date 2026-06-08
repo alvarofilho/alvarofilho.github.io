@@ -11,6 +11,7 @@ export type PostMeta = {
   translationKey?: string;
   related?: string[];
   image?: string;
+  imageLight?: string;
   searchText: string;
   readingTime: number;
 };

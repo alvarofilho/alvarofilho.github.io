@@ -1437,6 +1437,18 @@ section {
   object-fit: cover;
 }
 
+.post-cover .post-cover-img--light {
+  display: none;
+}
+
+[data-theme='light'] .post-cover--themeable .post-cover-img--dark {
+  display: none;
+}
+
+[data-theme='light'] .post-cover--themeable .post-cover-img--light {
+  display: block;
+}
+
 .post-content {
   min-width: 0;
   padding: 2rem 0 0;

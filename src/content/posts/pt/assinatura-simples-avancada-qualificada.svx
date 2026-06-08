@@ -8,6 +8,8 @@ tags:
 lang: pt
 slug: assinatura-simples-avancada-qualificada
 draft: false
+image: /images/blog/assinatura-simples-avancada-qualificada/assinatura-niveis-flow.svg
+imageLight: /images/blog/assinatura-simples-avancada-qualificada/assinatura-niveis-flow-light.svg
 ---
 <script>
   import { Callout, Aside, KeyValue, References, TableWrapper, Tabs, Tab } from '$lib/components/post';

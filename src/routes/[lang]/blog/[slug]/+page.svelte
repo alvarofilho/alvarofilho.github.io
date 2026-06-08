@@ -68,8 +68,11 @@
           </header>
 
           {#if data.post.image}
-            <div class="post-cover">
-              <img src={data.post.image} alt={data.post.title} />
+            <div class="post-cover" class:post-cover--themeable={data.post.imageLight}>
+              <img src={data.post.image} alt={data.post.title} class="post-cover-img post-cover-img--dark" />
+              {#if data.post.imageLight}
+                <img src={data.post.imageLight} alt={data.post.title} class="post-cover-img post-cover-img--light" />
+              {/if}
             </div>
           {/if}
 
