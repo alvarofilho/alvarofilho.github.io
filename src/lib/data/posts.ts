@@ -48,14 +48,16 @@ function enrichPost(post: PostMetadata): PostMeta {
 }
 
 export function getPostsByLang(lang: Lang) {
-  return posts.filter((post) => post.lang === lang);
+  return posts
+    .filter((post) => post.lang === lang)
+    .sort((a, b) => b.date.localeCompare(a.date));
 }
 
 export function getAllPostsForLang(lang: Lang): PostMeta[] {
   const byKey = new Map<string, PostMeta>();
 
   for (const post of posts) {
-    const key = post.translationKey;
+    const key = post.translationKey || `${post.slug}-${post.lang}`;
     const existing = byKey.get(key);
     if (!existing || post.lang === lang) {
       byKey.set(key, post);
@@ -86,14 +88,17 @@ export function getPostPath(post: PostMeta) {
 }
 
 export function getTranslatedPost(post: PostMeta, lang: Lang) {
+  if (!post.translationKey) return undefined;
   return posts.find((candidate) => candidate.translationKey === post.translationKey && candidate.lang === lang);
 }
 
 export function getTranslatedDraftPost(post: PostMeta, lang: Lang) {
+  if (!post.translationKey) return undefined;
   return draftPosts.find((candidate) => candidate.translationKey === post.translationKey && candidate.lang === lang);
 }
 
 export function getAvailableLangs(post: PostMeta): Lang[] {
+  if (!post.translationKey) return [post.lang];
   return posts
     .filter((p) => p.translationKey === post.translationKey)
     .map((p) => p.lang);

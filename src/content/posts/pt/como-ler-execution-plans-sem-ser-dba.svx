@@ -1,0 +1,544 @@
+---
+title: "Como ler Execution Plans sem ser DBA"
+description: "Um guia para desenvolvedores que querem entender o que o SQL Server está fazendo sem precisar dominar toda a teoria de otimização de banco de dados."
+date: '2026-06-22'
+tags:
+  - SQL Server
+  - Banco de Dados
+  - Performance
+lang: pt
+slug: como-ler-execution-plans-sem-ser-dba
+draft: true
+related:
+  - indices-sql-server-guia-pratico
+image: /images/blog/como-ler-execution-plans-sem-ser-dba.svg
+imageLight: /images/blog/como-ler-execution-plans-sem-ser-dba-light.svg
+---
+<script>
+  import { Callout, CodeSnippet, DiffSnippet, KeyValue, Mermaid, Step, StepList, Tab, Tabs, TableWrapper, References } from '$lib/components/post';
+
+  const planReadingDirection = `
+graph RL
+    IS["Index Seek\nClientes"]
+    KL["Key Lookup\nClientes"]
+    NL["Nested Loops\n(JOIN)"]
+    R(["SELECT\n← começa lendo aqui"])
+
+    IS --> NL
+    KL --> NL
+    NL --> R
+
+    classDef result fill:#5c8df0,stroke:#4479c4,color:#fff,font-weight:bold
+    classDef join fill:#2d3443,stroke:#5c8df0,color:#5c8df0
+    classDef seek fill:#1a4a30,stroke:#3dd68c,color:#3dd68c
+    classDef lookup fill:#4a3a00,stroke:#f0a020,color:#f0a020
+    class R result
+    class NL join
+    class IS seek
+    class KL lookup
+`;
+
+  const warningTypes = `
+graph TD
+    W(["⚠ Triângulo amarelo\nno operador"])
+    MI["Missing Index\nsugestão de index"]
+    IC["Implicit Conversion\ncast automático"]
+    PS["Parameter Sniffing\nplan para parâmetro errado"]
+    SP["Spill to TempDB\nmemória insuficiente"]
+
+    W --> MI
+    W --> IC
+    W --> PS
+    W --> SP
+
+    classDef root fill:#4a3a00,stroke:#f0a020,color:#f0a020,font-weight:bold
+    classDef item fill:#2d3443,stroke:#3a4558,color:#f4f4f6
+    class W root
+    class MI,IC,PS,SP item
+`;
+
+  const actualVsEstimated = `
+graph LR
+    S(["Statistics\ndesatualizadas"])
+    E["Optimizer estima\n100 linhas"]
+    A["Execução real:\n100.000 linhas"]
+    D(["Plan inadequado\npara o volume real"])
+
+    S -->|"enganam"| E
+    E --> D
+    A -->|"diverge"| D
+
+    classDef start fill:#2d3443,stroke:#3a4558,color:#f4f4f6
+    classDef warn fill:#4a3a00,stroke:#f0a020,color:#f0a020
+    classDef bad fill:#3a1010,stroke:#c0392b,color:#e74c3c
+    classDef end fill:#c0392b,stroke:#962d22,color:#fff,font-weight:bold
+    class S start
+    class E warn
+    class A bad
+    class D end
+`;
+
+  const diagnosticFlow = `
+graph TD
+    A(["Query lenta"]) --> B{"Triângulo\namarelo?"}
+    B -->|Sim| C["Leia o tooltip:\nMissing Index,\nImplicit Conversion, Spill"]
+    B -->|Não| D{"Table Scan\nem tabela grande?"}
+    D -->|Sim| E["Index faltando\nou filtro não SARGable"]
+    D -->|Não| F{"Key Lookup\nno plano?"}
+    F -->|Sim| G["Covering index\nresolve"]
+    F -->|Não| H{"Actual ≫ Estimated?"}
+    H -->|Sim| I["Statistics\ndesatualizadas"]
+    H -->|Não| J["Revise joins\ne volume de dados"]
+
+    classDef start fill:#5c8df0,stroke:#4479c4,color:#fff
+    classDef decision fill:#2d3443,stroke:#5c8df0,color:#f4f4f6
+    classDef result fill:#1a4a30,stroke:#3dd68c,color:#3dd68c
+    class A start
+    class B,D,F,H decision
+    class C,E,G,I,J result
+`;
+</script>
+
+<Callout type="info" title="Antes de começar">
+  Este artigo complementa o <a href="/pt/blog/indices-sql-server-guia-pratico/">guia prático de índices</a>. Você não precisa ter lido antes, mas se quiser entender como Index Seek, Key Lookup e covering indexes funcionam em detalhe, ele cobre isso. Para acompanhar executando, há um <a href="#ambiente-de-teste">ambiente de teste no apêndice</a>.
+</Callout>
+
+## Por que isso importa?
+
+Toda aplicação que usa um banco de dados relacional vai, em algum momento, produzir uma consulta lenta. O primeiro instinto costuma ser "é o banco de dados" ou "precisa de um DBA". Na maioria das vezes, o problema está na consulta e pode ser diagnosticado por quem a escreveu.
+
+O execution plan é o documento que o SQL Server produz para mostrar exatamente o que fez para responder à consulta: quais indexes usou, em que ordem acessou as tabelas, como juntou os dados e onde o custo ficou concentrado. Não é um relatório para DBA — é um mapa para quem escreveu a query.
+
+## Uma analogia útil
+
+Pense no execution plan como o histórico de uma viagem no GPS. O aplicativo calculou uma rota com base no tráfego estimado, mas na prática você pode ter encontrado desvios, congestionamentos ou uma rota diferente da planejada.
+
+- **Estimated execution plan** = o GPS antes de sair: a rota que o SQL Server planejou com base nas estatísticas disponíveis
+- **Actual execution plan** = o histórico da viagem: o que de fato aconteceu, incluindo onde o tráfego foi mais pesado
+- **Operadores** = os trechos da rota (avenida, rodovia, cruzamento)
+- **Custo percentual** = o quanto cada trecho pesou no tempo total
+
+Quando o plano estimado diverge muito do real, o SQL Server calculou a rota com informações desatualizadas — e a viagem demora mais do que o GPS prometia.
+
+## 1. Como abrir o execution plan
+
+O caminho mais direto é pelo **SQL Server Management Studio**. Antes de executar a consulta, pressione `Ctrl+M` ou clique em **Include Actual Execution Plan** na barra de ferramentas. Após a execução, o plano aparece na aba **Execution Plan** ao lado dos resultados.
+
+<Callout type="warning" title="Actual vs Estimated: use sempre o actual">
+  O <strong>estimated execution plan</strong> (<code>Ctrl+L</code>) mostra o que o optimizer planejou sem executar a consulta. O <strong>actual execution plan</strong> mostra o que de fato aconteceu, inclusive o número real de linhas processadas em cada operador. Para diagnóstico, prefira sempre o actual — é onde as divergências aparecem.
+</Callout>
+
+Para gerar o plano e as métricas de leitura pelo texto, você pode combinar:
+
+<CodeSnippet lang="sql" title="Estatísticas de I/O, tempo e plano juntos" code={`
+SET STATISTICS IO ON;
+SET STATISTICS TIME ON;
+--
+SELECT Nome, Email, Telefone
+FROM dbo.Clientes
+WHERE CPF = '12345678901';
+`} />
+
+A saída do `STATISTICS IO` mostra as leituras lógicas por tabela. Leituras lógicas altas em tabelas que deveriam retornar poucas linhas costumam indicar um `Scan` onde deveria haver um `Seek`.
+
+## 2. A direção de leitura: da direita para a esquerda
+
+O execution plan é uma árvore de operadores. Os dados entram pelos nós da extrema direita (acesso à tabela ou ao index) e fluem para a esquerda até o operador final, que entrega o resultado.
+
+<Mermaid chart={planReadingDirection} title="dados fluem da direita para a esquerda — leia de onde os dados nascem" />
+
+Na prática, ao abrir um plano pela primeira vez:
+
+1. **Vá para a direita**: os operadores mais à direita são os pontos de entrada de dados (scans, seeks)
+2. **Siga as setas**: cada seta representa o volume de dados passando de um operador ao próximo
+3. **Chegue à esquerda**: o nó mais à esquerda é o resultado final da consulta
+
+A **espessura das setas** no plano gráfico representa o volume de linhas entre os operadores. Uma seta grossa entre operadores baratos pode indicar que mais dados estão sendo passados do que o necessário.
+
+## 3. Custo percentual: onde olhar primeiro
+
+Cada operador exibe um **custo percentual** em relação ao total da consulta. Esse número é a estimativa do optimizer com base nas estatísticas internas e indica onde o trabalho está concentrado.
+
+Ao abrir um plano em uma consulta lenta, vá direto ao operador com o maior percentual. É quase sempre onde o problema está ou onde ele se manifesta com mais clareza.
+
+<Callout type="warning" title="O custo é estimado, não medido">
+  O percentual de custo vem das estatísticas internas, não do tempo real de execução. Ele é útil para priorizar a análise, mas não é um cronômetro. Para medir tempo e leituras reais, use <code>SET STATISTICS TIME ON</code> e <code>SET STATISTICS IO ON</code> antes da consulta.
+</Callout>
+
+## 4. Os operadores que você vai ver toda semana
+
+A maioria das consultas do dia a dia produz um subconjunto pequeno de operadores. Entender esses quatro já resolve boa parte dos diagnósticos.
+
+<TableWrapper caption="Operadores de acesso a dados">
+  <table>
+    <thead>
+      <tr><th>Operador</th><th>O que faz</th><th>Quando aparece</th><th>O que verificar</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Index Seek</strong></td>
+        <td>Navega pelo B-tree do index para localizar as linhas exatas</td>
+        <td>Há um index adequado e o filtro é SARGable</td>
+        <td>Bom sinal. Se o custo total ainda está alto, olhe para o que vem depois</td>
+      </tr>
+      <tr>
+        <td><strong>Index Scan</strong></td>
+        <td>Percorre uma parte (ou tudo) do index sem usar a estrutura B-tree para navegar</td>
+        <td>Filtro não é SARGable, ou o optimizer achou o Scan mais barato</td>
+        <td>Verifique o filtro. Funções aplicadas à coluna costumam forçar Scan</td>
+      </tr>
+      <tr>
+        <td><strong>Table Scan</strong></td>
+        <td>Lê a tabela inteira, linha por linha</td>
+        <td>Sem index útil, tabela pequena, ou o optimizer estimou que ler tudo era mais barato</td>
+        <td>Em tabelas grandes com filtros seletivos, quase sempre indica index faltando</td>
+      </tr>
+      <tr>
+        <td><strong>Key Lookup</strong></td>
+        <td>Volta ao clustered index para buscar colunas que não estão no nonclustered index usado</td>
+        <td>A consulta pede colunas fora do index que filtrou os dados</td>
+        <td>Adicionar essas colunas no <code>INCLUDE</code> do index elimina o lookup</td>
+      </tr>
+    </tbody>
+  </table>
+</TableWrapper>
+
+### Table Scan nem sempre é problema
+
+Em tabelas pequenas, o SQL Server pode deliberadamente escolher um `Table Scan` em vez de um `Index Seek` porque o overhead de navegar pelo B-tree não compensa para poucas linhas. O sinal de alerta aparece quando um `Scan` ocorre em tabelas grandes com filtros seletivos — nesses casos, geralmente falta um index adequado ou o filtro não é SARGable.
+
+## 5. Joins no plano: como eles aparecem
+
+Consultas com `JOIN` mostram qual estratégia o SQL Server escolheu para combinar as tabelas. O optimizer decide com base no volume estimado de dados de cada lado.
+
+<TableWrapper caption="Estratégias de join no execution plan">
+  <table>
+    <thead>
+      <tr><th>Operador</th><th>Estratégia</th><th>Costuma aparecer quando</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Nested Loops</strong></td>
+        <td>Para cada linha do lado externo, busca no lado interno. Itera linha a linha.</td>
+        <td>Um dos lados retorna poucas linhas. Funciona bem com Index Seek no lado interno.</td>
+      </tr>
+      <tr>
+        <td><strong>Hash Match</strong></td>
+        <td>Constrói uma tabela hash do lado menor e sonda com o lado maior.</td>
+        <td>Grandes volumes sem index nas colunas de join. Pode spill para TempDB.</td>
+      </tr>
+      <tr>
+        <td><strong>Merge Join</strong></td>
+        <td>Percorre dois conjuntos já ordenados em paralelo pela chave de join.</td>
+        <td>Ambos os lados estão ordenados pela chave de join, geralmente via index.</td>
+      </tr>
+    </tbody>
+  </table>
+</TableWrapper>
+
+Quando um `Nested Loops` aparece com `Key Lookup` no lado interno, você tem o padrão mais comum de performance ruim: o SQL Server busca no index (loop externo) e, para cada linha encontrada, volta ao clustered index para completar as colunas (loop interno). Esse padrão está detalhado na seção de <a href="/pt/blog/indices-sql-server-guia-pratico/#3-covering-index-quando-a-consulta-j%C3%A1-vem-completa">covering indexes</a>.
+
+## 6. Alertas: triângulos amarelos
+
+O SQL Server exibe um triângulo amarelo sobre um operador quando detecta algo que merece atenção. Ao passar o mouse sobre o triângulo no SSMS, um tooltip explica o que foi encontrado.
+
+<Mermaid chart={warningTypes} title="tipos de alerta que aparecem no execution plan" />
+
+### Missing Index
+
+O SQL Server sugere um index que poderia melhorar a consulta. A sugestão aparece no tooltip com o DDL completo para criação do index.
+
+Essa sugestão é um ponto de partida, não uma ordem direta. O SQL Server analisa apenas a consulta atual, sem considerar o impacto em writes, em outros indexes ou no conjunto completo de consultas da aplicação. Use como pista de diagnóstico, não como receita.
+
+<CodeSnippet lang="sql" title="Consultar todas as sugestões de missing index do banco" code={`
+SELECT
+    mid.statement             AS tabela,
+    mid.equality_columns,
+    mid.inequality_columns,
+    mid.included_columns,
+    migs.avg_user_impact,
+    migs.user_seeks
+FROM sys.dm_db_missing_index_details     mid
+JOIN sys.dm_db_missing_index_groups      mig  ON mid.index_handle       = mig.index_handle
+JOIN sys.dm_db_missing_index_group_stats migs ON mig.index_group_handle = migs.index_group_handle
+WHERE mid.database_id = DB_ID()
+ORDER BY migs.avg_user_impact * migs.user_seeks DESC;
+`} />
+
+### Implicit Conversion
+
+Aparece quando o SQL Server precisa converter automaticamente o tipo de dado para comparar dois valores — por exemplo, quando a coluna é `VARCHAR` e o parâmetro chega como `NVARCHAR`.
+
+A conversão implícita tem dois efeitos: aumenta o custo do operador e pode impedir o uso do index, forçando um `Scan` onde haveria um `Seek`.
+
+<DiffSnippet lang="sql" title="Implicit Conversion: tipo do parâmetro precisa bater com a coluna" code={`
+- -- NVARCHAR literal vs coluna VARCHAR: SQL Server converte cada linha
+- WHERE Email = N'ana@exemplo.local'
++ -- VARCHAR literal bate direto com a coluna: permite Index Seek
++ WHERE Email = 'ana@exemplo.local'
+`} />
+
+O mesmo problema ocorre ao passar um parâmetro do tipo errado via ORM ou código de aplicação. Verificar os tipos das colunas e os tipos enviados pela aplicação costuma resolver.
+
+### Spill to TempDB
+
+Aparece quando uma operação de sort, hash match ou troca de dados precisou de mais memória do que foi alocado e foi forçada a usar o TempDB como área de overflow. É custoso porque envolve I/O em disco.
+
+Quando você vê esse alerta em um `Hash Match` ou `Sort`, o SQL Server estimou um volume de dados menor do que o real. Isso geralmente aponta para statistics desatualizadas ou para parameter sniffing.
+
+### Parameter Sniffing
+
+O SQL Server cacheia o plano gerado para o primeiro conjunto de parâmetros que executou uma stored procedure ou consulta parametrizada. Se os parâmetros subsequentes têm distribuição muito diferente, o plano cacheado pode ser inadequado — e o tooltip indica que um plano diferente teria sido escolhido para os valores atuais.
+
+## 7. Actual vs Estimated: quando divergem
+
+O campo mais revelador do tooltip de cada operador é a comparação entre **Actual Number of Rows** e **Estimated Number of Rows**.
+
+<Mermaid chart={actualVsEstimated} title="statistics desatualizadas levam a plans calculados para a realidade errada" />
+
+Quando esses números divergem muito (mais de uma ordem de magnitude), o optimizer calculou o plano com base em uma realidade diferente da atual. As causas mais comuns:
+
+**Statistics desatualizadas**: o SQL Server mantém estatísticas sobre a distribuição dos dados em cada coluna indexada. Se os dados mudaram muito desde a última atualização, as estimativas ficam erradas.
+
+<CodeSnippet lang="sql" title="Verificar e atualizar statistics" code={`
+-- Quando foi a última atualização das statistics
+SELECT
+    OBJECT_NAME(s.object_id) AS tabela,
+    s.name                   AS statistics_name,
+    sp.last_updated,
+    sp.rows,
+    sp.rows_sampled
+FROM sys.stats s
+CROSS APPLY sys.dm_db_stats_properties(s.object_id, s.stats_id) sp
+WHERE OBJECT_NAME(s.object_id) = 'Clientes'
+ORDER BY sp.last_updated DESC;
+--
+-- Atualizar com amostragem completa
+UPDATE STATISTICS dbo.Clientes WITH FULLSCAN;
+`} />
+
+**Parameter sniffing**: o plano foi gerado para um parâmetro com distribuição atípica e ficou cacheado. Consultas que retornam poucos registros para um valor e muitos para outro são especialmente suscetíveis.
+
+<CodeSnippet lang="sql" title="Ver planos cacheados e leituras médias por execução" code={`
+SELECT
+    qs.execution_count,
+    qs.total_logical_reads / qs.execution_count AS avg_logical_reads,
+    SUBSTRING(
+        qt.text,
+        (qs.statement_start_offset / 2) + 1,
+        ((CASE qs.statement_end_offset
+            WHEN -1 THEN DATALENGTH(qt.text)
+            ELSE qs.statement_end_offset
+          END - qs.statement_start_offset) / 2) + 1
+    ) AS query_text
+FROM sys.dm_exec_query_stats qs
+CROSS APPLY sys.dm_exec_sql_text(qs.sql_handle) qt
+WHERE qt.text LIKE '%Clientes%'
+ORDER BY qs.total_logical_reads DESC;
+`} />
+
+## 8. Três padrões que aparecem toda semana
+
+Esses padrões respondem pela maioria dos problemas de performance que aparecem em diagnóstico de consultas comuns.
+
+### Padrão 1: Key Lookup em volume alto
+
+**Como identificar**: No plano, `Index Seek` seguido de `Key Lookup`, unidos por `Nested Loops`. O `Key Lookup` tem custo percentual significativo — costuma concentrar 60–80% do custo total.
+
+**O que significa**: A consulta usa um index para o filtro, mas esse index não contém todas as colunas do `SELECT`. O SQL Server vai buscar as colunas restantes no clustered index, uma vez por linha encontrada.
+
+**Como resolver**: Adicionar as colunas faltantes no `INCLUDE` do index transforma o nonclustered em um covering index e elimina o lookup.
+
+<CodeSnippet lang="sql" title="Covering index elimina o Key Lookup" code={`
+-- Antes: IX_Clientes_CPF só tem CPF, força Key Lookup para buscar Nome e Email
+CREATE NONCLUSTERED INDEX IX_Clientes_CPF
+ON dbo.Clientes (CPF);
+--
+-- Depois: colunas no INCLUDE evitam a volta ao clustered index
+CREATE NONCLUSTERED INDEX IX_Clientes_CPF_Covering
+ON dbo.Clientes (CPF)
+INCLUDE (Nome, Email, Telefone);
+`} />
+
+### Padrão 2: Table Scan em tabela grande com filtro seletivo
+
+**Como identificar**: Operador `Table Scan` ou `Clustered Index Scan` com custo alto em uma tabela com muitas linhas.
+
+**O que significa**: Ou não existe index para o filtro da consulta, ou a condição do `WHERE` não é SARGable — o SQL Server não consegue usar o index para navegar diretamente.
+
+**Como resolver**: Criar o index adequado ou reescrever a condição para evitar funções aplicadas à coluna filtrada.
+
+<DiffSnippet lang="sql" title="SARGability: evite funções na coluna filtrada" code={`
+- -- Função aplicada à coluna: força Table/Index Scan
+- WHERE YEAR(DataPedido) = 2025
++ -- Intervalo direto na coluna: permite Index Seek
++ WHERE DataPedido >= '2025-01-01' AND DataPedido < '2026-01-01'
+`} />
+
+O mesmo problema ocorre com `LOWER()`, `CAST()`, `CONVERT()` e com o lado da expressão invertido (ex.: `1 = coluna` em vez de `coluna = 1`). Qualquer transformação na coluna filtrada impede o uso eficiente do index.
+
+### Padrão 3: Actual muito maior que Estimated em Sort ou Hash Match
+
+**Como identificar**: Um operador `Sort` ou `Hash Match` com alerta amarelo (spill) ou com `Actual Number of Rows` uma ou duas ordens de magnitude acima do `Estimated Number of Rows`.
+
+**O que significa**: O optimizer calculou o plano para um volume de dados bem menor do que o real. Statistics desatualizadas ou parameter sniffing.
+
+**Como resolver**:
+
+<CodeSnippet lang="sql" title="Atualizar statistics e forçar recompilação pontual" code={`
+-- Atualizar statistics com scan completo
+UPDATE STATISTICS dbo.SuaTabela WITH FULLSCAN;
+--
+-- Forçar recompilação de uma consulta específica (use com parcimônia)
+SELECT Nome, Email
+FROM dbo.Clientes
+WHERE CPF = @cpf
+OPTION (RECOMPILE);
+`} />
+
+`OPTION (RECOMPILE)` força o SQL Server a gerar um plano novo a cada execução, eliminando o problema de parameter sniffing para aquela consulta. O custo é o tempo de compilação a cada execução — compensa em consultas com parâmetros de distribuição muito variável e frequência baixa o suficiente para absorver esse overhead.
+
+## Checklist rápido para quando o plano parece errado
+
+<StepList>
+  <Step title="Abra o actual execution plan, não o estimated">
+    <p>Use <code>Ctrl+M</code> no SSMS antes de executar. O actual plan mostra o número real de linhas, não a estimativa do optimizer.</p>
+  </Step>
+  <Step title="Localize o operador com maior custo percentual">
+    <p>Clique no operador. O tooltip mostra custo, operação, número estimado e real de linhas, e o index utilizado.</p>
+  </Step>
+  <Step title="Procure triângulos amarelos">
+    <p>Passe o mouse para ler o tooltip. Missing Index, Implicit Conversion e Spill to TempDB têm caminhos de resolução distintos e o tooltip costuma indicar o próximo passo.</p>
+  </Step>
+  <Step title="Compare Actual vs Estimated Number of Rows">
+    <p>Divergência de uma ordem de magnitude ou mais aponta para statistics desatualizadas ou parameter sniffing.</p>
+    <CodeSnippet lang="sql" title="Atualizar statistics" code={`
+UPDATE STATISTICS dbo.SuaTabela WITH FULLSCAN;
+`} />
+  </Step>
+  <Step title="Use o fluxo abaixo para identificar o padrão">
+    <p>Cada padrão — Scan, Key Lookup e Join custoso — tem uma resolução diferente.</p>
+  </Step>
+</StepList>
+
+<Mermaid chart={diagnosticFlow} title="fluxo de diagnóstico para queries lentas" />
+
+## Conclusão
+
+Ler um execution plan não exige dominar toda a teoria de otimização de banco de dados. Para a maioria dos problemas do dia a dia, o processo é direto:
+
+1. **Abra o actual plan**: o plano estimado é útil, mas o actual mostra o que de fato aconteceu
+2. **Vá ao maior custo**: não tente ler o plano inteiro de uma vez — vá ao que pesou mais
+3. **Leia os alertas**: triângulos amarelos têm tooltips com informação acionável
+4. **Compare actual vs estimated**: divergência grande indica statistics ou parameter sniffing
+5. **Identifique o padrão**: `Key Lookup`, `Table Scan` em tabela grande e `Spill` têm resoluções conhecidas
+
+Um execution plan que você leu e entendeu vale mais do que dias de tuning às cegas. Na maioria das vezes, o problema está visível no plano — precisa só de atenção para ser encontrado.
+
+<span id="ambiente-de-teste"></span>
+
+## Apêndice: ambiente de teste
+
+Os blocos abaixo criam um banco isolado chamado `IndexLab` e populam volume suficiente para o optimizer realmente escolher entre `Seek` e `Scan`. Se você já montou o ambiente do <a href="/pt/blog/indices-sql-server-guia-pratico/#ambiente-de-teste">guia de índices</a>, pode pular para a aba 3 diretamente. Nada aqui toca seus bancos reais.
+
+<Tabs labels={["1. Banco e tabelas", "2. Dados de teste", "3. Queries de diagnóstico"]}>
+  <Tab label="1. Banco e tabelas">
+    <CodeSnippet lang="sql" title="Banco isolado e tabelas" code={`
+IF DB_ID('IndexLab') IS NOT NULL
+BEGIN
+    ALTER DATABASE IndexLab SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+    DROP DATABASE IndexLab;
+END
+GO
+CREATE DATABASE IndexLab;
+GO
+USE IndexLab;
+GO
+CREATE TABLE dbo.Clientes (
+    ClienteId INT IDENTITY(1,1) NOT NULL,
+    CPF       CHAR(11)     NOT NULL,
+    Nome      VARCHAR(40)  NOT NULL,
+    Sobrenome VARCHAR(40)  NOT NULL,
+    Email     VARCHAR(120) NOT NULL,
+    Telefone  VARCHAR(11)  NOT NULL
+);
+CREATE TABLE dbo.Pedidos (
+    PedidoId   INT IDENTITY(1,1) NOT NULL,
+    DataPedido DATE          NOT NULL,
+    IdCliente  INT           NOT NULL,
+    ValorTotal DECIMAL(10,2) NOT NULL,
+    [Status]   VARCHAR(20)   NOT NULL
+);
+`} />
+  </Tab>
+  <Tab label="2. Dados de teste">
+    <CodeSnippet lang="sql" title="Popular Clientes e Pedidos" code={`
+;WITH N AS (
+    SELECT TOP (100000) ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS n
+    FROM sys.all_objects a CROSS JOIN sys.all_objects b
+)
+INSERT INTO dbo.Clientes (CPF, Nome, Sobrenome, Email, Telefone)
+SELECT
+    RIGHT('00000000000' + CAST(n AS VARCHAR(11)), 11),
+    CASE WHEN n % 500 = 0 THEN 'Maria' ELSE CONCAT('Cliente', n) END,
+    CHOOSE(n % 6 + 1, 'Silva','Souza','Oliveira','Santos','Pereira','Costa'),
+    CONCAT('cliente', n, '@exemplo.local'),
+    '11' + RIGHT('000000000' + CAST(n AS VARCHAR(9)), 9)
+FROM N;
+INSERT INTO dbo.Clientes (CPF, Nome, Sobrenome, Email, Telefone)
+VALUES ('12345678901', 'Ana', 'Silva', 'ana@exemplo.local', '11999998888');
+;WITH N AS (
+    SELECT TOP (300000) ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS n
+    FROM sys.all_objects a CROSS JOIN sys.all_objects b
+)
+INSERT INTO dbo.Pedidos (DataPedido, IdCliente, ValorTotal, [Status])
+SELECT
+    DATEADD(DAY, -(n % 730), CAST(GETDATE() AS DATE)),
+    (n % 100000) + 1,
+    CAST((n % 5000) + 9.90 AS DECIMAL(10,2)),
+    CASE WHEN n % 20 = 0 THEN 'PENDENTE' ELSE 'CONCLUIDO' END
+FROM N;
+`} />
+  </Tab>
+  <Tab label="3. Queries de diagnóstico">
+    <CodeSnippet lang="sql" title="Experimente os padrões do artigo com Ctrl+M ativado" code={`
+USE IndexLab;
+SET STATISTICS IO ON;
+--
+-- 1. Table Scan: sem index, lê a tabela inteira
+SELECT Nome, Email FROM dbo.Clientes WHERE CPF = '12345678901';
+--
+-- 2. Index Seek + Key Lookup: index sem INCLUDE
+CREATE NONCLUSTERED INDEX IX_Clientes_CPF
+ON dbo.Clientes (CPF);
+SELECT Nome, Email FROM dbo.Clientes WHERE CPF = '12345678901';
+-- Observe: Index Seek + Key Lookup (Nome e Email nao estao no index)
+--
+-- 3. Index Seek sem Key Lookup: covering index
+CREATE NONCLUSTERED INDEX IX_Clientes_CPF_Covering
+ON dbo.Clientes (CPF) INCLUDE (Nome, Email, Telefone);
+SELECT Nome, Email FROM dbo.Clientes WHERE CPF = '12345678901';
+-- Observe: apenas Index Seek, sem Key Lookup
+--
+-- 4. Implicit Conversion: observe o triangulo amarelo no seek
+SELECT Nome FROM dbo.Clientes WHERE Email = N'ana@exemplo.local'; -- NVARCHAR vs VARCHAR
+--
+-- 5. SARGability: funcao na coluna vs intervalo direto
+SELECT COUNT(*) FROM dbo.Pedidos WHERE YEAR(DataPedido) = 2025;
+SELECT COUNT(*) FROM dbo.Pedidos
+WHERE DataPedido >= '2025-01-01' AND DataPedido < '2026-01-01';
+-- Compare os dois planos lado a lado no SSMS
+`} />
+  </Tab>
+</Tabs>
+
+<References items={[
+  { label: 'Display an Actual Execution Plan - SQL Server', href: 'https://learn.microsoft.com/en-us/sql/relational-databases/performance/display-an-actual-execution-plan?view=sql-server-ver17' },
+  { label: 'Execution Plans - SQL Server', href: 'https://learn.microsoft.com/en-us/sql/relational-databases/performance/execution-plans?view=sql-server-ver17' },
+  { label: 'Showplan Logical and Physical Operators Reference', href: 'https://learn.microsoft.com/en-us/sql/relational-databases/showplan-logical-and-physical-operators-reference?view=sql-server-ver17' },
+  { label: 'Statistics - SQL Server', href: 'https://learn.microsoft.com/en-us/sql/relational-databases/statistics/statistics?view=sql-server-ver17' },
+  { label: 'Parameter Sensitivity Plan Optimization - SQL Server', href: 'https://learn.microsoft.com/en-us/sql/relational-databases/performance/parameter-sensitivity-plan-optimization?view=sql-server-ver17' },
+  { label: 'sys.dm_db_missing_index_details (Transact-SQL)', href: 'https://learn.microsoft.com/en-us/sql/relational-databases/system-dynamic-management-views/sys-dm-db-missing-index-details-transact-sql?view=sql-server-ver17' },
+  { label: 'sys.dm_exec_query_stats (Transact-SQL)', href: 'https://learn.microsoft.com/en-us/sql/relational-databases/system-dynamic-management-views/sys-dm-exec-query-stats-transact-sql?view=sql-server-ver17' },
+  { label: 'SET STATISTICS IO (Transact-SQL)', href: 'https://learn.microsoft.com/en-us/sql/t-sql/statements/set-statistics-io-transact-sql?view=sql-server-ver17' },
+]} />

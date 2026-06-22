@@ -1,0 +1,479 @@
+---
+title: "Índices no SQL Server: guia prático"
+description: "Um guia prático sobre clustered indexes, nonclustered indexes, covering indexes e execution plans no SQL Server."
+date: '2026-06-21'
+tags:
+  - SQL Server
+  - Banco de Dados
+  - Performance
+lang: pt
+slug: indices-sql-server-guia-pratico
+draft: false
+image: /images/blog/indices-sql-server-guia-pratico/indices-sql-server-guia-pratico.svg
+imageLight: /images/blog/indices-sql-server-guia-pratico/indices-sql-server-guia-pratico-light.svg
+---
+<script>
+  import { Callout, CodeSnippet, DiffSnippet, KeyValue, Mermaid, Step, StepList, Tab, Tabs, TableWrapper, References } from '$lib/components/post';
+
+  const clusteredBTree = `
+graph TD
+    Root(["Página raiz"])
+    I1["Intermediário\nCPF 001 – 500"]
+    I2["Intermediário\nCPF 501 – 999"]
+    L1["Folha\nCPF 001–250 · dados reais"]
+    L2["Folha\nCPF 251–500 · dados reais"]
+    L3["Folha\nCPF 501–750 · dados reais"]
+    L4["Folha\nCPF 751–999 · dados reais"]
+    Root --> I1
+    Root --> I2
+    I1 --> L1
+    I1 --> L2
+    I2 --> L3
+    I2 --> L4
+    L1 -.->|range scan| L2
+    L2 -.-> L3
+    L3 -.-> L4
+
+    classDef root fill:#5c8df0,stroke:#4479c4,color:#fff,font-weight:bold
+    classDef inter fill:#2d3443,stroke:#5c8df0,color:#f4f4f6
+    classDef leaf fill:#1b1f27,stroke:#3a4558,color:#98a3b3
+    class Root root
+    class I1,I2 inter
+    class L1,L2,L3,L4 leaf
+`;
+
+  const keyLookupFlow = `
+graph LR
+    Q(["SELECT Nome, Email, Telefone\nWHERE Nome = 'Maria'"])
+    NCI["① Index Seek\nIX_Clientes_Nome\n200 linhas · 5 reads"]
+    KL["② Key Lookup\nIX_Clientes_CPF\n1 ida por linha · 558 reads"]
+    NL["Nested Loops"]
+    R(["Resultado"])
+
+    Q --> NCI
+    NCI -->|"outer (1×)"| NL
+    NCI -->|"CPF por linha"| KL
+    KL -->|"inner (200×)"| NL
+    NL --> R
+
+    classDef endpoint fill:#5c8df0,stroke:#4479c4,color:#fff
+    classDef expensive fill:#c0392b,stroke:#962d22,color:#fff,font-weight:bold
+    classDef index fill:#2d3443,stroke:#3a4558,color:#f4f4f6
+    classDef join fill:#1b2535,stroke:#5c8df0,color:#5c8df0
+    class Q,R endpoint
+    class KL expensive
+    class NCI index
+    class NL join
+`;
+
+  const coveringIndexFlow = `
+graph LR
+    Q(["SELECT Nome, Email, Telefone\nWHERE Nome = 'Maria'"])
+    CVI["Index Seek\nIX_Clientes_Covering\n200 linhas · 6 reads"]
+    R(["Resultado"])
+
+    Q --> CVI
+    CVI -->|"todas as colunas\nna folha do index"| R
+
+    classDef endpoint fill:#5c8df0,stroke:#4479c4,color:#fff
+    classDef index fill:#2d3443,stroke:#3dd68c,color:#f4f4f6
+    class Q,R endpoint
+    class CVI index
+`;
+
+  const nonclusteredStructure = `
+graph LR
+    NC["Folha do nonclustered\nNome · Sobrenome\nCPF (row locator)"]
+    CI["Folha do clustered\nCPF · Nome · Sobrenome\nEmail · Telefone"]
+
+    NC -->|"CPF aponta para a linha completa"| CI
+
+    classDef nc fill:#2d3443,stroke:#3a4558,color:#f4f4f6
+    classDef ci fill:#1b2535,stroke:#5c8df0,color:#5c8df0
+    class NC nc
+    class CI ci
+`;
+
+  const sargabilityFlow = `
+graph LR
+    Q1(["LOWER(Email) = 'ana@...'"])
+    Q2(["Email = 'ana@...'"])
+    SCAN["Index Scan\n(percorre o index inteiro)"]
+    SEEK["Index Seek\n(busca direta pela chave)"]
+
+    Q1 --> SCAN
+    Q2 --> SEEK
+
+    classDef scan fill:#c0392b,stroke:#962d22,color:#fff,font-weight:bold
+    classDef seek fill:#1a4a30,stroke:#3dd68c,color:#3dd68c,font-weight:bold
+    classDef q fill:#2d3443,stroke:#3a4558,color:#f4f4f6
+    class SCAN scan
+    class SEEK seek
+    class Q1,Q2 q
+`;
+
+  const indexDecisionFlow = `
+graph TD
+    A(["Nova consulta lenta"]) --> B{"Filtro no WHERE\nem uma coluna?"}
+    B -->|Não| H["Scan pode\nser aceitável"]
+    B -->|Sim| C{"SELECT pede colunas\nfora do index?"}
+    C -->|Sim| E["Covering index\nINCLUDE nas colunas extras"]
+    C -->|Não| D{"Subconjunto pequeno\ne recorrente?"}
+    D -->|Sim| G["Filtered index\ncondição no WHERE"]
+    D -->|Não| F["Nonclustered index\nnas colunas de filtro"]
+
+    classDef start fill:#5c8df0,stroke:#4479c4,color:#fff
+    classDef decision fill:#2d3443,stroke:#5c8df0,color:#f4f4f6
+    classDef result fill:#1a4a30,stroke:#3dd68c,color:#3dd68c
+    classDef neutral fill:#2d3443,stroke:#3a4558,color:#98a3b3
+    class A start
+    class B,C,D decision
+    class E,F,G result
+    class H neutral
+`;
+</script>
+
+<Callout type="info" title="Antes de começar">
+  Este artigo assume familiaridade básica com SQL Server e consultas. Se você já se perguntou por que uma consulta ficou lenta ou como o SQL Server escolheu um execution plan, este é um bom ponto de partida. Para acompanhar executando, há um <a href="#ambiente-de-teste">ambiente de teste pronto no apêndice</a>.
+</Callout>
+
+## Por que isso importa?
+
+Indexes não resolvem tudo, mas afetam diretamente leituras, junções, ordenação e custo de escrita. Para quem mantém aplicações, entender essa troca ajuda a evitar tabelas lentas e decisões difíceis de reverter depois.
+
+Entender como os indexes funcionam não é uma tarefa só de DBA. É parte prática do trabalho de quem modela dados, escreve queries ou precisa diagnosticar gargalos de performance.
+
+## Uma analogia útil
+
+Pense no banco de dados como uma biblioteca grande:
+
+- **Clustered index** = a forma como os livros estão organizados fisicamente nas prateleiras.
+- **Nonclustered index** = o catálogo que aponta onde cada livro está.
+- **Covering index** = um catálogo que já traz as informações necessárias para evitar a ida até a prateleira.
+- **Execution plan** = o mapa que mostra como o SQL Server decidiu procurar os dados.
+
+Agora vamos sair da analogia e ir para o que interessa.
+
+## 1. Clustered index: a base física dos dados
+
+O **clustered index** é a estrutura que determina a ordem física dos dados em uma tabela. Cada tabela pode ter **apenas um** clustered index, ou nenhum, no caso de uma heap.
+
+Os dados ficam organizados em uma árvore B (B-tree): a raiz aponta para páginas intermediárias, que apontam para as folhas, onde os dados reais residem, já ordenados pela chave do index.
+
+<Mermaid chart={clusteredBTree} title="estrutura do clustered index (B-tree)" />
+
+<CodeSnippet lang="sql" title="Criando um clustered index" code={`
+CREATE CLUSTERED INDEX IX_Clientes_CPF
+ON dbo.Clientes (CPF);
+`} />
+
+### Características principais
+
+- **Apenas um por tabela**
+- **Geralmente definido na chave primária**, mas não obrigatoriamente
+- **Útil em consultas de intervalo** (`BETWEEN`, `>`, `<`)
+- **Pode impactar `INSERT`, `UPDATE` e `DELETE`**, porque a organização física precisa ser mantida
+
+## 2. Nonclustered index: acesso rápido aos dados
+
+O **nonclustered index** é uma estrutura separada dos dados que contém:
+
+- **A chave do index** (as colunas que você indexa)
+- **Um ponteiro** para a linha correspondente no clustered index ou na heap
+
+<Mermaid chart={nonclusteredStructure} title="folha do nonclustered aponta para o clustered" />
+
+<CodeSnippet lang="sql" title="Criando um nonclustered index" code={`
+CREATE NONCLUSTERED INDEX IX_Clientes_Nome
+ON dbo.Clientes (Nome, Sobrenome);
+`} />
+
+### Características principais
+
+- **Pode haver até 999 nonclustered indexes** por tabela
+- **Não altera a ordem física dos dados**
+- **É útil para filtros, joins e ordenações específicas**
+- **Tem custo de manutenção** em operações de escrita
+
+### A ordem das colunas importa
+
+Em indexes compostos, a ordem das colunas muda o resultado. A primeira coluna define o ponto de entrada mais comum do index e influencia `seek`, `scan` e `ORDER BY`.
+
+Regra prática:
+
+- Colunas usadas com mais frequência nos filtros ou ordenações tendem a vir primeiro
+- Colunas muito seletivas ajudam, mas o padrão real de consulta pesa mais que a teoria pura
+- Se a query sempre filtra por uma coluna e ordena por outra, o desenho precisa respeitar esse uso
+
+### Quando usar
+
+<CodeSnippet lang="sql" title="Consulta que se beneficia do index" code={`
+SELECT Nome, Email, Telefone
+FROM dbo.Clientes
+WHERE Nome = 'Maria'
+ORDER BY Sobrenome;
+`} />
+
+<Callout type="info" title="Depende da seletividade">
+  Esse <code>seek</code> só compensa quando o filtro é seletivo. Se <code>Nome</code> casar com uma fatia grande da tabela (na prática, acima de cerca de 1%), o SQL Server tende a preferir um <code>Scan</code> da tabela em vez de um seek seguido de milhares de <code>Key Lookup</code>. O index entra quando a consulta devolve poucas linhas em relação ao total.
+</Callout>
+
+### Filtered index
+
+Quando só uma parte da tabela importa, um `filtered index` pode ser mais eficiente do que indexar tudo.
+
+<CodeSnippet lang="sql" title="Filtered index para pedidos pendentes" code={`
+CREATE NONCLUSTERED INDEX IX_Pedidos_Pendentes
+ON dbo.Pedidos (DataPedido, IdCliente)
+INCLUDE (ValorTotal, [Status])
+WHERE [Status] = 'PENDENTE';
+`} />
+
+Esse padrão costuma funcionar bem em filas, estados operacionais e tabelas grandes com um subconjunto pequeno e recorrente.
+
+### SARGability
+
+Uma query pode parecer simples e ainda assim continuar lenta se a condição não for `SARGable`.
+
+Quando uma função ou expressão envolve a coluna filtrada, o SQL Server perde a capacidade de entrar diretamente no index e costuma cair para `scan` em vez de `seek`. Isso aparece com frequência em comparações usando `LOWER()`, `CAST()`, `CONVERT()` e ajustes no lado errado da expressão.
+
+<DiffSnippet lang="sql" title="SARGability: evite funções na coluna filtrada" code={`
+- WHERE LOWER(Email) = 'ana@exemplo.local' -- força Table/Index Scan
++ WHERE Email = 'ana@exemplo.local'         -- permite Index Seek
+`} />
+
+Quando possível, prefira comparar a coluna diretamente e resolva normalização de caixa em outra camada ou com uma estratégia própria de dados.
+
+<Mermaid chart={sargabilityFlow} title="função na coluna força scan; comparação direta permite seek" />
+
+## 3. Covering index: quando a consulta já vem completa
+
+Um **covering index** é um nonclustered index que carrega todas as colunas de que a consulta precisa, seja na chave do index ou na cláusula `INCLUDE`. Assim a consulta é respondida inteiramente pelo index, sem voltar ao clustered index ou à heap.
+
+### O custo do `Key Lookup`
+
+Lembre da consulta da seção anterior, que seleciona `Nome`, `Email` e `Telefone` filtrando por `Nome`. O `IX_Clientes_Nome (Nome, Sobrenome)` resolve o filtro e a ordenação, mas não contém `Email` nem `Telefone`. Para completar essas colunas, o SQL Server faz uma busca extra no clustered index a cada linha — é o `Key Lookup`.
+
+Em volume pequeno, isso pode ser aceitável. Em volume grande, costuma virar gargalo.
+
+<Tabs labels={["Sem covering index", "Com covering index"]}>
+  <Tab label="Sem covering index">
+    <p>O SQL Server precisa de dois passos: primeiro o <code>Index Seek</code> no nonclustered index, depois um <code>Key Lookup</code> para buscar as colunas que faltam no clustered index, uma ida por linha.</p>
+    <Mermaid chart={keyLookupFlow} title="caminho sem covering index" />
+  </Tab>
+  <Tab label="Com covering index">
+    <p>Com as colunas necessárias no <code>INCLUDE</code>, o <code>Index Seek</code> já entrega tudo. Nenhuma volta ao clustered index.</p>
+    <Mermaid chart={coveringIndexFlow} title="caminho com covering index" />
+  </Tab>
+</Tabs>
+
+### A solução: incluir as colunas que faltam
+
+Colocando `Email` e `Telefone` no `INCLUDE`, o `Index Seek` passa a entregar tudo de uma vez e o `Key Lookup` desaparece.
+
+<CodeSnippet lang="sql" title="Covering index com INCLUDE" code={`
+CREATE NONCLUSTERED INDEX IX_Clientes_Covering
+ON dbo.Clientes (Nome, Sobrenome)
+INCLUDE (Email, Telefone);
+`} />
+
+<Callout type="success" title="Dica prática">
+  Crie covering indexes com base nas consultas que realmente doem. Mais colunas nem sempre significam mais performance.
+</Callout>
+
+## 4. Execution plans: lendo as decisões do otimizador
+
+O SQL Server expõe como cada consulta foi executada através dos **execution plans**. No SSMS, ative **Include Actual Execution Plan** (`Ctrl+M`) antes de rodar a query para ver qual index foi usado, onde houve `seek`, `scan` ou `lookup` e onde o custo ficou concentrado. Os execution plans merecem um post próprio — este artigo foca nos indexes em si.
+
+## 5. Guia prático de decisão: qual index usar?
+
+<Mermaid chart={indexDecisionFlow} title="fluxo de decisão: qual index criar" />
+
+<TableWrapper caption="Escolha rápida de index">
+  <table>
+    <thead>
+      <tr><th>Cenário</th><th>Recomendação</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Filtro frequente em <code>WHERE</code></td><td>Nonclustered index</td></tr>
+      <tr><td><code>WHERE</code> + muitas colunas no <code>SELECT</code></td><td>Covering index com <code>INCLUDE</code></td></tr>
+      <tr><td><code>JOIN</code> recorrente</td><td>Index nas colunas de relacionamento</td></tr>
+      <tr><td><code>ORDER BY</code> recorrente</td><td>Index alinhado à ordenação</td></tr>
+      <tr><td>Consulta por intervalo</td><td>Clustered index ou nonclustered index adequado</td></tr>
+      <tr><td>Consulta retorna boa parte da tabela</td><td><code>Scan</code> pode ser aceitável</td></tr>
+    </tbody>
+  </table>
+</TableWrapper>
+
+### Checklist de boas práticas
+
+<StepList>
+  <Step title="Identifique consultas problemáticas com DMVs">
+    <CodeSnippet lang="sql" title="Top 10 consultas por CPU" code={`
+SELECT TOP 10
+    qt.text AS query_text,
+    qs.execution_count,
+    qs.total_worker_time AS total_cpu_time,
+    qs.total_elapsed_time,
+    qs.total_logical_reads
+FROM sys.dm_exec_query_stats qs
+CROSS APPLY sys.dm_exec_sql_text(qs.sql_handle) qt
+ORDER BY qs.total_worker_time DESC;
+`} />
+  </Step>
+  <Step title="Analise o execution plan de cada consulta problemática no SSMS" />
+  <Step title="Verifique missing index suggestions">
+    <CodeSnippet lang="sql" title="Sugestões de missing indexes" code={`
+SELECT *
+FROM sys.dm_db_missing_index_details
+WHERE database_id = DB_ID();
+`} />
+    <p>Essas sugestões são um ponto de partida, não uma ordem final. Elas não conhecem toda a carga, o custo de escrita ou a combinação completa de queries da aplicação.</p>
+  </Step>
+  <Step title="Crie indexes específicos para consultas críticas" />
+  <Step title="Monitore o uso dos indexes criados">
+    <CodeSnippet lang="sql" title="Indexes mais usados" code={`
+SELECT OBJECT_NAME(i.object_id) AS table_name,
+       i.name AS index_name,
+       i.type_desc,
+       user_seeks, user_scans, user_lookups
+FROM sys.dm_db_index_usage_stats us
+JOIN sys.indexes i ON us.object_id = i.object_id AND us.index_id = i.index_id
+WHERE database_id = DB_ID()
+ORDER BY user_seeks + user_scans + user_lookups DESC;
+`} />
+  </Step>
+  <Step title="Atualize statistics regularmente">
+    <CodeSnippet lang="sql" title="Atualizar statistics" code={`
+UPDATE STATISTICS dbo.SuaTabela WITH FULLSCAN;
+`} />
+  </Step>
+</StepList>
+
+## 6. Armadilhas comuns
+
+### Criar indexes demais
+
+- **Problema**: cada index ocupa espaço e deixa `INSERT`, `UPDATE` e `DELETE` mais caros
+- **Solução**: monitore uso e remova indexes não utilizados
+
+### Ignorar `Key Lookup`
+
+- **Problema**: muitos `Key Lookup` costumam indicar ida e volta desnecessária à tabela
+- **Solução**: use covering indexes ou revise as consultas
+
+### Não considerar seletividade
+
+- **Problema**: indexes em colunas com baixa seletividade tendem a trazer pouco ganho
+- **Solução**: colunas com alta seletividade, como CPF ou email, costumam funcionar melhor
+
+### Esquecer de atualizar statistics
+
+- **Problema**: statistics desatualizadas podem levar a plans ruins
+- **Solução**: mantenha statistics atualizadas, especialmente após grandes cargas de dados
+
+## Quando não indexar
+
+Nem toda coluna merece um index. Em geral, eu evitaria indexar quando:
+
+- A tabela é pequena e o `scan` é mais barato que a manutenção do index
+- A coluna tem baixa seletividade e é usada sozinha em muitos filtros
+- A tabela sofre muitas escritas e o ganho em leitura não compensa o custo
+- A query já retorna uma parte grande demais dos dados
+
+Nesses casos, o melhor ajuste pode estar na query, no desenho da tabela ou na forma de agrupar acesso e manutenção.
+
+## Conclusão
+
+A escolha entre os tipos de indexes depende das consultas e dos padrões de acesso. Não existe uma resposta única. O ponto é:
+
+1. **Entender suas consultas**: quais são as mais lentas e as mais frequentes
+2. **Analisar execution plans**: o SQL Server está fazendo o que você espera?
+3. **Criar indexes específicos**: para necessidades reais, não genéricas
+4. **Monitorar e ajustar**: performance é uma tarefa contínua
+
+Antes de culpar o banco de dados quando a aplicação ficar lenta, vale verificar se o index certo existe e se a consulta está usando esse index da forma esperada. Em muitos casos, o ajuste está em uma coluna, um `INCLUDE` ou na própria forma da query.
+
+<span id="ambiente-de-teste"></span>
+
+## Apêndice: ambiente de teste
+
+Quer reproduzir os exemplos deste artigo? Os blocos abaixo montam um banco de laboratório isolado chamado `IndexLab`, com volume suficiente para o otimizador realmente escolher entre `seek` e `scan`. Monte-o uma vez e, no SSMS, ative **Include Actual Execution Plan** (`Ctrl+M`) para ver cada plano na prática. Nada aqui toca seus bancos reais.
+
+<Tabs labels={["1. Banco e tabelas", "2. Dados de teste", "3. Conferir"]}>
+  <Tab label="1. Banco e tabelas">
+    <CodeSnippet lang="sql" title="Banco isolado e tabelas (heap)" code={`
+IF DB_ID('IndexLab') IS NOT NULL
+BEGIN
+    ALTER DATABASE IndexLab SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+    DROP DATABASE IndexLab;
+END
+GO
+CREATE DATABASE IndexLab;
+GO
+USE IndexLab;
+GO
+CREATE TABLE dbo.Clientes (
+    ClienteId INT IDENTITY(1,1) NOT NULL,
+    CPF       CHAR(11)     NOT NULL,
+    Nome      VARCHAR(40)  NOT NULL,
+    Sobrenome VARCHAR(40)  NOT NULL,
+    Email     VARCHAR(120) NOT NULL,
+    Telefone  VARCHAR(11)  NOT NULL
+);
+CREATE TABLE dbo.Pedidos (
+    PedidoId   INT IDENTITY(1,1) NOT NULL,
+    DataPedido DATE          NOT NULL,
+    IdCliente  INT           NOT NULL,
+    ValorTotal DECIMAL(10,2) NOT NULL,
+    [Status]   VARCHAR(20)   NOT NULL
+);
+`} />
+  </Tab>
+  <Tab label="2. Dados de teste">
+    <CodeSnippet lang="sql" title="Popular Clientes e Pedidos" code={`
+;WITH N AS (
+    SELECT TOP (100000) ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS n
+    FROM sys.all_objects a CROSS JOIN sys.all_objects b
+)
+INSERT INTO dbo.Clientes (CPF, Nome, Sobrenome, Email, Telefone)
+SELECT
+    RIGHT('00000000000' + CAST(n AS VARCHAR(11)), 11),
+    CASE WHEN n % 500 = 0 THEN 'Maria' ELSE CONCAT('Cliente', n) END,
+    CHOOSE(n % 6 + 1, 'Silva','Souza','Oliveira','Santos','Pereira','Costa'),
+    CONCAT('cliente', n, '@exemplo.local'),
+    '11' + RIGHT('000000000' + CAST(n AS VARCHAR(9)), 9)
+FROM N;
+INSERT INTO dbo.Clientes (CPF, Nome, Sobrenome, Email, Telefone)
+VALUES ('12345678901', 'Ana', 'Silva', 'ana@exemplo.local', '11999998888');
+;WITH N AS (
+    SELECT TOP (300000) ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS n
+    FROM sys.all_objects a CROSS JOIN sys.all_objects b
+)
+INSERT INTO dbo.Pedidos (DataPedido, IdCliente, ValorTotal, [Status])
+SELECT
+    DATEADD(DAY, -(n % 730), CAST(GETDATE() AS DATE)),
+    (n % 100000) + 1,
+    CAST((n % 5000) + 9.90 AS DECIMAL(10,2)),
+    CASE WHEN n % 20 = 0 THEN 'PENDENTE' ELSE 'CONCLUIDO' END
+FROM N;
+`} />
+  </Tab>
+  <Tab label="3. Conferir">
+    <CodeSnippet lang="sql" title="Contagem rápida" code={`
+SELECT
+    (SELECT COUNT(*) FROM dbo.Clientes) AS Clientes,
+    (SELECT COUNT(*) FROM dbo.Pedidos)  AS Pedidos;
+`} />
+    <p>Com o banco montado, todos os <code>CREATE INDEX</code> e consultas das seções anteriores rodam direto contra <code>IndexLab</code>.</p>
+  </Tab>
+</Tabs>
+
+<References items={[
+  { label: 'Clustered and Nonclustered Indexes - SQL Server', href: 'https://learn.microsoft.com/en-us/sql/relational-databases/indexes/clustered-and-nonclustered-indexes-described?view=sql-server-ver17' },
+  { label: 'Create Nonclustered Indexes - SQL Server', href: 'https://learn.microsoft.com/en-us/sql/relational-databases/indexes/create-nonclustered-indexes?view=sql-server-ver17' },
+  { label: 'Index Architecture and Design Guide - SQL Server', href: 'https://learn.microsoft.com/en-us/sql/relational-databases/sql-server-index-design-guide?view=sql-server-ver17' },
+  { label: 'sys.dm_db_missing_index_details (Transact-SQL)', href: 'https://learn.microsoft.com/en-us/sql/relational-databases/system-dynamic-management-views/sys-dm-db-missing-index-details-transact-sql?view=sql-server-ver17' },
+  { label: 'sys.dm_db_index_usage_stats (Transact-SQL)', href: 'https://learn.microsoft.com/en-us/sql/relational-databases/system-dynamic-management-views/sys-dm-db-index-usage-stats-transact-sql?view=sql-server-ver17' },
+  { label: 'Tune Nonclustered Indexes with Missing Index Suggestions', href: 'https://learn.microsoft.com/en-us/sql/relational-databases/indexes/tune-nonclustered-missing-index-suggestions?view=sql-server-ver17' },
+]} />

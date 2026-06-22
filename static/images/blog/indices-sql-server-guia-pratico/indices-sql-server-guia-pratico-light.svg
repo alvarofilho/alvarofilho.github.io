@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-labelledby="title desc">
+  <title id="title">SQL Server Indexes</title>
+  <desc id="desc">Editorial table showing clustered, nonclustered and covering indexes.</desc>
+  <defs>
+    <pattern id="grid" width="100" height="70" patternUnits="userSpaceOnUse">
+      <path d="M100 0V70M0 70H100" fill="none" stroke="#e0e4eb" stroke-width="1" opacity="0.78"/>
+    </pattern>
+    <style>
+      .mono { font-family: "JetBrains Mono", Consolas, "Liberation Mono", monospace; }
+      .title { fill: #151c28; font-size: 24px; letter-spacing: 0.04em; }
+      .heading { fill: #151c28; font-size: 34px; }
+      .sub { fill: #626f84; font-size: 18px; }
+      .head { fill: #626f84; font-size: 15px; letter-spacing: 0.08em; }
+      .cell { fill: #151c28; font-size: 18px; }
+      .accent { fill: #3864d4; }
+      .panel { fill: #ffffff; }
+      .table { fill: #f2f4f7; stroke: #c8d0dd; stroke-width: 2; }
+      .line { stroke: #c8d0dd; stroke-width: 2; }
+      .flow { fill: none; stroke: #3864d4; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="620" fill="#fcfcfd"/>
+  <rect width="1200" height="620" fill="url(#grid)"/>
+
+  <rect x="96" y="70" width="1008" height="480" class="panel" rx="0" stroke="#e0e4eb" stroke-width="2"/>
+
+  <g class="mono">
+    <text x="145" y="124" class="title">// SQL SERVER</text>
+    <text x="145" y="168" class="heading">INDEXES</text>
+    <text x="145" y="196" class="sub">clustered, nonclustered, covering</text>
+
+    <rect x="145" y="240" width="910" height="240" class="table"/>
+    <line x1="145" y1="286" x2="1055" y2="286" class="line"/>
+    <line x1="145" y1="354" x2="1055" y2="354" class="line"/>
+    <line x1="145" y1="422" x2="1055" y2="422" class="line"/>
+    <line x1="405" y1="240" x2="405" y2="480" class="line"/>
+    <line x1="705" y1="240" x2="705" y2="480" class="line"/>
+
+    <text x="170" y="271" class="head">TYPE</text>
+    <text x="425" y="271" class="head">ROLE</text>
+    <text x="735" y="271" class="head">IMPACT</text>
+
+    <text x="170" y="324" class="cell">Clustered</text>
+    <text x="425" y="324" class="cell">orders data</text>
+    <text x="735" y="324" class="cell">good for ranges</text>
+
+    <text x="170" y="392" class="cell">Nonclustered</text>
+    <text x="425" y="392" class="cell">points to rows</text>
+    <text x="735" y="392" class="cell">needs maintenance</text>
+
+    <text x="170" y="460" class="cell accent">Covering</text>
+    <text x="425" y="460" class="cell">covers query</text>
+    <text x="735" y="460" class="cell">avoids lookups</text>
+
+    <text x="145" y="522" class="sub">execution plan / seek / scan / lookup</text>
+  </g>
+</svg>

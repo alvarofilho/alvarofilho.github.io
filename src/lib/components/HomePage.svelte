@@ -14,7 +14,8 @@
   };
 
   let { lang, messages }: Props = $props();
-  const posts = $derived(getAllPostsForLang(lang).slice(0, 5));
+  const allPosts = $derived(getAllPostsForLang(lang));
+  const posts = $derived(allPosts.slice(0, 5));
 
   function externalLabel(label: string) {
     return `${label} (${messages.text.externalLinkSuffix})`;
@@ -170,7 +171,7 @@
       {#if posts.length}
         <div class="blog-list fi" use:fadeIn>
           {#each posts as post, index}
-            <BlogCard {post} {index} />
+            <BlogCard {post} index={allPosts.length - 1 - index} />
           {/each}
         </div>
         <a href={`/${lang}/blog/`} class="blog-cta-row fi" use:fadeIn>

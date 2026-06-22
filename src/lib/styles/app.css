@@ -1803,11 +1803,48 @@ section {
   border: 1px solid var(--border-l);
 }
 
-.diagram-block figcaption {
-  padding: 0.65rem 0.8rem;
+.diagram-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.45rem 0.45rem 0.45rem 0.8rem;
   border-bottom: 1px solid var(--border-l);
+  background: var(--card);
+  min-height: 2.25rem;
+}
+
+.diagram-block figcaption {
   color: var(--accent);
   font-size: 0.65rem;
+}
+
+.diagram-controls {
+  display: flex;
+  gap: 0.125rem;
+}
+
+.diagram-controls button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: none;
+  background: transparent;
+  color: var(--dimmer);
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+}
+
+.diagram-controls button:hover {
+  color: var(--text);
+  background: var(--card-h);
+}
+
+.diagram-controls button.active {
+  color: var(--accent);
+  background: var(--accent-dim);
 }
 
 .diagram-surface {
@@ -1824,6 +1861,114 @@ section {
 .diagram-surface pre {
   margin: 0;
   white-space: pre-wrap;
+}
+
+.diagram-source {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--muted);
+  background: transparent;
+  border: none;
+  padding: 0;
+  width: 100%;
+}
+
+.diagram-fs {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #0b0d10;
+  overflow: hidden;
+  cursor: grab;
+  user-select: none;
+  outline: none;
+}
+
+.diagram-fs.dragging {
+  cursor: grabbing;
+}
+
+.diagram-fs-canvas {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.diagram-fs-canvas svg {
+  display: block;
+  max-width: none;
+  pointer-events: none;
+}
+
+.diagram-fs-bar {
+  position: absolute;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.625rem;
+  padding: 0.375rem 0.5rem;
+  z-index: 1;
+  pointer-events: all;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+}
+
+.diagram-fs-title {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+  padding: 0 0.25rem;
+}
+
+.diagram-fs-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.125rem;
+}
+
+.diagram-fs-zoom {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+  min-width: 2.5rem;
+  text-align: center;
+}
+
+.diagram-fs-sep {
+  width: 1px;
+  height: 1.25rem;
+  background: var(--border);
+  margin: 0 0.125rem;
+}
+
+.diagram-fs-bar button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: none;
+  background: transparent;
+  color: var(--dimmer);
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+}
+
+.diagram-fs-bar button:hover {
+  color: var(--text);
+  background: var(--card-h);
+}
+
+body.diagram-fullscreen .site-nav {
+  display: none;
 }
 
 .post-content img,

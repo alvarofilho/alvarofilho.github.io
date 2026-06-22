@@ -247,7 +247,7 @@
   {#if filteredPosts.length}
     <div class="blog-list fi on">
       {#each visiblePosts as post, i}
-        <BlogCard {post} index={(safePage - 1) * POSTS_PER_PAGE + i} />
+        <BlogCard {post} index={filteredPosts.length - 1 - ((safePage - 1) * POSTS_PER_PAGE + i)} />
       {/each}
     </div>
     {#if totalPages > 1}
