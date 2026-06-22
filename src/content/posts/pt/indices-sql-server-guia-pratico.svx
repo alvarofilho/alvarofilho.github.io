@@ -1,6 +1,6 @@
 ---
 title: "Índices no SQL Server: guia prático"
-description: "Um guia prático sobre clustered indexes, nonclustered indexes, covering indexes e execution plans no SQL Server."
+description: "Um guia prático sobre clustered indexes, nonclustered indexes, covering indexes, SARGability e execution plans no SQL Server."
 date: '2026-06-21'
 tags:
   - SQL Server
@@ -158,7 +158,7 @@ Agora vamos sair da analogia e ir para o que interessa.
 
 O **clustered index** é a estrutura que determina a ordem física dos dados em uma tabela. Cada tabela pode ter **apenas um** clustered index, ou nenhum, no caso de uma heap.
 
-Os dados ficam organizados em uma árvore B (B-tree): a raiz aponta para páginas intermediárias, que apontam para as folhas, onde os dados reais residem, já ordenados pela chave do index.
+Os dados ficam organizados em uma B-tree: a raiz aponta para páginas intermediárias, que apontam para as folhas, onde os dados reais residem, já ordenados pela chave do index.
 
 <Mermaid chart={clusteredBTree} title="estrutura do clustered index (B-tree)" />
 
@@ -218,7 +218,7 @@ ORDER BY Sobrenome;
   Esse <code>seek</code> só compensa quando o filtro é seletivo. Se <code>Nome</code> casar com uma fatia grande da tabela (na prática, acima de cerca de 1%), o SQL Server tende a preferir um <code>Scan</code> da tabela em vez de um seek seguido de milhares de <code>Key Lookup</code>. O index entra quando a consulta devolve poucas linhas em relação ao total.
 </Callout>
 
-### Filtered index
+### Filtered index: indexando um subconjunto
 
 Quando só uma parte da tabela importa, um `filtered index` pode ser mais eficiente do que indexar tudo.
 
@@ -231,7 +231,7 @@ WHERE [Status] = 'PENDENTE';
 
 Esse padrão costuma funcionar bem em filas, estados operacionais e tabelas grandes com um subconjunto pequeno e recorrente.
 
-### SARGability
+## 3. SARGability: queries que aproveitam os indexes
 
 Uma query pode parecer simples e ainda assim continuar lenta se a condição não for `SARGable`.
 
@@ -246,15 +246,25 @@ Quando possível, prefira comparar a coluna diretamente e resolva normalização
 
 <Mermaid chart={sargabilityFlow} title="função na coluna força scan; comparação direta permite seek" />
 
-## 3. Covering index: quando a consulta já vem completa
+## 4. Covering index: quando a consulta já vem completa
 
 Um **covering index** é um nonclustered index que carrega todas as colunas de que a consulta precisa, seja na chave do index ou na cláusula `INCLUDE`. Assim a consulta é respondida inteiramente pelo index, sem voltar ao clustered index ou à heap.
 
 ### O custo do `Key Lookup`
 
-Lembre da consulta da seção anterior, que seleciona `Nome`, `Email` e `Telefone` filtrando por `Nome`. O `IX_Clientes_Nome (Nome, Sobrenome)` resolve o filtro e a ordenação, mas não contém `Email` nem `Telefone`. Para completar essas colunas, o SQL Server faz uma busca extra no clustered index a cada linha — é o `Key Lookup`.
+Lembre da consulta da seção anterior, que seleciona `Nome`, `Email` e `Telefone` filtrando por `Nome`. O `IX_Clientes_Nome (Nome, Sobrenome)` resolve o filtro e a ordenação, mas não contém `Email` nem `Telefone`. Para completar essas colunas, o SQL Server faz uma busca extra no clustered index a cada linha: é o `Key Lookup`.
 
 Em volume pequeno, isso pode ser aceitável. Em volume grande, costuma virar gargalo.
+
+### A solução: incluir as colunas que faltam
+
+Colocando `Email` e `Telefone` no `INCLUDE`, o `Index Seek` passa a entregar tudo de uma vez e o `Key Lookup` desaparece.
+
+<CodeSnippet lang="sql" title="Covering index com INCLUDE" code={`
+CREATE NONCLUSTERED INDEX IX_Clientes_Covering
+ON dbo.Clientes (Nome, Sobrenome)
+INCLUDE (Email, Telefone);
+`} />
 
 <Tabs labels={["Sem covering index", "Com covering index"]}>
   <Tab label="Sem covering index">
@@ -267,25 +277,15 @@ Em volume pequeno, isso pode ser aceitável. Em volume grande, costuma virar gar
   </Tab>
 </Tabs>
 
-### A solução: incluir as colunas que faltam
-
-Colocando `Email` e `Telefone` no `INCLUDE`, o `Index Seek` passa a entregar tudo de uma vez e o `Key Lookup` desaparece.
-
-<CodeSnippet lang="sql" title="Covering index com INCLUDE" code={`
-CREATE NONCLUSTERED INDEX IX_Clientes_Covering
-ON dbo.Clientes (Nome, Sobrenome)
-INCLUDE (Email, Telefone);
-`} />
-
 <Callout type="success" title="Dica prática">
   Crie covering indexes com base nas consultas que realmente doem. Mais colunas nem sempre significam mais performance.
 </Callout>
 
-## 4. Execution plans: lendo as decisões do otimizador
+## 5. Execution plans: lendo as decisões do otimizador
 
-O SQL Server expõe como cada consulta foi executada através dos **execution plans**. No SSMS, ative **Include Actual Execution Plan** (`Ctrl+M`) antes de rodar a query para ver qual index foi usado, onde houve `seek`, `scan` ou `lookup` e onde o custo ficou concentrado. Os execution plans merecem um post próprio — este artigo foca nos indexes em si.
+O SQL Server expõe como cada consulta foi executada através dos **execution plans**. No SSMS, ative **Include Actual Execution Plan** (`Ctrl+M`) antes de rodar a query para ver qual index foi usado, onde houve `seek`, `scan` ou `lookup` e onde o custo ficou concentrado. Os execution plans merecem um post próprio; este artigo foca nos indexes em si.
 
-## 5. Guia prático de decisão: qual index usar?
+## 6. Guia prático de decisão: qual index usar?
 
 <Mermaid chart={indexDecisionFlow} title="fluxo de decisão: qual index criar" />
 
@@ -350,7 +350,7 @@ UPDATE STATISTICS dbo.SuaTabela WITH FULLSCAN;
   </Step>
 </StepList>
 
-## 6. Armadilhas comuns
+## 7. Armadilhas comuns
 
 ### Criar indexes demais
 

@@ -41,7 +41,8 @@
   const htmlLang = $derived(lang ? languageConfig[lang].htmlLang : undefined);
   const canonicalPath = $derived(path === '/pt/' ? '/' : path);
   const canonical = $derived(`${siteUrl}${canonicalPath}`);
-  const ogImage = $derived(`${siteUrl}${image ?? '/images/avatar-144.jpg'}`);
+  const ogImagePath = $derived(image?.endsWith('.svg') ? image.replace('.svg', '.png') : image);
+  const ogImage = $derived(`${siteUrl}${ogImagePath ?? '/images/avatar-144.jpg'}`);
   const twitterCard = $derived(image ? 'summary_large_image' : 'summary');
   const defaultAlternates = $derived.by(() => {
     if (path === '/' || path === '/pt/' || path === '/en/') {

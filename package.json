@@ -13,6 +13,7 @@
   "devDependencies": {
     "@icons-pack/svelte-simple-icons": "^6.5.0",
     "@lucide/svelte": "^1.16.0",
+    "@resvg/resvg-js": "^2.6.2",
     "@sveltejs/adapter-static": "^3.0.8",
     "@sveltejs/kit": "^2.16.0",
     "@sveltejs/vite-plugin-svelte": "^5.0.3",
