@@ -38,6 +38,39 @@ function externalLinks() {
   };
 }
 
+// Mirror PostToc.svelte's slugify so build-time ids match runtime ids.
+function slugify(value) {
+  return value
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
+function headingText(node) {
+  if (node.type === 'text' || node.type === 'raw') return node.value;
+  if (node.value) return node.value;
+  if (node.children) return node.children.map(headingText).join('');
+  return '';
+}
+
+// Assign ids to h2/h3 at build time so in-page anchors resolve in prerendered HTML.
+function rehypeHeadingIds() {
+  return (tree) => {
+    const seen = new Map();
+    visit(tree, 'element', (node) => {
+      if (node.tagName !== 'h2' && node.tagName !== 'h3') return;
+      if (node.properties?.id) return;
+      const base = slugify(headingText(node)) || 'section';
+      const count = seen.get(base) ?? 0;
+      seen.set(base, count + 1);
+      node.properties = node.properties || {};
+      node.properties.id = count ? `${base}-${count + 1}` : base;
+    });
+  };
+}
+
   const config = {
     extensions: ['.svelte', '.svx'],
     preprocess: [
@@ -45,7 +78,8 @@ function externalLinks() {
       mdsvex({
         extensions: ['.svx'],
         highlight: false,
-        remarkPlugins: [remarkReadingTime, externalLinks]
+        remarkPlugins: [remarkReadingTime, externalLinks],
+        rehypePlugins: [rehypeHeadingIds]
       })
     ],
     kit: {
