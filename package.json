@@ -32,7 +32,8 @@
   },
   "pnpm": {
     "overrides": {
-      "dompurify": "3.4.11"
+      "dompurify": "3.4.11",
+      "cookie": "^0.7.0"
     }
   }
 }
