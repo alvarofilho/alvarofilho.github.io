@@ -236,7 +236,7 @@ Consultas com `JOIN` mostram qual estratégia o SQL Server escolheu para combina
   </table>
 </TableWrapper>
 
-Quando um `Nested Loops` aparece com `Key Lookup` no lado interno, você tem o padrão mais comum de performance ruim: o SQL Server busca no index (loop externo) e, para cada linha encontrada, volta ao clustered index para completar as colunas (loop interno). Esse padrão está detalhado na seção de <a href="/pt/blog/indices-sql-server-guia-pratico/#3-covering-index-quando-a-consulta-j%C3%A1-vem-completa">covering indexes</a>.
+Quando um `Nested Loops` aparece com `Key Lookup` no lado interno, você tem o padrão mais comum de performance ruim: o SQL Server busca no index (loop externo) e, para cada linha encontrada, volta ao clustered index para completar as colunas (loop interno). Esse padrão está detalhado na seção de <a href="/pt/blog/indices-sql-server-guia-pratico/#4-covering-index-quando-a-consulta-ja-vem-completa">covering indexes</a>.
 
 ## 6. Alertas: triângulos amarelos
 
