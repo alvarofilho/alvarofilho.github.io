@@ -4,7 +4,8 @@
   import { tick } from 'svelte';
   import ThemeToggle from './ThemeToggle.svelte';
   import { getOtherLang, languages, type Lang, type Messages } from '$lib/data/site';
-  import { getDraftPost, getDraftPostPath, getPost, getPostPath, getTranslatedDraftPost, getTranslatedPost } from '$lib/data/posts';
+  import { contentCatalog } from '$lib/data/posts';
+  import { getBlogPath, getDraftIndexPath, getHomePath } from '$lib/data/url-policy';
 
   type Props = {
     lang: Lang;
@@ -19,7 +20,7 @@
   const currentHash = $derived(page.url.hash);
   const otherLang = $derived(getOtherLang(lang));
   const isBlog = $derived(currentPath.includes('/blog'));
-  const homePath = $derived(currentPath === '/' ? '/' : `/${lang}/`);
+  const homePath = $derived(getHomePath(lang));
   const otherPath = $derived(getLanguagePath(currentPath, lang, otherLang));
   const activeLinkId = $derived(isBlog ? 'blog' : activeSection);
 
@@ -27,7 +28,7 @@
     { id: 'skills', label: messages.nav.skills, href: `${homePath}#skills` },
     { id: 'projects', label: messages.nav.projects, href: `${homePath}#projects` },
     { id: 'experience', label: messages.nav.experience, href: `${homePath}#experience` },
-    { id: 'blog', label: messages.nav.blog, href: `/${lang}/blog/` },
+    { id: 'blog', label: messages.nav.blog, href: getBlogPath(lang) },
     { id: 'contact', label: messages.nav.contact, href: `${homePath}#contact` }
   ]);
 
@@ -38,31 +39,31 @@
 
   function getLanguagePath(currentPath: string, currentLang: Lang, nextLang: Lang) {
     if (currentPath === '/') {
-      return `/${nextLang}/`;
+      return getHomePath(nextLang);
     }
 
     const parts = currentPath.split('/').filter(Boolean);
     if (parts.length > 2 && parts[1] === 'blog') {
       if (parts[2] === 'drafts') {
-        const draft = parts[3] ? getDraftPost(currentLang, parts[3]) : undefined;
-        if (!draft) return `/${nextLang}/blog/drafts/`;
+        const draft = parts[3] ? contentCatalog.getDraftPost(currentLang, parts[3]) : undefined;
+        if (!draft) return getDraftIndexPath(nextLang);
 
-        const translatedDraft = getTranslatedDraftPost(draft, nextLang);
-        return translatedDraft ? getDraftPostPath(translatedDraft) : `/${nextLang}/blog/drafts/`;
+        const translatedDraft = contentCatalog.getTranslatedDraftPost(draft, nextLang);
+        return translatedDraft ? contentCatalog.getDraftPostPath(translatedDraft) : getDraftIndexPath(nextLang);
       }
 
-      const currentPost = getPost(currentLang, parts[2]);
+      const currentPost = contentCatalog.getPublishedPost(currentLang, parts[2]);
       if (currentPost) {
-        const translatedPost = getTranslatedPost(currentPost, nextLang);
-        if (translatedPost) return getPostPath(translatedPost);
+        const translatedPost = contentCatalog.getTranslatedPost(currentPost, nextLang);
+        if (translatedPost) return contentCatalog.getPostPath(translatedPost);
 
         const fallbackOrder = ['en', 'pt', ...languages.filter((l) => l !== 'en' && l !== 'pt')];
         for (const fallbackLang of fallbackOrder) {
-          const fallback = getTranslatedPost(currentPost, fallbackLang as typeof languages[number]);
-          if (fallback) return getPostPath(fallback);
+          const fallback = contentCatalog.getTranslatedPost(currentPost, fallbackLang as typeof languages[number]);
+          if (fallback) return contentCatalog.getPostPath(fallback);
         }
       }
-      return `/${nextLang}/blog/`;
+      return getBlogPath(nextLang);
     }
 
     return currentPath.replace(`/${currentLang}/`, `/${nextLang}/`);

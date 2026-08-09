@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getAvailableLangs, getPostPath, type PostMeta } from '$lib/data/posts';
+  import { contentCatalog, type PostMeta } from '$lib/data/posts';
   import { formatDate } from '$lib/data/site';
 
   type Props = {
@@ -9,10 +9,10 @@
 
   let { post, index }: Props = $props();
 
-  const availableLangs = $derived(getAvailableLangs(post));
+  const availableLangs = $derived(contentCatalog.getAvailableLangs(post));
 </script>
 
-<a href={getPostPath(post)} class="blog-card">
+<a href={contentCatalog.getPostPath(post)} class="blog-card">
   <span class="bc-idx">{String(index + 1).padStart(2, '0')}</span>
   <span class="bc-body">
     <span class="bc-meta">

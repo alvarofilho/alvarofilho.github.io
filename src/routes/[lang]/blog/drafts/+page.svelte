@@ -1,6 +1,6 @@
 <script lang="ts">
   import Seo from '$lib/components/Seo.svelte';
-  import { getDraftPostPath } from '$lib/data/posts';
+  import { contentCatalog } from '$lib/data/posts';
   import rawStarterTemplate from '$lib/data/draft-starter-template.svx?raw';
 
   let { data } = $props();
@@ -37,7 +37,7 @@
           {#if data.drafts.length}
             <div class="draft-list">
               {#each data.drafts as draft}
-                <a class="draft-row" href={getDraftPostPath(draft)}>
+                <a class="draft-row" href={contentCatalog.getDraftPostPath(draft)}>
                   <span class="draft-row-title">{draft.title}</span>
                   <span class="draft-row-meta">{draft.slug} · {draft.date}</span>
                 </a>

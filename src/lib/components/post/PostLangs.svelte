@@ -1,6 +1,6 @@
 <script lang="ts">
   import { getContext } from 'svelte';
-  import { getPostPath, getTranslatedPost, type PostMeta } from '$lib/data/posts';
+  import { contentCatalog, type PostMeta } from '$lib/data/posts';
   import type { Lang, Messages } from '$lib/data/site';
 
   type Props = {
@@ -18,8 +18,8 @@
   const readInLabel = $derived(text?.postReadInLangLabel ?? 'Read this post in');
 
   function getPath(lang: Lang) {
-    const translated = getTranslatedPost(post, lang);
-    return translated ? getPostPath(translated) : null;
+    const translated = contentCatalog.getTranslatedPost(post, lang);
+    return translated ? contentCatalog.getPostPath(translated) : null;
   }
 </script>
 

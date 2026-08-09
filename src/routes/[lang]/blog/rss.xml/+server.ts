@@ -1,5 +1,6 @@
-import { getPostsByLang, getPostPath } from '$lib/data/posts';
-import { siteUrl, languageConfig, isLang, languages } from '$lib/data/site';
+import { contentCatalog } from '$lib/data/posts';
+import { languageConfig, isLang, languages } from '$lib/data/site';
+import { absoluteUrl, getBlogPath, getRssPath } from '$lib/data/url-policy';
 import { error } from '@sveltejs/kit';
 import type { EntryGenerator, RequestHandler } from './$types';
 
@@ -12,7 +13,7 @@ export const GET: RequestHandler = ({ params }) => {
   if (!isLang(lang)) error(404);
 
   const config = languageConfig[lang];
-  const posts = getPostsByLang(lang);
+  const posts = contentCatalog.getPostsByLang(lang);
 
   const title = lang === 'pt' ? 'Blog — Álvaro Duarte' : 'Blog — Álvaro Duarte';
   const description =
@@ -22,7 +23,7 @@ export const GET: RequestHandler = ({ params }) => {
 
   const items = posts
     .map((post) => {
-      const link = `${siteUrl}${getPostPath(post)}`;
+      const link = absoluteUrl(contentCatalog.getPostPath(post));
       const pubDate = new Date(`${post.date}T00:00:00Z`).toUTCString();
       return `
     <item>
@@ -39,10 +40,10 @@ export const GET: RequestHandler = ({ params }) => {
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>${title}</title>
-    <link>${siteUrl}/${lang}/blog/</link>
+    <link>${absoluteUrl(getBlogPath(lang))}</link>
     <description>${description}</description>
     <language>${config.htmlLang}</language>
-    <atom:link href="${siteUrl}/${lang}/blog/rss.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="${absoluteUrl(getRssPath(lang))}" rel="self" type="application/rss+xml" />
 ${items}
   </channel>
 </rss>`;

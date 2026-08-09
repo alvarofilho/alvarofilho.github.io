@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getPostPath, type PostMeta } from '$lib/data/posts';
+  import { contentCatalog, type PostMeta } from '$lib/data/posts';
   import { formatDate } from '$lib/data/site';
 
   type Props = {
@@ -16,7 +16,7 @@
     <ul>
       {#each posts as post}
         <li>
-          <a href={getPostPath(post)}>
+          <a href={contentCatalog.getPostPath(post)}>
             <span class="rp-title">{post.title}</span>
             <span class="rp-date">{formatDate(post.date, post.lang)}</span>
           </a>

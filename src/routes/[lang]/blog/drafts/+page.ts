@@ -1,4 +1,4 @@
-import { getDraftPostsByLang } from '$lib/data/posts';
+import { contentCatalog } from '$lib/data/posts';
 import { languages } from '$lib/data/site';
 import type { EntryGenerator, PageLoad } from './$types';
 
@@ -8,6 +8,6 @@ export const load: PageLoad = async ({ parent }) => {
   const { lang } = await parent();
 
   return {
-    drafts: getDraftPostsByLang(lang)
+    drafts: contentCatalog.getDraftPostsByLang(lang)
   };
 };

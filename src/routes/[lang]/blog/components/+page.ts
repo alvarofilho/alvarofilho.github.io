@@ -1,4 +1,4 @@
-import { getPostsByLang } from '$lib/data/posts';
+import { contentCatalog } from '$lib/data/posts';
 import { languages } from '$lib/data/site';
 import type { EntryGenerator, PageLoad } from './$types';
 
@@ -6,7 +6,7 @@ export const entries: EntryGenerator = () => languages.map((lang) => ({ lang }))
 
 export const load: PageLoad = async ({ parent }) => {
   const { lang } = await parent();
-  const posts = getPostsByLang(lang);
+  const posts = contentCatalog.getPostsByLang(lang);
 
   return { posts };
 };

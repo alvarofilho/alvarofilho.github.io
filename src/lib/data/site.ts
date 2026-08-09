@@ -186,13 +186,3 @@ export function formatDate(date: string, lang: Lang) {
     year: 'numeric'
   });
 }
-
-export function getLanguageAlternates(path: string) {
-  const parts = path.split('/').filter(Boolean);
-
-  return languages.map((lang) => ({
-    lang,
-    hreflang: languageConfig[lang].htmlLang,
-    path: parts.length ? `/${[lang, ...parts.slice(1)].join('/')}/` : `/${lang}/`
-  }));
-}

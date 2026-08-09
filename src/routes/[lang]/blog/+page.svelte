@@ -2,6 +2,7 @@
   import { fadeIn } from '$lib/actions/fadeIn';
   import BlogSearch from '$lib/components/BlogSearch.svelte';
   import Seo from '$lib/components/Seo.svelte';
+  import { getBlogPath, getRssPath } from '$lib/data/url-policy';
 
   let { data } = $props();
 </script>
@@ -9,10 +10,10 @@
 <Seo
   title={`${data.messages.text.blogTitle} — Álvaro Duarte`}
   description={data.messages.text.blogHint}
-  path={`/${data.lang}/blog/`}
+  path={getBlogPath(data.lang)}
   lang={data.lang}
   locale={data.messages.locale}
-  rssPath={`/${data.lang}/blog/rss.xml`}
+  rssPath={getRssPath(data.lang)}
 />
 
 <main>

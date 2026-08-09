@@ -15,3 +15,4 @@ export { default as Tabs } from './Tabs.svelte';
 export { default as References } from './References.svelte';
 export { default as TableWrapper } from './TableWrapper.svelte';
 export { default as TerminalBlock } from './TerminalBlock.svelte';
+export { postComponentReference } from './reference';

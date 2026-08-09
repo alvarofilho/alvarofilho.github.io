@@ -19,12 +19,13 @@
   import PostToc from '$lib/components/post/PostToc.svelte';
   import RelatedPosts from '$lib/components/post/RelatedPosts.svelte';
   import PostLangs from '$lib/components/post/PostLangs.svelte';
-  import { getAvailableLangs } from '$lib/data/posts';
+  import { contentCatalog } from '$lib/data/posts';
+  import { postComponentReference } from '$lib/components/post/reference';
 
   let { data } = $props();
 
   const firstPost = $derived(data.posts[0]);
-  const availableLangs = $derived(firstPost ? getAvailableLangs(firstPost) : []);
+  const availableLangs = $derived(firstPost ? contentCatalog.getAvailableLangs(firstPost) : []);
   const t = $derived(data.messages.text);
 
   // ── CodeSnippet examples ──────────────────────────────────────
@@ -186,6 +187,15 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiJ9...
           <div class="component-showcase-mobile-toc">
             <PostToc />
           </div>
+
+          <nav class="component-reference" aria-label="Post component reference">
+            <p>// components</p>
+            <ul>
+              {#each postComponentReference as component}
+                <li><a href={`#${component.id}`}>{component.name}</a><code>{component.interface}</code></li>
+              {/each}
+            </ul>
+          </nav>
 
           <div class="post-content">
 
@@ -450,6 +460,38 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiJ9...
 </main>
 
 <style>
+  .component-reference {
+    margin: 1.25rem 0 2rem;
+    padding: 1rem;
+    border: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .component-reference p {
+    margin: 0 0 0.75rem;
+    color: var(--muted);
+  }
+
+  .component-reference ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: 0.55rem 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .component-reference li {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .component-reference code {
+    color: var(--muted);
+    font-size: 0.72rem;
+  }
+
   .demo-block {
     padding: 1rem 1.25rem;
     border: 1px solid var(--border);

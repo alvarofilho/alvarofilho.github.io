@@ -1,7 +1,7 @@
 <script lang="ts">
   import { fadeIn } from '$lib/actions/fadeIn';
   import { projects, skillGroups, type Lang, type Messages } from '$lib/data/site';
-  import { getAllPostsForLang } from '$lib/data/posts';
+  import { contentCatalog } from '$lib/data/posts';
   import { ArrowRight, ArrowUpRight, Mail } from '@lucide/svelte';
   import { SiDiscord, SiGithub } from '@icons-pack/svelte-simple-icons';
   import HeroTyping from './HeroTyping.svelte';
@@ -14,7 +14,7 @@
   };
 
   let { lang, messages }: Props = $props();
-  const allPosts = $derived(getAllPostsForLang(lang));
+  const allPosts = $derived(contentCatalog.getAllPostsForLang(lang));
   const posts = $derived(allPosts.slice(0, 5));
 
   function externalLabel(label: string) {

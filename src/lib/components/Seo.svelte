@@ -1,5 +1,6 @@
 <script lang="ts">
   import { languageConfig, siteUrl, type Lang } from '$lib/data/site';
+  import { absoluteUrl, getLocalizedPageAlternates } from '$lib/data/url-policy';
 
   type Alternate = {
     hreflang: string;
@@ -39,39 +40,14 @@
   }: Props = $props();
 
   const htmlLang = $derived(lang ? languageConfig[lang].htmlLang : undefined);
-  const canonicalPath = $derived(path === '/pt/' ? '/' : path);
-  const canonical = $derived(`${siteUrl}${canonicalPath}`);
+  const canonical = $derived(absoluteUrl(path));
   const ogImagePath = $derived(image?.endsWith('.svg') ? image.replace('.svg', '.png') : image);
   const ogImage = $derived(`${siteUrl}${ogImagePath ?? '/images/avatar-144.jpg'}`);
   const twitterCard = $derived(image ? 'summary_large_image' : 'summary');
-  const defaultAlternates = $derived.by(() => {
-    if (path === '/' || path === '/pt/' || path === '/en/') {
-      return [
-        { hreflang: languageConfig.pt.htmlLang, path: '/' },
-        { hreflang: languageConfig.en.htmlLang, path: '/en/' }
-      ];
-    }
-
-    const segments = path.split('/').filter(Boolean);
-    if (segments.length === 2 && segments[1] === 'blog') {
-      return path.startsWith('/pt/')
-        ? [
-            { hreflang: languageConfig.pt.htmlLang, path },
-            { hreflang: languageConfig.en.htmlLang, path: path.replace('/pt/', '/en/') }
-          ]
-        : path.startsWith('/en/')
-          ? [
-              { hreflang: languageConfig.pt.htmlLang, path: path.replace('/en/', '/pt/') },
-              { hreflang: languageConfig.en.htmlLang, path }
-            ]
-          : [];
-    }
-
-    return [];
-  });
+  const defaultAlternates = $derived(getLocalizedPageAlternates(path));
   const resolvedAlternates = $derived((alternates.length ? alternates : defaultAlternates).map((alternate) => ({
     ...alternate,
-    href: `${siteUrl}${alternate.path === '/pt/' ? '/' : alternate.path}`
+    href: absoluteUrl(alternate.path)
   })));
 
 </script>
@@ -91,7 +67,7 @@
     <link rel="alternate" hreflang={alternate.hreflang} href={alternate.href} />
   {/each}
   {#if xDefaultPath}
-    <link rel="alternate" hreflang="x-default" href={`${siteUrl}${xDefaultPath}`} />
+    <link rel="alternate" hreflang="x-default" href={absoluteUrl(xDefaultPath)} />
   {/if}
   <meta property="og:type" content={type} />
   <meta property="og:url" content={canonical} />
@@ -104,7 +80,7 @@
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content={ogImage} />
   {#if rssPath}
-    <link rel="alternate" type="application/rss+xml" title={title} href={`${siteUrl}${rssPath}`} />
+    <link rel="alternate" type="application/rss+xml" title={title} href={absoluteUrl(rssPath)} />
   {/if}
   {#if publishedTime}
     <meta property="article:published_time" content={publishedTime} />
