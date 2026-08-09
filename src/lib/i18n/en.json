@@ -145,6 +145,28 @@
     "light": "light theme",
     "system": "system theme"
   },
+  "command": {
+    "profileFile": "PROFILE.json",
+    "missionFile": "MISSION.md",
+    "workHistoryFile": "WORK_HISTORY.log",
+    "readOnly": "READ ONLY",
+    "systemScope": "// SOFTWARE · SECURITY · SYSTEMS",
+    "missionLead": "Complex systems.",
+    "missionOutcome": "Clear outcomes.",
+    "currentRole": "CURRENT ROLE",
+    "focus": "FOCUS",
+    "securityTrust": "SECURITY & TRUST",
+    "deepDives": "DEEP DIVES",
+    "systemReady": "SYSTEM READY",
+    "active": "ACTIVE",
+    "rssOnline": "RSS ONLINE",
+    "openChannels": "OPEN CHANNELS",
+    "online": "ONLINE",
+    "tableId": "ID",
+    "tableTitle": "TITLE",
+    "tableTopic": "TOPICS",
+    "tableDate": "DATE"
+  },
   "skillGroups": {
     "practices": ["Code Review", "Technical writing", "Ownership"]
   },

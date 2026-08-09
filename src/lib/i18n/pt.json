@@ -145,6 +145,28 @@
     "light": "tema claro",
     "system": "tema do sistema"
   },
+  "command": {
+    "profileFile": "PERFIL.json",
+    "missionFile": "MISSÃO.md",
+    "workHistoryFile": "HISTÓRICO_TRABALHO.log",
+    "readOnly": "SOMENTE LEITURA",
+    "systemScope": "// SOFTWARE · SEGURANÇA · SISTEMAS",
+    "missionLead": "Sistemas complexos.",
+    "missionOutcome": "Resultados claros.",
+    "currentRole": "FUNÇÃO ATUAL",
+    "focus": "FOCO",
+    "securityTrust": "SEGURANÇA & CONFIANÇA",
+    "deepDives": "ANÁLISES TÉCNICAS",
+    "systemReady": "SISTEMA PRONTO",
+    "active": "ATIVO",
+    "rssOnline": "RSS ATIVO",
+    "openChannels": "CANAIS ABERTOS",
+    "online": "ONLINE",
+    "tableId": "ID",
+    "tableTitle": "TÍTULO",
+    "tableTopic": "TÓPICOS",
+    "tableDate": "DATA"
+  },
   "skillGroups": {
     "practices": ["Code Review", "Escrita técnica", "Ownership"]
   },

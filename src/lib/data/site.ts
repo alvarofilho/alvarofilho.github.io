@@ -134,6 +134,28 @@ export type Messages = {
     other: string;
   };
   theme: Record<'dark' | 'light' | 'system', string>;
+  command: {
+    profileFile: string;
+    missionFile: string;
+    workHistoryFile: string;
+    readOnly: string;
+    systemScope: string;
+    missionLead: string;
+    missionOutcome: string;
+    currentRole: string;
+    focus: string;
+    securityTrust: string;
+    deepDives: string;
+    systemReady: string;
+    active: string;
+    rssOnline: string;
+    openChannels: string;
+    online: string;
+    tableId: string;
+    tableTitle: string;
+    tableTopic: string;
+    tableDate: string;
+  };
 };
 
 export type TerminalLine =
@@ -160,7 +182,7 @@ export const skillGroups = [
 ] as const;
 
 export const projects = [
-  { name: 'alvarofilho.github.io', href: 'https://alvarofilho.github.io', tags: ['SvelteKit', 'TypeScript', 'CSS'] },
+  { name: 'alvarofilho.github.io', href: 'https://alvarofilho.github.io', tags: ['SvelteKit', 'TypeScript', 'CSS'], featured: true },
   { name: 'Bin2Dec', href: 'https://github.com/alvarofilho/Bin2Dec', tags: ['Svelte', 'JavaScript'] },
   { name: 'MakeYourRPC', href: 'https://github.com/alvarofilho/MakeYourRPC', tags: ['Python', 'Discord API'] },
   { name: 'PasteFlask', href: 'https://github.com/alvarofilho/PasteFlask', tags: ['Python', 'Flask', 'SQL'] },

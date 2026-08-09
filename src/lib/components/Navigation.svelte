@@ -5,7 +5,7 @@
   import ThemeToggle from './ThemeToggle.svelte';
   import { getOtherLang, languages, type Lang, type Messages } from '$lib/data/site';
   import { contentCatalog } from '$lib/data/posts';
-  import { getBlogPath, getDraftIndexPath, getHomePath } from '$lib/data/url-policy';
+  import { canonicalizePath, getBlogPath, getDraftIndexPath, getHomePath } from '$lib/data/url-policy';
 
   type Props = {
     lang: Lang;
@@ -21,6 +21,7 @@
   const otherLang = $derived(getOtherLang(lang));
   const isBlog = $derived(currentPath.includes('/blog'));
   const homePath = $derived(getHomePath(lang));
+  const isHome = $derived(canonicalizePath(currentPath) === homePath);
   const otherPath = $derived(getLanguagePath(currentPath, lang, otherLang));
   const activeLinkId = $derived(isBlog ? 'blog' : activeSection);
 
@@ -152,15 +153,16 @@
 
 <a class="skip-link" href="#main-content">{messages.aria.skipToContent}</a>
 
-<nav class="site-nav" aria-label={messages.aria.primaryNavigation}>
+<nav class="site-nav" class:site-nav--home={isHome} aria-label={messages.aria.primaryNavigation}>
   <a href={homePath} class="nav-logo" aria-label={messages.aria.homeLink}>
-    <span class="d">~/</span><span class="a">alvaroduarte</span>
+    <span class="nav-logo-command">AD<span>_</span></span>
+    <span class="nav-logo-default"><span class="d">~/</span><span class="a">alvaroduarte</span></span>
   </a>
   <ul class="nav-links">
-    {#each links as link}
+    {#each links as link, index}
       <li>
         <a href={link.href} class:active={activeLinkId === link.id} aria-current={getAriaCurrent(link.id)}
-          >{link.label}</a
+          ><span class="nav-link-index">0{index + 1}</span>{link.label}</a
         >
       </li>
     {/each}
@@ -176,5 +178,9 @@
     >
       {lang.toUpperCase()}
     </a>
+  </div>
+  <div class="nav-rail-footer" aria-hidden="true">
+    <span><i></i> {messages.command.online}</span>
+    <small>UTC−03:00</small>
   </div>
 </nav>
