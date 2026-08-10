@@ -41,6 +41,7 @@
     "blogTagSearchPlaceholder": "filtrar tags",
     "blogTagSearchLabel": "Buscar tags",
     "blogResultsSummary": "posts encontrados",
+    "blogResultsSummarySingle": "post encontrado",
     "blogRemoveTagLabel": "Remover tag",
     "blogFilterByTagLabel": "Filtrar por tag",
     "blogLoadMore": "mostrar mais",
@@ -165,7 +166,21 @@
     "tableId": "ID",
     "tableTitle": "TÍTULO",
     "tableTopic": "TÓPICOS",
-    "tableDate": "DATA"
+    "tableDate": "DATA",
+    "blogCommand": "BLOG_COMANDO",
+    "blogFeed": "FEED · ENGENHARIA · SISTEMAS · CONFIANÇA",
+    "blogBriefingEyebrow": "04 / BRIEFING_DIÁRIO",
+    "blogBriefingTitle": "Briefing",
+    "blogBriefingAccent": "técnico",
+    "blogBriefingIntro": "Ensaios práticos sobre decisões de engenharia que sobrevivem à produção.",
+    "blogLatestEntry": "ENTRADA_RECENTE",
+    "blogOpenNote": "ABRIR NOTA",
+    "blogNotesEyebrow": "05 / LOG_DE_NOTAS",
+    "blogNotesLog": "Log de notas",
+    "blogSearchCommand": "$ grep ./notas",
+    "blogArticleEyebrow": "NOTA TÉCNICA",
+    "blogPublished": "PUBLICADO",
+    "blogAuthor": "POR ÁLVARO DUARTE"
   },
   "skillGroups": {
     "practices": ["Code Review", "Escrita técnica", "Ownership"]

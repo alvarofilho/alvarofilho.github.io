@@ -24,24 +24,34 @@
   const isPublished = $derived(mode === 'published');
   const backPath = $derived(isPublished ? `/${post.lang}/blog/` : `/${post.lang}/blog/drafts/`);
   const backLabel = $derived(isPublished ? messages.text.backToBlog : 'draft studio');
-  const eyebrow = $derived(isPublished ? 'blog' : 'draft preview');
+  const eyebrow = $derived(isPublished ? messages.command.blogArticleEyebrow : 'draft preview');
 </script>
 
 <main>
-  <article class="post-page">
-    <div class="wrap post-wrap">
+  <article class="post-page" class:post-page--command={isPublished}>
+    <div class="wrap post-wrap" class:post-command-wrap={isPublished}>
+      {#if isPublished}
+        <div class="post-command-bar">
+          <strong>{messages.command.blogCommand}</strong>
+          <span>{messages.command.blogFeed}</span>
+        </div>
+      {/if}
       <a href={backPath} class="post-back">← {backLabel}</a>
 
       <div class="post-layout">
         <div class="post-main">
           <header class="post-head">
-            <p class="eyebrow">{eyebrow}</p>
+            <div class="post-head-kicker">
+              <p class="eyebrow">{eyebrow}</p>
+              {#if isPublished}<span><i></i> {messages.command.blogPublished}</span>{/if}
+            </div>
             <h1>{post.title}</h1>
             <p>{post.description}</p>
             {#if isPublished}
               <PostLangs {post} {availableLangs} />
             {/if}
             <div class="post-meta">
+              {#if isPublished}<span>{messages.command.blogAuthor}</span>{/if}
               <span>{formatDate(post.date, post.lang)}</span>
               <span>{post.readingTime} {messages.text.readingTime}</span>
               {#if !isPublished}
@@ -72,22 +82,26 @@
             </div>
           {/if}
 
-          <div class="post-content">
-            {#if Content}
-              <Content />
-            {/if}
+          <div class="post-reading-layout">
+            <div class="post-article-body">
+              <div class="post-content">
+                {#if Content}
+                  <Content />
+                {/if}
+              </div>
+
+              {#if isPublished}
+                <RelatedPosts posts={relatedPosts} title={post.lang === 'pt' ? 'relacionados' : 'related'} />
+              {/if}
+            </div>
+
+            <aside class="post-sidebar">
+              {#key `${mode}-${post.lang}-${post.slug}`}
+                <PostToc />
+              {/key}
+            </aside>
           </div>
-
-          {#if isPublished}
-            <RelatedPosts posts={relatedPosts} title={post.lang === 'pt' ? 'relacionados' : 'related'} />
-          {/if}
         </div>
-
-        <aside class="post-sidebar">
-          {#key `${mode}-${post.lang}-${post.slug}`}
-            <PostToc />
-          {/key}
-        </aside>
       </div>
     </div>
   </article>

@@ -228,7 +228,7 @@
 </main>
 
 <style>
-  .command-home{--cmd-line:var(--border);--cmd-panel:color-mix(in srgb,var(--card) 90%,transparent);--cmd-panel-head:color-mix(in srgb,var(--surface) 90%,transparent);width:auto;min-height:100vh;margin-left:var(--home-rail-width);padding:2rem;color:var(--text);font-family:var(--mono)}
+  .command-home{--cmd-line:var(--border);--cmd-panel:color-mix(in srgb,var(--card) 90%,transparent);--cmd-panel-head:color-mix(in srgb,var(--surface) 90%,transparent);width:auto;min-height:100vh;margin-left:var(--command-rail-width);padding:2rem;color:var(--text);font-family:var(--mono)}
   .cmd-panel{background:var(--cmd-panel);border:1px solid var(--cmd-line)}
   .cmd-panel-bar{display:flex;justify-content:space-between;padding:.55rem .8rem;color:var(--dimmer);background:var(--cmd-panel-head);border-bottom:1px solid var(--cmd-line);font-size:.55rem;letter-spacing:.08em}
   .cmd-overview{display:grid;grid-template-columns:1.05fr 1fr 1fr;gap:.8rem;padding:0;scroll-margin-top:1rem}

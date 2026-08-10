@@ -1,6 +1,7 @@
 <script lang="ts">
   import { contentCatalog, type PostMeta } from '$lib/data/posts';
   import { formatDate } from '$lib/data/site';
+  import { ArrowUpRight } from '@lucide/svelte';
 
   type Props = {
     post: PostMeta;
@@ -15,9 +16,7 @@
 <a href={contentCatalog.getPostPath(post)} class="blog-card">
   <span class="bc-idx">{String(index + 1).padStart(2, '0')}</span>
   <span class="bc-body">
-    <span class="bc-meta">
-      {formatDate(post.date, post.lang)}
-    </span>
+    <span class="bc-meta">{post.tags.join(' · ')}</span>
     <span class="bc-title">{post.title}</span>
     <span class="bc-desc">{post.description}</span>
     <span class="ptags">
@@ -31,4 +30,6 @@
       {/each}
     </span>
   </span>
+  <time datetime={post.date}>{formatDate(post.date, post.lang)}</time>
+  <ArrowUpRight size={18} aria-hidden="true" />
 </a>

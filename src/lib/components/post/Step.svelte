@@ -20,7 +20,7 @@
 <style>
   .step-item {
     display: grid;
-    grid-template-columns: 48px 1fr;
+    grid-template-columns: 48px minmax(0, 1fr);
     background: var(--card);
     border-bottom: 1px solid var(--border);
   }
@@ -42,6 +42,7 @@
   }
 
   .step-body {
+    min-width: 0;
     padding: 0.85rem 1.1rem;
   }
 

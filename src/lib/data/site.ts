@@ -51,6 +51,7 @@ export type Messages = {
     blogTagSearchPlaceholder: string;
     blogTagSearchLabel: string;
     blogResultsSummary: string;
+    blogResultsSummarySingle: string;
     blogRemoveTagLabel: string;
     blogFilterByTagLabel: string;
     blogLoadMore: string;
@@ -155,6 +156,20 @@ export type Messages = {
     tableTitle: string;
     tableTopic: string;
     tableDate: string;
+    blogCommand: string;
+    blogFeed: string;
+    blogBriefingEyebrow: string;
+    blogBriefingTitle: string;
+    blogBriefingAccent: string;
+    blogBriefingIntro: string;
+    blogLatestEntry: string;
+    blogOpenNote: string;
+    blogNotesEyebrow: string;
+    blogNotesLog: string;
+    blogSearchCommand: string;
+    blogArticleEyebrow: string;
+    blogPublished: string;
+    blogAuthor: string;
   };
 };
 

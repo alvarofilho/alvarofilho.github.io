@@ -1,4 +1,4 @@
-import { languageConfig, siteUrl, type Lang } from './site';
+import { languageConfig, languages, siteUrl, type Lang } from './site';
 
 export type AlternateLink = {
   hreflang: string;
@@ -27,6 +27,23 @@ export function getDraftIndexPath(lang: Lang) {
 
 export function getRssPath(lang: Lang) {
   return `${getBlogPath(lang)}rss.xml`;
+}
+
+export function isBlogPath(path: string) {
+  const segments = path.split('/').filter(Boolean);
+  return segments.length >= 2 && segments[1] === 'blog';
+}
+
+export function isBlogIndexPath(path: string) {
+  const segments = path.split('/').filter(Boolean);
+  return segments.length === 2 && languages.includes(segments[0] as Lang) && segments[1] === 'blog';
+}
+
+export function getBlogArticleRoute(path: string) {
+  const segments = path.split('/').filter(Boolean);
+  if (segments.length !== 3 || !languages.includes(segments[0] as Lang) || segments[1] !== 'blog') return undefined;
+
+  return { lang: segments[0] as Lang, slug: segments[2] };
 }
 
 export function getSiteAlternates(): AlternateLink[] {

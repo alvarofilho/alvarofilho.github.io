@@ -41,6 +41,7 @@
     "blogTagSearchPlaceholder": "filter tags",
     "blogTagSearchLabel": "Search tags",
     "blogResultsSummary": "posts found",
+    "blogResultsSummarySingle": "post found",
     "blogRemoveTagLabel": "Remove tag",
     "blogFilterByTagLabel": "Filter by tag",
     "blogLoadMore": "show more",
@@ -165,7 +166,21 @@
     "tableId": "ID",
     "tableTitle": "TITLE",
     "tableTopic": "TOPICS",
-    "tableDate": "DATE"
+    "tableDate": "DATE",
+    "blogCommand": "BLOG_COMMAND",
+    "blogFeed": "FEED · ENGINEERING · SYSTEMS · TRUST",
+    "blogBriefingEyebrow": "04 / DAILY_BRIEFING",
+    "blogBriefingTitle": "Technical",
+    "blogBriefingAccent": "briefing",
+    "blogBriefingIntro": "Practical essays about engineering decisions that survive production.",
+    "blogLatestEntry": "LATEST_ENTRY",
+    "blogOpenNote": "OPEN NOTE",
+    "blogNotesEyebrow": "05 / NOTES_LOG",
+    "blogNotesLog": "Notes log",
+    "blogSearchCommand": "$ grep ./notes",
+    "blogArticleEyebrow": "TECHNICAL NOTE",
+    "blogPublished": "PUBLISHED",
+    "blogAuthor": "BY ÁLVARO DUARTE"
   },
   "skillGroups": {
     "practices": ["Code Review", "Technical writing", "Ownership"]

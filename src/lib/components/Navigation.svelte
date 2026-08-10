@@ -5,7 +5,15 @@
   import ThemeToggle from './ThemeToggle.svelte';
   import { getOtherLang, languages, type Lang, type Messages } from '$lib/data/site';
   import { contentCatalog } from '$lib/data/posts';
-  import { canonicalizePath, getBlogPath, getDraftIndexPath, getHomePath } from '$lib/data/url-policy';
+  import {
+    canonicalizePath,
+    getBlogArticleRoute,
+    getBlogPath,
+    getDraftIndexPath,
+    getHomePath,
+    isBlogPath,
+    isBlogIndexPath
+  } from '$lib/data/url-policy';
 
   type Props = {
     lang: Lang;
@@ -19,9 +27,15 @@
   const currentPath = $derived(page.url.pathname || path);
   const currentHash = $derived(page.url.hash);
   const otherLang = $derived(getOtherLang(lang));
-  const isBlog = $derived(currentPath.includes('/blog'));
+  const isBlog = $derived(isBlogPath(currentPath));
   const homePath = $derived(getHomePath(lang));
   const isHome = $derived(canonicalizePath(currentPath) === homePath);
+  const blogArticleRoute = $derived(getBlogArticleRoute(currentPath));
+  const isCommandBlog = $derived(
+    isBlogIndexPath(currentPath) ||
+      Boolean(blogArticleRoute && contentCatalog.getPublishedPost(blogArticleRoute.lang, blogArticleRoute.slug))
+  );
+  const isCommandSurface = $derived(isHome || isCommandBlog);
   const otherPath = $derived(getLanguagePath(currentPath, lang, otherLang));
   const activeLinkId = $derived(isBlog ? 'blog' : activeSection);
 
@@ -153,7 +167,7 @@
 
 <a class="skip-link" href="#main-content">{messages.aria.skipToContent}</a>
 
-<nav class="site-nav" class:site-nav--home={isHome} aria-label={messages.aria.primaryNavigation}>
+<nav class="site-nav" class:site-nav--command={isCommandSurface} aria-label={messages.aria.primaryNavigation}>
   <a href={homePath} class="nav-logo" aria-label={messages.aria.homeLink}>
     <span class="nav-logo-command">AD<span>_</span></span>
     <span class="nav-logo-default"><span class="d">~/</span><span class="a">alvaroduarte</span></span>
