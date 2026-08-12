@@ -143,7 +143,7 @@ export type Messages = {
     systemScope: string;
     missionLead: string;
     missionOutcome: string;
-    current: string;
+    primaryStack: string;
     currentRole: string;
     focus: string;
     integrationsSystems: string;
@@ -189,10 +189,16 @@ export const messages: Record<Lang, Messages> = {
   en: enMessages as Messages,
 };
 
+export const primaryStack = {
+  backend: '.NET',
+  frontend: 'Angular',
+  database: 'SQL Server'
+} as const;
+
 export const skillGroups = [
   { key: 'lang', items: ['C#', 'TypeScript', 'SQL', 'Java', 'Python'] },
-  { key: 'frameworks', items: ['.NET', 'Angular', 'Svelte', 'Flask'] },
-  { key: 'database', items: ['MySQL', 'PostgreSQL', 'SQL Server'] },
+  { key: 'frameworks', items: [primaryStack.backend, primaryStack.frontend, 'Svelte', 'Flask'] },
+  { key: 'database', items: ['MySQL', 'PostgreSQL', primaryStack.database] },
   { key: 'tools', items: ['Git', 'IA & LLMs'] },
   { key: 'practices', soft: true }
 ] as const;

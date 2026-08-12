@@ -1,7 +1,7 @@
 <script lang="ts">
   import { fadeIn } from '$lib/actions/fadeIn';
   import { contentCatalog } from '$lib/data/posts';
-  import { formatDate, projects, skillGroups, type Lang, type Messages } from '$lib/data/site';
+  import { formatDate, primaryStack, projects, skillGroups, type Lang, type Messages } from '$lib/data/site';
   import { ArrowRight, ArrowUpRight, Circle, Mail, MapPin } from '@lucide/svelte';
   import { SiDiscord, SiGithub } from '@icons-pack/svelte-simple-icons';
   import HeroTyping from './HeroTyping.svelte';
@@ -67,9 +67,9 @@
     </article>
 
     <article class="cmd-panel cmd-metric">
-      <span>{messages.nav.experience}</span>
-      <strong>{messages.command.current}</strong>
-      <small>Lacuna Software</small>
+      <span>{messages.command.primaryStack}</span>
+      <strong>{primaryStack.backend}</strong>
+      <small>{primaryStack.frontend} · {primaryStack.database}</small>
     </article>
     <article class="cmd-panel cmd-metric">
       <span>{messages.command.focus}</span>
