@@ -143,9 +143,10 @@ export type Messages = {
     systemScope: string;
     missionLead: string;
     missionOutcome: string;
+    current: string;
     currentRole: string;
     focus: string;
-    securityTrust: string;
+    integrationsSystems: string;
     deepDives: string;
     systemReady: string;
     active: string;
