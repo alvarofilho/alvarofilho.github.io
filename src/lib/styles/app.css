@@ -10,12 +10,13 @@
   --card-h: #222838;
   --border: #2d3443;
   --border-l: #3a4558;
-  --accent: #3dd68c;
-  --accent-dim: rgba(61, 214, 140, 0.1);
+  --accent: #5c8df0;
+  --accent-dim: color-mix(in srgb, var(--accent) 10%, transparent);
+  --ambient-glow: color-mix(in srgb, var(--accent) 12%, transparent);
+  --ambient-wash: color-mix(in srgb, var(--accent) 3.5%, transparent);
   --text: #f4f4f6;
   --muted: #98a3b3;
   --dimmer: #4a5570;
-  --green: var(--accent);
   --tag-bg: rgba(255, 255, 255, 0.04);
   --mono:
     ui-monospace, 'SFMono-Regular', 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace;
@@ -28,7 +29,7 @@
   --term-text: var(--text);
   --term-muted: var(--muted);
   --term-dimmer: #7a8ba8;
-  --term-green: var(--green);
+  --term-accent: var(--accent);
 }
 
 [data-theme='light'] {
@@ -41,9 +42,8 @@
   --text: #151c28;
   --muted: #626f84;
   --dimmer: #aab5c5;
-  --accent: #167a4a;
-  --accent-dim: rgba(22, 122, 74, 0.1);
-  --green: var(--accent);
+  --accent: #3864d4;
+  --ambient-glow: color-mix(in srgb, var(--accent) 9%, transparent);
   --tag-bg: rgba(0, 0, 0, 0.06);
   --nav-bg: rgba(252, 252, 253, 0.92);
   --term-bg: #14161a;
@@ -52,7 +52,6 @@
   --term-text: #f4f4f6;
   --term-muted: #98a3b3;
   --term-dimmer: #7a8ba8;
-  --term-green: #3dd68c;
 }
 
 *,
@@ -69,7 +68,11 @@ html {
 }
 
 body {
-  background: var(--bg);
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(ellipse 68% 34rem at 78% -8%, var(--ambient-glow), transparent 72%),
+    linear-gradient(180deg, var(--ambient-wash), transparent 38rem);
+  background-attachment: fixed;
   color: var(--text);
   font-family: var(--sans);
   line-height: 1.6;
@@ -511,7 +514,7 @@ section {
 }
 
 .td.g {
-  background: #3dd68c;
+  background: var(--term-accent);
 }
 
 .ttitle {
@@ -542,7 +545,7 @@ section {
 }
 
 .to.gr {
-  color: var(--term-green);
+  color: var(--term-accent);
 }
 
 .tspace {
@@ -1651,7 +1654,7 @@ section {
 
 .http-status.status-2xx,
 .http-status.status-3xx {
-  color: var(--green);
+  color: var(--accent);
 }
 
 .http-status.status-4xx,
@@ -2076,11 +2079,11 @@ body.diagram-fullscreen .site-nav {
 }
 
 .callout-success {
-  border-left-color: var(--green);
+  border-left-color: var(--accent);
 }
 
 .callout-success .callout-title {
-  color: var(--green);
+  color: var(--accent);
 }
 
 .callout-warning {
@@ -2507,7 +2510,7 @@ footer {
 }
 
 .site-nav--command .nav-logo-command span {
-  color: var(--green);
+  color: var(--accent);
 }
 
 @media (min-width: 721px) {
@@ -2576,7 +2579,7 @@ footer {
 
   .site-nav--command .nav-links a:hover .nav-link-index,
   .site-nav--command .nav-links a.active .nav-link-index {
-    color: var(--green);
+    color: var(--accent);
   }
 
   .site-nav--command .nav-actions {
@@ -2595,7 +2598,7 @@ footer {
     display: grid;
     gap: 0.35rem;
     margin-top: auto;
-    color: var(--green);
+    color: var(--accent);
     font-family: var(--mono);
     font-size: 0.58rem;
   }
@@ -2609,9 +2612,9 @@ footer {
   .site-nav--command .nav-rail-footer i {
     width: 6px;
     height: 6px;
-    background: var(--green);
+    background: var(--accent);
     border-radius: 50%;
-    box-shadow: 0 0 10px color-mix(in srgb, var(--green) 70%, transparent);
+    box-shadow: 0 0 10px color-mix(in srgb, var(--accent) 70%, transparent);
   }
 
   .site-nav--command .nav-rail-footer small {
@@ -2712,7 +2715,7 @@ footer {
 }
 
 .blog-command-masthead > span {
-  color: var(--green);
+  color: var(--accent);
   font-size: 0.58rem;
   letter-spacing: 0.08em;
 }
@@ -2729,7 +2732,7 @@ footer {
 }
 
 .blog-command-masthead h1 em {
-  color: var(--green);
+  color: var(--accent);
   font-style: normal;
 }
 
@@ -2773,7 +2776,7 @@ footer {
 }
 
 .blog-command-feature-copy > small {
-  color: var(--green);
+  color: var(--accent);
   font-size: 0.55rem;
   letter-spacing: 0.08em;
 }
@@ -2802,8 +2805,8 @@ footer {
   align-self: flex-start;
   margin-top: 1.5rem;
   padding: 0.65rem 0.8rem;
-  color: var(--green);
-  border: 1px solid color-mix(in srgb, var(--green) 45%, var(--border));
+  color: var(--accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--border));
   font-size: 0.55rem;
   letter-spacing: 0.08em;
 }
@@ -2813,7 +2816,7 @@ footer {
 }
 
 .blog-command-feature:hover .blog-command-feature-copy > strong {
-  color: var(--green);
+  color: var(--accent);
 }
 
 .blog-command-feature-art {
@@ -2857,7 +2860,7 @@ footer {
 }
 
 .blog-command-log-head > div > span {
-  color: var(--green);
+  color: var(--accent);
   font-size: 0.54rem;
   letter-spacing: 0.1em;
 }
@@ -2881,7 +2884,7 @@ footer {
 }
 
 .blog-command-search > span {
-  color: var(--green);
+  color: var(--accent);
   font-size: 0.55rem;
   white-space: nowrap;
 }
@@ -2938,7 +2941,7 @@ footer {
 }
 
 .blog-command-log .bc-meta {
-  color: var(--green);
+  color: var(--accent);
   font-size: 0.52rem;
 }
 
@@ -2968,7 +2971,7 @@ footer {
 
 .blog-command-log .blog-card:hover .bc-title,
 .blog-command-log .blog-card:hover > svg {
-  color: var(--green);
+  color: var(--accent);
 }
 
 .blog-command-log .blog-pagination {
@@ -3000,7 +3003,7 @@ footer {
   display: flex;
   align-items: center;
   gap: 0.45rem;
-  color: var(--green);
+  color: var(--accent);
   font-size: 0.54rem;
   letter-spacing: 0.08em;
 }
@@ -3008,9 +3011,9 @@ footer {
 .post-head-kicker i {
   width: 6px;
   height: 6px;
-  background: var(--green);
+  background: var(--accent);
   border-radius: 50%;
-  box-shadow: 0 0 10px color-mix(in srgb, var(--green) 70%, transparent);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--accent) 70%, transparent);
 }
 
 .post-page--command .post-head {
@@ -3114,7 +3117,7 @@ footer {
 .post-page--command .post-toc a.active {
   margin-left: 0;
   padding-left: 0.6rem;
-  border-left: 2px solid var(--green);
+  border-left: 2px solid var(--accent);
   color: var(--text);
 }
 
