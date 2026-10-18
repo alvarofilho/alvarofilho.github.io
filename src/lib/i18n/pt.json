@@ -3,7 +3,7 @@
   "locale": "pt_BR",
   "meta": {
     "title": "Álvaro Duarte — Desenvolvedor de Software",
-    "description": "Desenvolvedor de software especializado em sistemas de assinatura digital. Atua com .NET, Angular e SQL Server na Lacuna Software."
+    "description": "Desenvolvedor na Lacuna Software. .NET, Angular e SQL Server em assinaturas digitais e integrações. Experimentos com ferramentas e agentes de IA."
   },
   "nav": {
     "skills": "habilidades",
@@ -13,7 +13,9 @@
     "contact": "contato"
   },
   "text": {
-    "heroBio": "Desenvolvedor de software especializado em sistemas de assinatura digital. Na Lacuna Software, trabalho com .NET, Angular e SQL Server entregando fluxos reais de assinatura, pagamentos, webhooks, integrações com ERP e melhorias de performance em produto usado em produção.",
+    "heroBio": "Sou desenvolvedor de software na Lacuna Software, onde trabalho com .NET, Angular e SQL Server em sistemas de assinatura digital. Meu trabalho envolve fluxos de assinatura, pagamentos, integrações e performance.",
+    "workApproach": "Gosto de acompanhar uma solução inteira: entender o problema, implementar as regras e cuidar de como ela funciona para quem usa. Também exploro ferramentas para desenvolvimento com agentes de IA.",
+    "profileLocation": "Petrolina, PE · Brasil",
     "heroButton": "ver projetos",
     "avatarAlt": "Foto de Álvaro Duarte",
     "externalLinkSuffix": "abre em nova aba",
@@ -23,16 +25,15 @@
     "blogEyebrow": "blog",
     "contactEyebrow": "contato",
     "skillsTitle": "Habilidades",
-    "projectsTitle": "Projetos",
-    "projectsCta": "ver todos os projetos",
+    "projectsTitle": "Projetos selecionados",
+    "projectsCta": "mais projetos e estudos no GitHub",
     "experienceTitle": "Experiência",
     "contactTitle": "Contato",
     "blogTitle": "Blog",
     "blogCta": "ver todos os posts",
-    "blogHint": "artigos sobre .NET, sistemas distribuídos e engenharia de software",
+    "blogHint": "notas sobre assinaturas digitais, SQL Server e decisões de engenharia",
     "blogEmptyStatus": "// em preparação",
-    "blogEmptyCount": "03 artigos",
-    "blogEmptyText": "Artigos sobre .NET, sistemas distribuídos e engenharia de software em breve.",
+    "blogEmptyText": "Estou preparando notas sobre assinaturas digitais, SQL Server e decisões de engenharia.",
     "blogSearchPlaceholder": "buscar por texto",
     "blogSearchLabel": "Busca",
     "blogTagFilter": "filtrar por tag",
@@ -104,23 +105,21 @@
     "location": "Brasília, DF · Remoto",
     "role": "Desenvolvedor de Software · Tempo integral",
     "bullets": [
-      "Desenvolvimento e manutenção de produto de assinatura digital com .NET, Angular e SQL Server em ambiente de produção",
-      "Implementação de fluxos de assinatura, gestão de documentos e melhorias de usabilidade para operações do dia a dia",
-      "Entrega de modelo pré-pago com integração a gateway de pagamento, cobrindo regras de negócio e acompanhamento do ciclo de cobrança",
-      "Construção e manutenção de webhooks para eventos de assinatura, pagamento e integrações externas",
-      "Apoio técnico em integrações com ERPs e sistemas corporativos, ajudando clientes a conectar processos internos ao produto",
-      "Otimização de performance, correção de bugs e evolução de código em áreas críticas da aplicação",
-      "Participação em decisões de arquitetura, refinamento com produto e priorização de funcionalidades com foco em valor de negócio"
+      "Desenvolvo e mantenho fluxos de assinatura e gestão de documentos com .NET, Angular e SQL Server, incluindo melhorias de usabilidade nas operações do dia a dia.",
+      "Implementei um modelo pré-pago integrado a um gateway de pagamento, com regras de negócio e acompanhamento do ciclo de cobrança.",
+      "Construo e mantenho webhooks de assinatura e pagamento e apoio clientes na integração com ERPs e sistemas corporativos.",
+      "Investigo problemas de performance, corrijo bugs e evoluo o código em áreas críticas da aplicação.",
+      "Participo de decisões de arquitetura, refinamento com produto e priorização de funcionalidades, considerando as regras de negócio e a experiência de quem usa."
     ],
     "tech": [".NET", "C#", "Angular", "TypeScript", "SQL Server", "Webhooks", "Pagamentos"]
   },
-  "roles": ["Software Developer", ".NET · Angular · SQL Server", "Lacuna Software"],
+  "roles": ["Desenvolvedor de software", ".NET · Angular · SQL Server", "Lacuna Software"],
   "terminal": [
     { "kind": "cmd", "text": "whoami" },
     { "kind": "out", "text": "álvaro duarte", "modifier": "hi" },
     { "kind": "space" },
     { "kind": "cmd", "text": "cat role.txt" },
-    { "kind": "out", "text": "Software Developer" },
+    { "kind": "out", "text": "Desenvolvedor de software" },
     { "kind": "out", "text": "Lacuna Software · Assinatura Digital" },
     { "kind": "space" },
     { "kind": "cmd", "text": "ls stack/" },
@@ -151,13 +150,14 @@
     "missionFile": "MISSÃO.md",
     "workHistoryFile": "HISTÓRICO_TRABALHO.log",
     "readOnly": "SOMENTE LEITURA",
-    "systemScope": "// SOFTWARE · SEGURANÇA · SISTEMAS",
-    "missionLead": "Sistemas complexos.",
-    "missionOutcome": "Resultados claros.",
+    "systemScope": "// ASSINATURAS DIGITAIS · INTEGRAÇÕES · FERRAMENTAS",
+    "missionLead": "Da regra de negócio",
+    "missionOutcome": "à experiência de uso.",
     "primaryStack": "STACK PRINCIPAL",
     "currentRole": "FUNÇÃO ATUAL",
-    "focus": "FOCO",
-    "integrationsSystems": "INTEGRAÇÕES & SISTEMAS",
+    "focus": "ATUAÇÃO",
+    "focusArea": "PRODUTO",
+    "integrationsSystems": "BACKEND · INTERFACES · INTEGRAÇÕES",
     "deepDives": "ANÁLISES TÉCNICAS",
     "systemReady": "SISTEMA PRONTO",
     "active": "ATIVO",
@@ -169,11 +169,11 @@
     "tableTopic": "TÓPICOS",
     "tableDate": "DATA",
     "blogCommand": "BLOG_COMANDO",
-    "blogFeed": "FEED · ENGENHARIA · SISTEMAS · CONFIANÇA",
+    "blogFeed": "FEED · ASSINATURAS DIGITAIS · SQL SERVER · ENGENHARIA",
     "blogBriefingEyebrow": "04 / BRIEFING_DIÁRIO",
     "blogBriefingTitle": "Briefing",
     "blogBriefingAccent": "técnico",
-    "blogBriefingIntro": "Ensaios práticos sobre decisões de engenharia que sobrevivem à produção.",
+    "blogBriefingIntro": "Notas práticas sobre assinaturas digitais, SQL Server e as decisões por trás de um software.",
     "blogLatestEntry": "ENTRADA_RECENTE",
     "blogOpenNote": "ABRIR NOTA",
     "blogNotesEyebrow": "05 / LOG_DE_NOTAS",
@@ -184,14 +184,23 @@
     "blogAuthor": "POR ÁLVARO DUARTE"
   },
   "skillGroups": {
-    "practices": ["Code Review", "Escrita técnica", "Ownership"]
+    "practices": [
+      "Revisão de código",
+      "Investigação de problemas",
+      "Usabilidade",
+      "Escrita técnica"
+    ]
   },
-  "projectDescriptions": [
-    "Portfólio pessoal com foco em posicionamento profissional, conteúdo técnico e apresentação de experiência prática.",
-    "Conversor binário para decimal construído com Svelte.",
-    "Crie seu Rich Presence no Discord de forma fácil e prática.",
-    "Sistema Pastebin desenvolvido em Flask com armazenamento em banco.",
-    "Pokédex criada para estudar Svelte e seu ecossistema.",
-    "API REST de encurtamento de URLs desenvolvida em Java."
-  ]
+  "projects": {
+    "trama": {
+      "status": "Experimento pessoal · em desenvolvimento",
+      "description": "Aplicativo desktop para organizar tarefas de desenvolvimento com agentes de IA em repositórios Git locais. Reúne configuração de agentes, worktrees e sessões de terminal em uma interface.",
+      "detail": "Exploro como tornar o trabalho com agentes mais compreensível, do início da tarefa ao acompanhamento da execução. Criado com uso intensivo de IA; o fluxo completo de diff, commit e merge ainda está em desenvolvimento."
+    },
+    "portfolio": {
+      "status": "Site pessoal · blog técnico",
+      "description": "Este site reúne minha experiência profissional e notas técnicas sobre assinaturas digitais e SQL Server, com conteúdo em português e inglês.",
+      "detail": "Combina escrita técnica, navegação entre idiomas, busca e componentes para explicar código e decisões de engenharia em um site estático."
+    }
+  }
 }

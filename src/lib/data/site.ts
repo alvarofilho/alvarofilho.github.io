@@ -1,9 +1,9 @@
-import ptMessages from '$lib/i18n/pt.json';
-import enMessages from '$lib/i18n/en.json';
+import ptMessages from "$lib/i18n/pt.json";
+import enMessages from "$lib/i18n/en.json";
 
 export const languageConfig = {
-  pt: { label: 'PT', name: 'Português', htmlLang: 'pt-BR', locale: 'pt_BR', dateLocale: 'pt-BR' },
-  en: { label: 'EN', name: 'English', htmlLang: 'en', locale: 'en_US', dateLocale: 'en' }
+  pt: { label: "PT", name: "Português", htmlLang: "pt-BR", locale: "pt_BR", dateLocale: "pt-BR" },
+  en: { label: "EN", name: "English", htmlLang: "en", locale: "en_US", dateLocale: "en" },
 } as const;
 
 export type Lang = keyof typeof languageConfig;
@@ -24,6 +24,8 @@ export type Messages = {
   };
   text: {
     heroBio: string;
+    workApproach: string;
+    profileLocation: string;
     heroButton: string;
     avatarAlt: string;
     externalLinkSuffix: string;
@@ -41,7 +43,6 @@ export type Messages = {
     blogCta: string;
     blogHint: string;
     blogEmptyStatus: string;
-    blogEmptyCount: string;
     blogEmptyText: string;
     blogSearchPlaceholder: string;
     blogSearchLabel: string;
@@ -112,7 +113,14 @@ export type Messages = {
   skillGroups: {
     practices: string[];
   };
-  projectDescriptions: string[];
+  projects: Record<
+    ProjectId,
+    {
+      status: string;
+      description: string;
+      detail: string;
+    }
+  >;
   experience: {
     date: string;
     location: string;
@@ -134,7 +142,7 @@ export type Messages = {
     current: string;
     other: string;
   };
-  theme: Record<'dark' | 'light' | 'system', string>;
+  theme: Record<"dark" | "light" | "system", string>;
   command: {
     profileFile: string;
     missionFile: string;
@@ -146,6 +154,7 @@ export type Messages = {
     primaryStack: string;
     currentRole: string;
     focus: string;
+    focusArea: string;
     integrationsSystems: string;
     deepDives: string;
     systemReady: string;
@@ -175,14 +184,14 @@ export type Messages = {
 };
 
 export type TerminalLine =
-  | { kind: 'cmd'; text: string }
-  | { kind: 'out'; text: string; modifier?: 'hi' | 'gr' }
-  | { kind: 'space' }
-  | { kind: 'cursor' };
+  | { kind: "cmd"; text: string }
+  | { kind: "out"; text: string; modifier?: "hi" | "gr" }
+  | { kind: "space" }
+  | { kind: "cursor" };
 
 export const languages = Object.keys(languageConfig) as Lang[];
 
-export const siteUrl = 'https://alvaro.dev.br';
+export const siteUrl = "https://alvaro.dev.br";
 
 export const messages: Record<Lang, Messages> = {
   pt: ptMessages as Messages,
@@ -190,29 +199,42 @@ export const messages: Record<Lang, Messages> = {
 };
 
 export const primaryStack = {
-  backend: '.NET',
-  frontend: 'Angular',
-  database: 'SQL Server'
+  backend: ".NET",
+  frontend: "Angular",
+  database: "SQL Server",
 } as const;
 
 export const skillGroups = [
-  { key: 'lang', items: ['C#', 'TypeScript', 'SQL', 'Java', 'Python'] },
-  { key: 'frameworks', items: [primaryStack.backend, primaryStack.frontend, 'Svelte', 'Flask'] },
-  { key: 'database', items: ['MySQL', 'PostgreSQL', primaryStack.database] },
-  { key: 'tools', items: ['Git', 'IA & LLMs'] },
-  { key: 'practices', soft: true }
+  { key: "lang", items: ["C#", "TypeScript", "SQL", "Java", "Python"] },
+  {
+    key: "frameworks",
+    items: [primaryStack.backend, primaryStack.frontend, "SvelteKit", "Tauri", "Flask"],
+  },
+  { key: "database", items: ["MySQL", "PostgreSQL", primaryStack.database] },
+  { key: "tools", items: ["Git", "Git worktrees", "Codex CLI"] },
+  { key: "practices", soft: true },
 ] as const;
 
 export const projects = [
-  { name: 'alvarofilho.github.io', href: 'https://alvarofilho.github.io', tags: ['SvelteKit', 'TypeScript', 'CSS'], featured: true },
-  { name: 'Bin2Dec', href: 'https://github.com/alvarofilho/Bin2Dec', tags: ['Svelte', 'JavaScript'] },
-  { name: 'MakeYourRPC', href: 'https://github.com/alvarofilho/MakeYourRPC', tags: ['Python', 'Discord API'] },
-  { name: 'PasteFlask', href: 'https://github.com/alvarofilho/PasteFlask', tags: ['Python', 'Flask', 'SQL'] },
-  { name: 'Pokedex', href: 'https://github.com/alvarofilho/Pokedex', tags: ['Svelte', 'PokeAPI'] },
-  { name: 'url-shortener-api', href: 'https://github.com/alvarofilho/url-shortener-api', tags: ['Java', 'REST API'] }
-];
+  {
+    id: "trama",
+    name: "Trama",
+    href: "https://github.com/alvarofilho/trama",
+    tags: ["Angular", "Tauri", "Rust", "SQLite", "Git"],
+    featured: true,
+  },
+  {
+    id: "portfolio",
+    name: "alvaro.dev.br",
+    href: "https://github.com/alvarofilho/alvarofilho.github.io",
+    tags: ["SvelteKit", "TypeScript", "MDSvex"],
+    featured: false,
+  },
+] as const;
 
-export const blogTopics = ['.NET', 'Webhooks', 'IA & LLMs', 'PKI', 'Certificados'];
+export type ProjectId = (typeof projects)[number]["id"];
+
+export const blogTopics = [".NET", "Webhooks", "IA & LLMs", "PKI", "Certificados"];
 
 export function getOtherLang(lang: Lang): Lang {
   const idx = languages.indexOf(lang);
@@ -225,8 +247,8 @@ export function isLang(value: string): value is Lang {
 
 export function formatDate(date: string, lang: Lang) {
   return new Date(`${date}T00:00:00`).toLocaleDateString(languageConfig[lang].dateLocale, {
-    month: 'short',
-    day: '2-digit',
-    year: 'numeric'
+    month: "short",
+    day: "2-digit",
+    year: "numeric",
   });
 }

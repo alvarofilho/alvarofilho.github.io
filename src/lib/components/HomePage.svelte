@@ -38,7 +38,7 @@
           <span class="cmd-prompt">$ whoami</span>
           <h1 id="home-title">Álvaro Duarte</h1>
           <div class="cmd-role"><HeroTyping roles={messages.roles} /></div>
-          <span class="cmd-location"><MapPin size={13} aria-hidden="true" /> {messages.experience.location}</span>
+          <span class="cmd-location"><MapPin size={13} aria-hidden="true" /> {messages.text.profileLocation}</span>
         </div>
       </div>
     </article>
@@ -49,6 +49,7 @@
         <span class="cmd-comment">{messages.command.systemScope}</span>
         <h2>{messages.command.missionLead}<br /><em>{messages.command.missionOutcome}</em></h2>
         <p>{messages.text.heroBio}</p>
+        <p class="cmd-work-approach">{messages.text.workApproach}</p>
         <div class="cmd-mission-links">
           <a href="#projects" class="cmd-action">
             {messages.text.heroButton}<ArrowRight size={14} aria-hidden="true" />
@@ -73,7 +74,7 @@
     </article>
     <article class="cmd-panel cmd-metric">
       <span>{messages.command.focus}</span>
-      <strong>BACKEND</strong>
+      <strong>{messages.command.focusArea}</strong>
       <small>{messages.command.integrationsSystems}</small>
     </article>
     <article class="cmd-panel cmd-metric">
@@ -121,19 +122,20 @@
       </a>
     </div>
     <div class="cmd-project-grid">
-      {#each projects as project, index}
+      {#each projects as project (project.id)}
         <a
           class:cmd-project-wide={'featured' in project && project.featured}
           class="cmd-project fi"
           href={project.href}
           target="_blank"
           rel="noreferrer"
-          aria-label={externalLabel(`${project.name}: ${messages.projectDescriptions[index]}`)}
+          aria-label={externalLabel(`${project.name}: ${messages.projects[project.id].status}`)}
           use:fadeIn
         >
-          <div class="cmd-project-top"><span>0{index + 1}</span><ArrowUpRight size={17} aria-hidden="true" /></div>
+          <div class="cmd-project-top"><span>{messages.projects[project.id].status}</span><ArrowUpRight size={17} aria-hidden="true" /></div>
           <h3>{project.name}</h3>
-          <p>{messages.projectDescriptions[index]}</p>
+          <p>{messages.projects[project.id].description}</p>
+          <p class="cmd-project-detail">{messages.projects[project.id].detail}</p>
           <footer>{#each project.tags as tag}<span>{tag}</span>{/each}</footer>
         </a>
       {/each}
@@ -252,7 +254,13 @@
   .cmd-identity h1{font-size:clamp(1.85rem,3.2vw,2.7rem);letter-spacing:-.07em}
   .cmd-mission{position:relative;isolation:isolate;overflow:hidden}
   .cmd-mission::after{position:absolute;z-index:-1;inset:0;background-image:linear-gradient(to right,color-mix(in srgb,var(--border) 42%,transparent) 1px,transparent 1px),linear-gradient(to bottom,color-mix(in srgb,var(--border) 42%,transparent) 1px,transparent 1px);background-size:42px 42px;content:'';mask-image:linear-gradient(110deg,transparent 25%,#000 100%);opacity:.4;pointer-events:none}
-  .cmd-mission h2{max-width:900px;font-size:clamp(2.5rem,5.1vw,5.2rem);line-height:.9;letter-spacing:-.078em}
+  .cmd-mission h2{max-width:900px;font-size:clamp(2.2rem,3.7vw,4.3rem);line-height:1.06;letter-spacing:-.04em;text-wrap:balance}
+  .cmd-mission .cmd-work-approach{margin-top:.85rem}
+  .cmd-project-top{align-items:flex-start;gap:1rem;color:var(--muted);line-height:1.6}
+  .cmd-project-top :global(svg){flex-shrink:0}
+  .cmd-project h3{margin:1.7rem 0 .7rem}
+  .cmd-project .cmd-project-detail{margin-top:1rem}
+  .cmd-project footer{margin-top:auto;padding-top:1.2rem}
   .cmd-metric{min-height:142px;border-top:2px solid var(--border-l)}
   .cmd-metric:nth-of-type(3){border-top-color:var(--accent)}
   .cmd-action:focus-visible,.cmd-notes>a:focus-visible,.cmd-blog-cta:focus-visible,.cmd-project:focus-visible,.cmd-contact-grid>a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}

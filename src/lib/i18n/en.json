@@ -3,7 +3,7 @@
   "locale": "en_US",
   "meta": {
     "title": "Álvaro Duarte — Software Developer",
-    "description": "Software developer specializing in digital signature systems. Working with .NET, Angular and SQL Server at Lacuna Software."
+    "description": "Software developer at Lacuna Software. .NET, Angular and SQL Server for digital signatures and integrations. Experiments with developer tools and AI agents."
   },
   "nav": {
     "skills": "skills",
@@ -13,7 +13,9 @@
     "contact": "contact"
   },
   "text": {
-    "heroBio": "Software developer specializing in digital signature systems. At Lacuna Software, I work with .NET, Angular and SQL Server delivering real-world signature flows, payments, webhooks, ERP integrations and performance improvements in a production product.",
+    "heroBio": "I'm a software developer at Lacuna Software, working with .NET, Angular and SQL Server on digital signature systems. My work covers signature workflows, payments, integrations and performance.",
+    "workApproach": "I like working through a whole solution: understanding the problem, implementing the business rules and making it work well for the people using it. I also explore tools for developing software with AI agents.",
+    "profileLocation": "Petrolina, PE · Brazil",
     "heroButton": "view projects",
     "avatarAlt": "Photo of Álvaro Duarte",
     "externalLinkSuffix": "opens in a new tab",
@@ -23,16 +25,15 @@
     "blogEyebrow": "blog",
     "contactEyebrow": "contact",
     "skillsTitle": "Skills",
-    "projectsTitle": "Projects",
-    "projectsCta": "view all projects",
+    "projectsTitle": "Selected projects",
+    "projectsCta": "more projects and learning on GitHub",
     "experienceTitle": "Experience",
     "contactTitle": "Contact",
     "blogTitle": "Blog",
     "blogCta": "view all posts",
-    "blogHint": "articles about .NET, distributed systems and software engineering",
+    "blogHint": "notes on digital signatures, SQL Server and engineering decisions",
     "blogEmptyStatus": "// in progress",
-    "blogEmptyCount": "03 articles",
-    "blogEmptyText": "Articles about .NET, distributed systems and software engineering coming soon.",
+    "blogEmptyText": "I'm preparing notes on digital signatures, SQL Server and engineering decisions.",
     "blogSearchPlaceholder": "search by text",
     "blogSearchLabel": "Search",
     "blogTagFilter": "filter by tag",
@@ -104,13 +105,11 @@
     "location": "Brasília, DF · Remote",
     "role": "Software Developer · Full-time",
     "bullets": [
-      "Development and maintenance of a production digital signature product using .NET, Angular and SQL Server",
-      "Implementation of signature flows, document management features and usability improvements for day-to-day operations",
-      "Delivery of a prepaid billing model integrated with a payment gateway, including business rules and billing lifecycle handling",
-      "Implementation and maintenance of webhooks for signature events, payments and external integrations",
-      "Technical support for ERP and back-office integrations, helping customers connect internal processes to the product",
-      "Performance improvements, bug fixing and code evolution in critical application areas",
-      "Participation in architecture decisions, product refinement and feature prioritization with a business impact mindset"
+      "I develop and maintain signature and document management workflows with .NET, Angular and SQL Server, including usability improvements for day-to-day operations.",
+      "I implemented a prepaid billing model integrated with a payment gateway, covering business rules and the billing lifecycle.",
+      "I build and maintain webhooks for signatures and payments and help customers integrate with ERPs and corporate systems.",
+      "I investigate performance issues, fix bugs and improve code in critical parts of the application.",
+      "I contribute to architecture decisions, product refinement and feature prioritization, considering business rules and the experience of the people using the software."
     ],
     "tech": [".NET", "C#", "Angular", "TypeScript", "SQL Server", "Webhooks", "Payments"]
   },
@@ -151,13 +150,14 @@
     "missionFile": "MISSION.md",
     "workHistoryFile": "WORK_HISTORY.log",
     "readOnly": "READ ONLY",
-    "systemScope": "// SOFTWARE · SECURITY · SYSTEMS",
-    "missionLead": "Complex systems.",
-    "missionOutcome": "Clear outcomes.",
+    "systemScope": "// DIGITAL SIGNATURES · INTEGRATIONS · TOOLS",
+    "missionLead": "From business rules",
+    "missionOutcome": "to user experience.",
     "primaryStack": "PRIMARY STACK",
     "currentRole": "CURRENT ROLE",
-    "focus": "FOCUS",
-    "integrationsSystems": "INTEGRATIONS & SYSTEMS",
+    "focus": "WORK",
+    "focusArea": "PRODUCT",
+    "integrationsSystems": "BACKEND · INTERFACES · INTEGRATIONS",
     "deepDives": "DEEP DIVES",
     "systemReady": "SYSTEM READY",
     "active": "ACTIVE",
@@ -169,11 +169,11 @@
     "tableTopic": "TOPICS",
     "tableDate": "DATE",
     "blogCommand": "BLOG_COMMAND",
-    "blogFeed": "FEED · ENGINEERING · SYSTEMS · TRUST",
+    "blogFeed": "FEED · DIGITAL SIGNATURES · SQL SERVER · ENGINEERING",
     "blogBriefingEyebrow": "04 / DAILY_BRIEFING",
     "blogBriefingTitle": "Technical",
     "blogBriefingAccent": "briefing",
-    "blogBriefingIntro": "Practical essays about engineering decisions that survive production.",
+    "blogBriefingIntro": "Practical notes on digital signatures, SQL Server and the decisions behind software.",
     "blogLatestEntry": "LATEST_ENTRY",
     "blogOpenNote": "OPEN NOTE",
     "blogNotesEyebrow": "05 / NOTES_LOG",
@@ -184,14 +184,18 @@
     "blogAuthor": "BY ÁLVARO DUARTE"
   },
   "skillGroups": {
-    "practices": ["Code Review", "Technical writing", "Ownership"]
+    "practices": ["Code review", "Troubleshooting", "Usability", "Technical writing"]
   },
-  "projectDescriptions": [
-    "Personal portfolio focused on professional positioning, technical writing and practical product experience.",
-    "Binary to decimal converter built with Svelte.",
-    "Create your Rich Presence on Discord easily and practically.",
-    "Pastebin system built with Flask and database storage.",
-    "Pokédex built to study Svelte and its ecosystem.",
-    "REST URL shortener API built in Java."
-  ]
+  "projects": {
+    "trama": {
+      "status": "Personal experiment · in development",
+      "description": "A desktop app for organizing development tasks with AI agents in local Git repositories. It brings agent configuration, worktrees and terminal sessions into one interface.",
+      "detail": "I explore how to make working with agents easier to follow, from starting a task to tracking its execution. Built with extensive AI assistance; the full diff, commit and merge workflow is still in development."
+    },
+    "portfolio": {
+      "status": "Personal site · technical blog",
+      "description": "This site brings together my professional experience and technical notes on digital signatures and SQL Server, with content in Portuguese and English.",
+      "detail": "It combines technical writing, language navigation, search and components for explaining code and engineering decisions in a static site."
+    }
+  }
 }
