@@ -48,7 +48,7 @@ function getRelatedPosts(post: PostMeta, limit = 3): PostMeta[] {
   import Callout from '$lib/components/post/Callout.svelte';
 
   let message = $state('Hello, Svelte 5!');
-<\/script>
+</scr${"ipt"}>
 
 <Callout type="info" title="tip">
   <p>{message}</p>

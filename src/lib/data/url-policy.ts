@@ -1,4 +1,4 @@
-import { languageConfig, languages, siteUrl, type Lang } from './site';
+import { languageConfig, languages, siteUrl, type Lang } from "./site";
 
 export type AlternateLink = {
   hreflang: string;
@@ -6,7 +6,7 @@ export type AlternateLink = {
 };
 
 export function canonicalizePath(path: string) {
-  return path === '/pt/' ? '/' : path;
+  return path === "/pt/" ? "/" : path;
 }
 
 export function absoluteUrl(path: string) {
@@ -14,7 +14,7 @@ export function absoluteUrl(path: string) {
 }
 
 export function getHomePath(lang: Lang) {
-  return lang === 'pt' ? '/' : `/${lang}/`;
+  return lang === "pt" ? "/" : `/${lang}/`;
 }
 
 export function getBlogPath(lang: Lang) {
@@ -30,42 +30,43 @@ export function getRssPath(lang: Lang) {
 }
 
 export function isBlogPath(path: string) {
-  const segments = path.split('/').filter(Boolean);
-  return segments.length >= 2 && segments[1] === 'blog';
+  const segments = path.split("/").filter(Boolean);
+  return segments.length >= 2 && segments[1] === "blog";
 }
 
 export function isBlogIndexPath(path: string) {
-  const segments = path.split('/').filter(Boolean);
-  return segments.length === 2 && languages.includes(segments[0] as Lang) && segments[1] === 'blog';
+  const segments = path.split("/").filter(Boolean);
+  return segments.length === 2 && languages.includes(segments[0] as Lang) && segments[1] === "blog";
 }
 
 export function getBlogArticleRoute(path: string) {
-  const segments = path.split('/').filter(Boolean);
-  if (segments.length !== 3 || !languages.includes(segments[0] as Lang) || segments[1] !== 'blog') return undefined;
+  const segments = path.split("/").filter(Boolean);
+  if (segments.length !== 3 || !languages.includes(segments[0] as Lang) || segments[1] !== "blog")
+    return undefined;
 
   return { lang: segments[0] as Lang, slug: segments[2] };
 }
 
 export function getSiteAlternates(): AlternateLink[] {
   return [
-    { hreflang: languageConfig.pt.htmlLang, path: getHomePath('pt') },
-    { hreflang: languageConfig.en.htmlLang, path: getHomePath('en') },
-    { hreflang: 'x-default', path: getHomePath('pt') }
+    { hreflang: languageConfig.pt.htmlLang, path: getHomePath("pt") },
+    { hreflang: languageConfig.en.htmlLang, path: getHomePath("en") },
+    { hreflang: "x-default", path: getHomePath("pt") },
   ];
 }
 
 export function getBlogAlternates(): AlternateLink[] {
   return [
-    { hreflang: languageConfig.pt.htmlLang, path: getBlogPath('pt') },
-    { hreflang: languageConfig.en.htmlLang, path: getBlogPath('en') }
+    { hreflang: languageConfig.pt.htmlLang, path: getBlogPath("pt") },
+    { hreflang: languageConfig.en.htmlLang, path: getBlogPath("en") },
   ];
 }
 
 export function getLocalizedPageAlternates(path: string): AlternateLink[] {
-  if (path === '/' || path === '/pt/' || path === '/en/') {
-    return getSiteAlternates().filter((alternate) => alternate.hreflang !== 'x-default');
+  if (path === "/" || path === "/pt/" || path === "/en/") {
+    return getSiteAlternates().filter((alternate) => alternate.hreflang !== "x-default");
   }
 
-  const segments = path.split('/').filter(Boolean);
-  return segments.length === 2 && segments[1] === 'blog' ? getBlogAlternates() : [];
+  const segments = path.split("/").filter(Boolean);
+  return segments.length === 2 && segments[1] === "blog" ? getBlogAlternates() : [];
 }

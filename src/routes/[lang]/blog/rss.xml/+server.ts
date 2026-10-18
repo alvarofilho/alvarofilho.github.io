@@ -1,8 +1,8 @@
-import { contentCatalog } from '$lib/data/posts';
-import { languageConfig, isLang, languages } from '$lib/data/site';
-import { absoluteUrl, getBlogPath, getRssPath } from '$lib/data/url-policy';
-import { error } from '@sveltejs/kit';
-import type { EntryGenerator, RequestHandler } from './$types';
+import { contentCatalog } from "$lib/data/posts";
+import { languageConfig, isLang, languages } from "$lib/data/site";
+import { absoluteUrl, getBlogPath, getRssPath } from "$lib/data/url-policy";
+import { error } from "@sveltejs/kit";
+import type { EntryGenerator, RequestHandler } from "./$types";
 
 export const prerender = true;
 
@@ -15,11 +15,11 @@ export const GET: RequestHandler = ({ params }) => {
   const config = languageConfig[lang];
   const posts = contentCatalog.getPostsByLang(lang);
 
-  const title = lang === 'pt' ? 'Blog — Álvaro Duarte' : 'Blog — Álvaro Duarte';
+  const title = lang === "pt" ? "Blog — Álvaro Duarte" : "Blog — Álvaro Duarte";
   const description =
-    lang === 'pt'
-      ? 'Engenharia de produto aplicada a sistemas confiáveis.'
-      : 'Product engineering applied to reliable systems.';
+    lang === "pt"
+      ? "Engenharia de produto aplicada a sistemas confiáveis."
+      : "Product engineering applied to reliable systems.";
 
   const items = posts
     .map((post) => {
@@ -34,7 +34,7 @@ export const GET: RequestHandler = ({ params }) => {
       <pubDate>${pubDate}</pubDate>
     </item>`;
     })
-    .join('');
+    .join("");
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
@@ -50,8 +50,8 @@ ${items}
 
   return new Response(xml, {
     headers: {
-      'Content-Type': 'application/rss+xml; charset=utf-8',
-      'Cache-Control': 'max-age=3600'
-    }
+      "Content-Type": "application/rss+xml; charset=utf-8",
+      "Cache-Control": "max-age=3600",
+    },
   });
 };

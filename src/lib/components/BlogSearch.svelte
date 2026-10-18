@@ -46,8 +46,8 @@
   });
 
   $effect(() => {
-    debouncedQuery;
-    selectedTags;
+    void debouncedQuery;
+    void selectedTags;
     if (mounted) resetPage();
   });
 

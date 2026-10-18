@@ -21,8 +21,8 @@
   const codeLabel = $derived(title || lang);
 
   $effect(() => {
-    trimmedCode;
-    lang;
+    void trimmedCode;
+    void lang;
     void highlightCode();
   });
 

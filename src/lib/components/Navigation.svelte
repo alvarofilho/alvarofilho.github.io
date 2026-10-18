@@ -114,7 +114,7 @@
 
   $effect(() => {
     const currentRoutePath = currentPath;
-    currentHash;
+    void currentHash;
 
     if (!browser) return;
 

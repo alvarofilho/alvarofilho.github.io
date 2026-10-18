@@ -1,6 +1,6 @@
-import { contentCatalog } from '$lib/data/posts';
-import { languages } from '$lib/data/site';
-import type { EntryGenerator, PageLoad } from './$types';
+import { contentCatalog } from "$lib/data/posts";
+import { languages } from "$lib/data/site";
+import type { EntryGenerator, PageLoad } from "./$types";
 
 export const entries: EntryGenerator = () => languages.map((lang) => ({ lang }));
 
