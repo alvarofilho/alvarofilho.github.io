@@ -17,13 +17,13 @@ Portuguese version: [README.pt-BR.md](README.pt-BR.md)
 
 ## Requirements
 
-- Node.js 22
-- pnpm 10.33.2
+- Node.js 22.13 or newer
+- pnpm 12.14.0
 
 The pnpm version is declared in `package.json`:
 
 ```json
-"packageManager": "pnpm@10.33.2"
+"packageManager": "pnpm@12.14.0"
 ```
 
 ## Installation

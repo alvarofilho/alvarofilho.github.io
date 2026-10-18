@@ -17,13 +17,13 @@ English version: [README.md](README.md)
 
 ## Requisitos
 
-- Node.js 22
-- pnpm 10.33.2
+- Node.js 22.13 ou mais recente
+- pnpm 12.14.0
 
 O projeto declara a versao do pnpm em `package.json`:
 
 ```json
-"packageManager": "pnpm@10.33.2"
+"packageManager": "pnpm@12.14.0"
 ```
 
 ## Instalacao

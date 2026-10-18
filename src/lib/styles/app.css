@@ -167,13 +167,48 @@ footer,
 }
 
 .nav-logo {
+  display: inline-flex;
+  align-items: center;
   flex-shrink: 0;
+  gap: 0.65rem;
+  width: fit-content;
   color: var(--text);
-  font-size: 0.78rem;
-  font-weight: 500;
+  border-radius: 4px;
 }
 
-.nav-logo .d,
+.nav-logo-mark {
+  display: block;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+}
+
+.nav-logo-name {
+  display: grid;
+  font-family: var(--sans);
+  font-size: 0.96rem;
+  font-weight: 750;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.nav-logo-name > span {
+  margin-top: 0.12rem;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.nav-logo-cursor {
+  color: var(--accent);
+}
+
+.nav-logo:hover .nav-logo-name,
+.nav-logo:focus-visible .nav-logo-name {
+  color: var(--accent);
+}
+
 .nav-links a,
 .btn-o,
 .to,
@@ -237,10 +272,6 @@ footer,
 .cl:hover .cl-icon,
 .post-back:hover {
   color: var(--text);
-}
-
-.nav-logo .a {
-  color: var(--accent);
 }
 
 .nav-links a.active {
@@ -2496,21 +2527,9 @@ footer {
 }
 
 /* Command-center navigation */
-.nav-logo-command,
 .nav-link-index,
 .nav-rail-footer {
   display: none;
-}
-
-.site-nav--command .nav-logo-command {
-  color: var(--text);
-  font-family: var(--sans);
-  font-weight: 800;
-  letter-spacing: -0.08em;
-}
-
-.site-nav--command .nav-logo-command span {
-  color: var(--accent);
 }
 
 @media (min-width: 721px) {
@@ -2532,13 +2551,13 @@ footer {
     padding: 0;
   }
 
-  .site-nav--command .nav-logo-command {
-    display: inline-flex;
-    font-size: 1.4rem;
+  .site-nav--command .nav-logo-mark {
+    width: 40px;
+    height: 40px;
   }
 
-  .site-nav--command .nav-logo-default {
-    display: none;
+  .site-nav--command .nav-logo-name {
+    font-size: 1.1rem;
   }
 
   .site-nav--command .nav-links {
@@ -2652,12 +2671,6 @@ footer {
     border-bottom: 1px solid var(--border);
   }
 
-  .site-nav--command .nav-logo-command {
-    display: inline-flex;
-    font-size: 1.1rem;
-  }
-
-  .site-nav--command .nav-logo-default,
   .site-nav--command .nav-link-index,
   .site-nav--command .nav-rail-footer {
     display: none;

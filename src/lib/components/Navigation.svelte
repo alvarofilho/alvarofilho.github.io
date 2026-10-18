@@ -169,8 +169,8 @@
 
 <nav class="site-nav" class:site-nav--command={isCommandSurface} aria-label={messages.aria.primaryNavigation}>
   <a href={homePath} class="nav-logo" aria-label={messages.aria.homeLink}>
-    <span class="nav-logo-command">AD<span>_</span></span>
-    <span class="nav-logo-default"><span class="d">~/</span><span class="a">alvaroduarte</span></span>
+    <img class="nav-logo-mark" src="/logo.svg" alt="" width="40" height="40" />
+    <span class="nav-logo-name" aria-hidden="true">álvaro<span>duarte<span class="nav-logo-cursor">_</span></span></span>
   </a>
   <ul class="nav-links">
     {#each links as link, index}
