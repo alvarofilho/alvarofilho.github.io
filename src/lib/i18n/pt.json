@@ -192,6 +192,11 @@
     ]
   },
   "projects": {
+    "toolbox": {
+      "status": "Ferramentas para desenvolvimento · gratuito e open source",
+      "description": "Uma caixa de ferramentas para desenvolvimento, QA e TI: formatar JSON, decodificar JWTs, testar expressões regulares, gerar dados de teste e trabalhar com arquivos, tudo no navegador.",
+      "detail": "Sem cadastro e sem envio dos dados inseridos a um servidor. O processamento é local, com busca no catálogo, favoritos, histórico recente e interface em português e inglês."
+    },
     "trama": {
       "status": "Experimento pessoal · em desenvolvimento",
       "description": "Aplicativo desktop para organizar tarefas de desenvolvimento com agentes de IA em repositórios Git locais. Reúne configuração de agentes, worktrees e sessões de terminal em uma interface.",

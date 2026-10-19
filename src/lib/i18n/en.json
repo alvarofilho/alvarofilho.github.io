@@ -187,6 +187,11 @@
     "practices": ["Code review", "Troubleshooting", "Usability", "Technical writing"]
   },
   "projects": {
+    "toolbox": {
+      "status": "Developer tools · free and open source",
+      "description": "A toolbox for developers, QA and IT professionals: format JSON, decode JWTs, test regular expressions, generate test data and work with files, all in your browser.",
+      "detail": "No account or input uploads to a server. Processing stays local, with catalog search, favorites, recent tools and a Portuguese and English interface."
+    },
     "trama": {
       "status": "Personal experiment · in development",
       "description": "A desktop app for organizing development tasks with AI agents in local Git repositories. It brings agent configuration, worktrees and terminal sessions into one interface.",

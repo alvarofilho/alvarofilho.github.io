@@ -217,11 +217,18 @@ export const skillGroups = [
 
 export const projects = [
   {
+    id: "toolbox",
+    name: "Toolbox",
+    href: "https://toolbox.alvaro.dev.br",
+    tags: ["Angular", "TypeScript", "Tailwind CSS", "DaisyUI", "Web Crypto"],
+    featured: true,
+  },
+  {
     id: "trama",
     name: "Trama",
     href: "https://github.com/alvarofilho/trama",
     tags: ["Angular", "Tauri", "Rust", "SQLite", "Git"],
-    featured: true,
+    featured: false,
   },
   {
     id: "portfolio",
